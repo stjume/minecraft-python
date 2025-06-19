@@ -33,6 +33,7 @@ def _sende_befehl(befehl: str) -> None:
     if verbindung is None:
         raise RuntimeError("Keine Verbindung zum Server. Bitte zuerst verbinden.")
     # TODO: Protokollformat für die Übertragung implementieren
+    befehl = f"{befehl}\n"
     verbindung.sendall(befehl.encode("utf-8"))
 
 
