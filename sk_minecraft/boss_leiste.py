@@ -1,7 +1,47 @@
 """ Ermöglicht das erstellen und konfigurieren von Bossleisten """
+from enum import Enum
+
+from pydantic import BaseModel
 
 from sk_minecraft.kern import _leerzeichen_behandel, _sende_befehl
-from sk_minecraft.daten_modelle import BossLeiste, WertFehler, BossLeisteFarben, BossLeisteStil
+from sk_minecraft.daten_modelle import WertFehler
+
+
+class BossLeisteStil(Enum):
+    """ Möglichkeiten in denen der Stil einer Bossleiste angezeigt werden kann """
+    DURCHGEZOGEN = "solid"
+    SEGMENTE_6 = "segmented_6"
+    SEGMENTE_10 = "segmented_10"
+    SEGMENTE_12 = "segmented_12"
+    SEGMENTE_20 = "segmented_20"
+
+
+class BossLeisteFarben(Enum):
+    """ Farben in denen eine Bossleiste angezeigt werden kann """
+    BLAU = "blue"
+    GRÜN = "green"
+    PINK = "pink"
+    LILA = "purple"
+    ROT = "red"
+    WEIß = "white"
+    GELB = "yellow"
+
+
+class BossLeiste(BaseModel):
+    """ Modell einer Bossleiste """
+    name: str
+    """ Der von dir für die Leiste gesetze Name """
+    anzeige_text: str
+    """ Der Text der auf der Leiste angezeigt wird """
+    wert: float  # zwischen 0 und 1
+    """ Wie viel von der Leiste gefüllt sein soll (zwischen 0 und 1) """
+    stil: BossLeisteStil
+    """ Anzeige Stil der Leiste (siehe BossLeisteStil) """
+    color: BossLeisteFarben
+    """ Anzeige Farbe der Leiste (siehe BossLeisteFarbe) """
+
+    def __repr__(self):
+        return f"BossLeiste(name={self.name}, anzeige_text={self.anzeige_text}, wert={self.wert:.2f}, stil={self.stil})"
 
 
 def _sende_boss_leiste_befehl(unter_befehl: str):

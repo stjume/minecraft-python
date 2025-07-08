@@ -88,44 +88,6 @@ class Inventar(dict[int, InventarFeld]):
         return False
 
 
-class BossLeisteStil(Enum):
-    """ Möglichkeiten in denen der Stil einer Boss Leiste angezeigt werden kann """
-    DURCHGEZOGEN = "solid"
-    SEGMENTE_6 = "segmented_6"
-    SEGMENTE_10 = "segmented_10"
-    SEGMENTE_12 = "segmented_12"
-    SEGMENTE_20 = "segmented_20"
-
-
-
-class BossLeisteFarben(Enum):
-    """ Farben in denen eine Boss Leiste eingezeigt werden kann"""
-    BLAU = "blue"
-    GRÜN = "green"
-    PINK = "pink"
-    LILA = "purple"
-    ROT = "red"
-    WEIß = "white"
-    GELB = "yellow"
-
-
-class BossLeiste(BaseModel):
-    """ Modell einer Boss Leiste"""
-    name: str
-    """ Der von dir für die Leiste gesetze Name """
-    anzeige_text: str
-    """ Der Text der auf der Leiste angezeigt wird """
-    wert: float  # zwischen 0 und 1
-    """ Wie viel von der Leiste gefüllt sein soll (zwischen 0 und 1) """
-    stil: BossLeisteStil
-    """ Anzeige Stil der Leiste (siehe BossLeisteStil) """
-    color: BossLeisteFarben
-    """ Anzeige Farbe der Leiste (siehe BossLeisteFarbe) """
-
-    def __repr__(self):
-        return f"BossLeiste(name={self.name}, anzeige_text={self.anzeige_text}, wert={self.wert:.2f}, stil={self.stil})"
-
-
 class KeineDatenFehler(Exception):
     """ Wird geworfen, wenn wir von der API nix empfangen """
     pass
