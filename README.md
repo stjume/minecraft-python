@@ -50,6 +50,13 @@ Here is a **high-level checklist** for the Minecraft Python Backend API based on
 
 * [ ] `batch ;|;<command>;|;<command>` — Run multiple commands in one message
 
+#### 📊 Boss Bar Commands
+
+* [x] spawnBossBar <name> <text> — Spawn a boss bar with a name and display text
+
+* [x] editBossBar <command> <name> ?text:? ?color:? ?value:? ?style:? — Edit an existing boss bar
+
+
 ---
 
 Let me know if you want this as a Markdown file, a checklist app format (like Notion or Trello), or integrated into code comments or a README.

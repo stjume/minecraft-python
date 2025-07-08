@@ -1,3 +1,6 @@
+from enum import Enum
+from typing import Literal
+
 from pydantic import BaseModel
 
 class Spieler(BaseModel):
@@ -61,7 +64,7 @@ class InventarFeld(BaseModel):
         return InventarFeld(index=int(idx), item=itm, anzahl=int(anz))
 
     def __repr__(self):
-        return f"InventarFeld(index={self.index}, item={repr(self.item)}, anzahl={self.anzahl})"
+        return f"InventarFeld(index={self.index}, item={self.item!r}, anzahl={self.anzahl})"
 
 
 class Inventar(dict[int, InventarFeld]):
@@ -74,6 +77,41 @@ class Inventar(dict[int, InventarFeld]):
         return False
 
 
+class BossLeisteStil(Enum):
+    DURCHGEZOGEN = "solid"
+    SEGMENTE_6 = "segmented_6"
+    SEGMENTE_10 = "segmented_10"
+    SEGMENTE_12 = "segmented_12"
+    SEGMENTE_20 = "segmented_20"
+
+
+
+class BossLeisteFarben(Enum):
+    BLAU = "blue"
+    GRÜN = "green"
+    PINK = "pink"
+    LILA = "purple"
+    ROT = "red"
+    WEIß = "white"
+    GELB = "yellow"
+
+
+class BossLeiste(BaseModel):
+    name: str
+    anzeige_text: str
+    wert: float  # zwischen 0 und 1
+    stil: BossLeisteStil
+    color: BossLeisteFarben
+
+    def __repr__(self):
+        return f"BossLeiste(name={self.name}, anzeige_text={self.anzeige_text}, wert={self.wert:.2f}, stil={self.stil})"
+
+
 class KeineDatenFehler(Exception):
     """ Wird geworfen, wenn wir von der API nix empfangen """
+    pass
+
+
+class WertFehler(Exception):
+    """ ValueError aber deutsch :clown face: """
     pass
