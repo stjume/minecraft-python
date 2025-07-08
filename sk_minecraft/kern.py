@@ -20,6 +20,7 @@ def verbinden(ip: str, port: int) -> None:
         ip (str): Die IP-Adresse des Servers.
         port (int): Der Port des Servers.
     """
+    # brauchen wir intern
     global verbindung
     if verbindung is not None:
         verbindung.close()
@@ -28,6 +29,7 @@ def verbinden(ip: str, port: int) -> None:
 
 
 def _empfangen(timeout: float = 2.0) -> bytes | None:
+    # brauchen wir intern
     verbindung.settimeout(timeout)  # Timeout in Sekunden
     try:
         data = verbindung.recv(1024)
@@ -39,11 +41,13 @@ def _empfangen(timeout: float = 2.0) -> bytes | None:
 
 
 def _bytes_zu_text(b: bytes) -> str:
+    # brauchen wir intern
     # häppchen zu text :)
-    return b.decode("utf-8")
+    return b.decode("utf-8").strip()
 
 
 def _leerzeichen_behandel(s: str) -> str:
+    # brauchen wir intern
     return s.replace(" ", "|&s&|")
 
 
@@ -54,6 +58,7 @@ def _sende_befehl(befehl: str) -> None:
     Args:
         befehl (str): Der zu sendende Befehl.
     """
+    # brauchen wir intern
     if verbindung is None:
         raise RuntimeError("Keine Verbindung zum Server. Bitte zuerst verbinden.")
 
