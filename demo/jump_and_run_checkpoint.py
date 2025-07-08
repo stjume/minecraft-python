@@ -13,18 +13,18 @@ while True:
     block_unter_spieler = sk_minecraft.hole_block(spieler.x, spieler.y-1, spieler.z)
     # print(block_unter_spieler)
 
-    if not gestartet and block_unter_spieler.typ == "OAK_LOG\n":
+    if not gestartet and block_unter_spieler.typ == "OAK_LOG":
         gestartet = True
         unterster_punkt = spieler.y-1
-        sk_minecraft.send_an_chat("Jump and run gestartet")
+        sk_minecraft.sende_an_chat("Jump and run gestartet")
         checkpoint = spieler
 
     if checkpoint == None:
         continue
     
-    if block_unter_spieler.typ == "STONE\n" and (checkpoint.x != spieler.x or checkpoint.y != spieler.y or checkpoint.z != spieler.z):
+    if block_unter_spieler.typ == "STONE" and (checkpoint.x != spieler.x or checkpoint.y != spieler.y or checkpoint.z != spieler.z):
         checkpoint = spieler
-        sk_minecraft.send_an_chat("Checkpoint gespeichert")
+        sk_minecraft.sende_an_chat("Checkpoint gespeichert")
 
 
     if spieler.y < unterster_punkt:
