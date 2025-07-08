@@ -31,6 +31,7 @@ Here is a **high-level checklist** for the Minecraft Python Backend API based on
 #### 🧍 **Player Commands**
 
 * [x] `getPlayer <index>` — Get player info (name, coords, rotation)
+* [ ] `setPlayerPos <playerindex> <x> <y> <z> ?rotation:?`
 
 #### 💬 **Chat Commands**
 
@@ -55,6 +56,7 @@ Here is a **high-level checklist** for the Minecraft Python Backend API based on
 * [x] spawnBossBar <name> <text> — Spawn a boss bar with a name and display text
 
 * [x] editBossBar <command> <name> ?text:? ?color:? ?value:? ?style:? — Edit an existing boss bar
+
 
 
 ---

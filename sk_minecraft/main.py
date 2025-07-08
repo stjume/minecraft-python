@@ -105,3 +105,10 @@ def hole_inventar(spieler: Spieler):
         inventar[feld.index] = feld
 
     return inventar
+
+def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: int = None):
+    befehl = f"setPlayerPos {spieler.id} {x} {y} {z}"
+    if rotation is not None:
+        befehl += f" rotation:{rotation}"
+
+    _sende_befehl(befehl)
