@@ -14,7 +14,7 @@ def setze_block(x: int, y: int, z: int, block_typ: str) -> None:
         x (int): X-Koordinate
         y (int): Y-Koordinate
         z (int): Z-Koordinate
-        block_typ (str): Typ des Blocks
+        block_typ (str): Typ des Blocks (resource location), siehe https://minecraft.fandom.com/wiki/Java_Edition_data_values#Blocks
     """
     # TODO: Das genaue Befehlsformat für das Protokoll festlegen
     befehl = f"setBlock {x} {y} {z} {block_typ}"
