@@ -5,11 +5,14 @@ from pydantic import BaseModel
 
 class Spieler(BaseModel):
     id: int
+    """ Eindeutige ID des Spielers """
     name: str
+    """ Name des Spielers """
     x: int
     y: int
     z: int
     rotation: int
+    """ Rotation des Spielers von -180 bis 180 """
 
     @staticmethod
     def von_rohdaten(data: bytes) -> "Spieler":
@@ -26,20 +29,25 @@ class Block(BaseModel):
     y: int
     z: int
     typ: str
+    """ Block Typ """
 
     def __repr__(self):
         return f"Block(typ={self.typ}, x={self.x}, y={self.y}, z={self.z})"
 
 
 class Entity(BaseModel):
+    """ Modelliert ein Entity """
     typ: str
+    """ Typ des Entity's """
     id: str
+    """ Einzigartige ID für dieses Entity """
 
     def __repr__(self):
             return f"Entity(typ={self.typ}, id={self.id}"
 
 
 class Item(BaseModel):
+    """ Modelliert ein Item """
     typ: str
 
     @staticmethod
@@ -53,8 +61,11 @@ class Item(BaseModel):
 class InventarFeld(BaseModel):
     """ Ein Feld im Inventar eine:r Spieler:in """
     index: int
+    """ Index wo das Feld im Inventar liegt """
     item: Item
+    """ Item Objekt, welches Item in dem Feld liegt """
     anzahl: int
+    """ Wie viele von dem Item in diesem Feld liegen """
 
     @staticmethod
     def von_api_format(s: str):
@@ -75,36 +86,6 @@ class Inventar(dict[int, InventarFeld]):
             if v.item == item:
                 return True
         return False
-
-
-class BossLeisteStil(Enum):
-    DURCHGEZOGEN = "solid"
-    SEGMENTE_6 = "segmented_6"
-    SEGMENTE_10 = "segmented_10"
-    SEGMENTE_12 = "segmented_12"
-    SEGMENTE_20 = "segmented_20"
-
-
-
-class BossLeisteFarben(Enum):
-    BLAU = "blue"
-    GRÜN = "green"
-    PINK = "pink"
-    LILA = "purple"
-    ROT = "red"
-    WEIß = "white"
-    GELB = "yellow"
-
-
-class BossLeiste(BaseModel):
-    name: str
-    anzeige_text: str
-    wert: float  # zwischen 0 und 1
-    stil: BossLeisteStil
-    color: BossLeisteFarben
-
-    def __repr__(self):
-        return f"BossLeiste(name={self.name}, anzeige_text={self.anzeige_text}, wert={self.wert:.2f}, stil={self.stil})"
 
 
 class KeineDatenFehler(Exception):
