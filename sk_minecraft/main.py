@@ -39,7 +39,7 @@ def hole_spieler_koordinaten(index: int = 0) -> Spieler:
     Der index ist die Reihenfolge in der die Spieler dem Server beigetreten sind.
     Startend bei 0 für die erste Spielerin
     """
-    befehl = f"getPlayerLoc {index}"
+    befehl = f"getPlayer {index}"
     _sende_befehl(befehl)
     print("befehl gesendet")
     data = _empfangen()
