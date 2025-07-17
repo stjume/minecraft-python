@@ -4,7 +4,7 @@ import socket
 
 from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerzeichen_behandel
 from sk_minecraft.daten_modelle import Spieler, Block, Entity, Inventar, Item, InventarFeld, WertFehler
-
+from typing import Literal
 
 def setze_block(x: int, y: int, z: int, block_typ: str) -> None:
     """
@@ -160,3 +160,10 @@ def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: 
         befehl += f" rotation:{rotation}"
 
     _sende_befehl(befehl)
+
+def validiere_id(id: str, type: Literal["MATERIAL","ENTITY"]):
+    befehl = f"validate {type} {id}"
+    _sende_befehl(befehl)
+    data = _empfangen()
+
+    return _bytes_zu_text(data)
