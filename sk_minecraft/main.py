@@ -220,6 +220,27 @@ def _setzt_spieler_eigenschaft(typ: str, spieler: Spieler, wert: float):
     _sende_befehl(befehl)
 
 
+def entity_name_setzen(entity: Entity, name: str) -> Entity:
+    """ setzen den Namen eines Entities """
+    befehl = f"editEntity {entity.id} name:{name}"
+    _sende_befehl(befehl)
+    return hole_entity(entity)
+
+
+def entity_position_setzen(entity: Entity, x: float, y: float, z: float) -> Entity:
+    """ setzen den Namen eines Entities """
+    befehl = f"editEntity {entity.id} position:{x};{y};{z}"
+    _sende_befehl(befehl)
+    return hole_entity(entity)
+
+
+def entity_ai_setzen(entity: Entity, status: bool) -> Entity:
+    """ setzen den Namen eines Entities """
+    befehl = f"editEntity {entity.id} ai:{status}"
+    _sende_befehl(befehl)
+    return hole_entity(entity)
+
+
 def validiere_id(id: str, type: Literal["MATERIAL","ENTITY"]):
     befehl = f"validate {type} {id}"
     _sende_befehl(befehl)
