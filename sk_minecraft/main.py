@@ -140,6 +140,9 @@ def hole_inventar(spieler: Spieler) -> Inventar:
     # (index,name;optional;infos:anzahl)
     # 0:LILY_OF_THE_VALLEY:1 4:STONE_PRESSURE_PLATE:1 25:DISPENSER:1 29:TARGET:1
     inventar_info = _bytes_zu_text(data)
+    if not inventar_info:
+        return Inventar()
+
     item_infos = inventar_info.split(" ")
 
     # baue inventar dict zusammen
