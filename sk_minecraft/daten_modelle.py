@@ -166,10 +166,6 @@ class Item(BaseModel):
 
         return Item(typ=_zu_enum_umwandeln(MaterialSammlung, typ), anzeige_name=anzeige_name)
 
-    @staticmethod
-    def von_string(typ: str):
-        return Item(typ=_zu_enum_umwandeln(MaterialSammlung, typ))
-
     def __repr__(self):
         return f"Item(typ={self.typ}, anzeige_name={self.anzeige_name})"
 
@@ -187,7 +183,7 @@ class InventarFeld(BaseModel):
     def von_api_format(s: str):
         idx, itm, anz = s.split(":")
 
-        itm = Item.von_string(itm)
+        itm = Item.von_api_format(itm)
         return InventarFeld(index=int(idx), item=itm, anzahl=int(anz))
 
     def __repr__(self):
