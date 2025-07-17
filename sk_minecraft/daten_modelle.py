@@ -1,4 +1,7 @@
-from pydantic import BaseModel
+from enum import Enum
+from typing import Optional
+
+from pydantic import BaseModel, ValidationError
 
 from sk_minecraft.entity import EntitySammlung
 from sk_minecraft.material import MaterialSammlung
@@ -16,9 +19,15 @@ class Material(BaseModel):
         return f"Block(typ={self.typ}, x={self.x}, y={self.y}, z={self.z})"
 
     @staticmethod
-    def von_string(typ: str, x: int | None = None, y: int | None = None, z: int | None = None) -> "Material":
+    def von_string(typ: str, x: int | None = None, y: int | None = None, z: int | None = None) -> Optional["Material"]:
+        try:
+            _typ = _zu_enum_umwandeln(MaterialSammlung, typ)
+        except ValidationError:
+            _typ = None
+            print(f"Block '{typ}' ist von der Library nicht unterstützt. Der typ des Blocks ist auf None gesetzt.")
+
         return Material(
-            typ=_zu_enum_umwandeln(MaterialSammlung, typ),
+            typ=_typ,
             x=x,
             y=y,
             z=z
