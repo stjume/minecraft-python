@@ -2,7 +2,7 @@
 
 import socket
 
-from sk_minecraft import EntitySammlung
+from sk_minecraft.entity import EntitySammlung
 from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerzeichen_behandel, WertFehler
 from sk_minecraft.daten_modelle import Spieler, Material, Entity, Inventar, Item, InventarFeld, RichtungSammlung
 from typing import Literal
