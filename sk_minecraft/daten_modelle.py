@@ -8,6 +8,14 @@ from sk_minecraft.material import MaterialSammlung
 from sk_minecraft.kern import _zu_enum_umwandeln, _bytes_zu_text
 
 
+class RichtungSammlung(Enum):
+    """ wird genutzt um Geschwindigkeiten zu modifizieren """
+    Hoch = "UP"
+    Runter = "DOWN"
+    Zurück = "BACK"
+    Vorwärts = "LOOKING"
+
+
 class Material(BaseModel):
     typ: MaterialSammlung
     """ Block Typ """

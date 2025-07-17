@@ -3,7 +3,7 @@
 import socket
 
 from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerzeichen_behandel, WertFehler
-from sk_minecraft.daten_modelle import Spieler, Material, Entity, Inventar, Item, InventarFeld
+from sk_minecraft.daten_modelle import Spieler, Material, Entity, Inventar, Item, InventarFeld, RichtungSammlung
 from typing import Literal
 
 def setze_block(x: int, y: int, z: int, block_typ: str) -> None:
@@ -160,6 +160,19 @@ def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: 
         befehl += f" rotation:{rotation}"
 
     _sende_befehl(befehl)
+
+
+def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung, wert: float):
+    """
+
+    Args:
+        spieler: Spieler Objekt, dass beeinflusst werden soll
+        richtung: Richtung die verändert werden soll
+        wert: 1 ist normale geschwindigkeit, 0 ist einfrieren, nach oben kann es beliebig schnell werden
+    """
+    befehl = f"setPlayerVelocity {richtung.value} {spieler.id} {wert}"
+    _sende_befehl(befehl)
+
 
 def validiere_id(id: str, type: Literal["MATERIAL","ENTITY"]):
     befehl = f"validate {type} {id}"
