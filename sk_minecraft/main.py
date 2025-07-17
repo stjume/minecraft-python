@@ -8,7 +8,7 @@ from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerze
 from sk_minecraft.daten_modelle import Spieler, Material, Entity, Inventar, Item, InventarFeld, RichtungSammlung
 from typing import Literal
 
-def setze_block(x: int, y: int, z: int, block_typ: str) -> None:
+def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung) -> None:
     """
     Setzt einen Block im Minecraft-Spiel.
 
@@ -19,7 +19,7 @@ def setze_block(x: int, y: int, z: int, block_typ: str) -> None:
         block_typ (str): Typ des Blocks (resource location), siehe https://minecraft.fandom.com/wiki/Java_Edition_data_values#Blocks
     """
     # TODO: Das genaue Befehlsformat für das Protokoll festlegen
-    befehl = f"setBlock {x} {y} {z} {block_typ}"
+    befehl = f"setBlock {x} {y} {z} {block_typ.value}"
     _sende_befehl(befehl)
 
 
