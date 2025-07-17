@@ -4,6 +4,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 class Spieler(BaseModel):
+    """ Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft geupdated """
     id: int
     """ Eindeutige ID des Spielers """
     name: str
@@ -13,15 +14,39 @@ class Spieler(BaseModel):
     z: int
     rotation: int
     """ Rotation des Spielers von -180 bis 180 """
+    schaut_auf: str # TODO Block
+    """ Der nächste Block auf den Spieler schaut (maximal 100 Blöcke weit entfernt) """
+    sneaked: bool
+    """ True wenn Player sneaked """
+
 
     @staticmethod
     def von_rohdaten(data: bytes) -> "Spieler":
         """ rohdaten sind index, name, x, y, z """
-        _id, name, x, y, z, rot = data.decode("utf-8").split(" ")
-        return Spieler(id=int(_id), name=name, x=int(x), y=int(y), z=int(z), rotation=rot)
+        _id, name, x, y, z, rot, schaut_auf, sneaked = data.decode("utf-8").split(" ")
+        return Spieler(
+            id=int(_id),
+            name=name,
+            x=int(x),
+            y=int(y),
+            z=int(z),
+            rotation=int(rot),
+            schaut_auf=schaut_auf,
+            sneaked=sneaked.lower() == "true"
+        )
 
     def __repr__(self):
-        return f"Spieler(id={self.id}, name={self.name}, x={self.x}, y={self.y}, z={self.z}, rotation={self.rotation})"
+        return (
+            f"Spieler("
+            f"id={self.id}, "
+            f"name={self.name}, "
+            f"x={self.x}, "
+            f"y={self.y}, "
+            f"z={self.z}, "
+            f"rotation={self.rotation}, "
+            f"schaut_auf={self.schaut_auf}, "
+            f"sneaked={self.sneaked})"
+        )
 
 
 class Block(BaseModel):
