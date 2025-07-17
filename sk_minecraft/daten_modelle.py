@@ -57,12 +57,18 @@ class Spieler(BaseModel):
     """ Der nächste Block auf den Spieler schaut (maximal 100 Blöcke weit entfernt) """
     sneaked: bool
     """ True wenn Player sneaked """
+    max_leben: float
+    leben: float
+    hunger: float
+    sättigung: float
+    xp_level: float
+    xp_fortschritt: float
 
 
     @staticmethod
     def von_rohdaten(data: bytes) -> "Spieler":
         """ rohdaten sind index, name, x, y, z """
-        _id, name, x, y, z, rot, schaut_auf, sneaked = _bytes_zu_text(data).split(" ")
+        _id, name, x, y, z, rot, schaut_auf, sneaked, max_leben, leben, hunger, sättigung, xp_level, xp_progress = _bytes_zu_text(data).split(" ")
         return Spieler(
             id=int(_id),
             name=name,
@@ -71,7 +77,13 @@ class Spieler(BaseModel):
             z=int(z),
             rotation=int(rot),
             schaut_auf=Material.von_string(schaut_auf),
-            sneaked=sneaked.lower() == "true"
+            sneaked=sneaked.lower() == "true",
+            max_leben=float(leben),
+            hunger=float(hunger),
+            sättigung=float(sättigung),
+            xp_level=float(xp_level),
+            xp_fortschritt=float(xp_level),
+            leben=float(leben)
         )
 
     def __repr__(self):
@@ -83,8 +95,15 @@ class Spieler(BaseModel):
             f"y={self.y}, "
             f"z={self.z}, "
             f"rotation={self.rotation}, "
+            f"leben={self.leben}"
+            f"max_leben={self.max_leben}, "
+            f"hunger={self.hunger}, "
+            f"sättigung={self.sättigung}, "
+            f"xp_level={self.xp_level}, "
+            f"xp_fortschritt={self.xp_fortschritt}, "
+            f"sneaked={self.sneaked}, "
             f"schaut_auf={self.schaut_auf}, "
-            f"sneaked={self.sneaked})"
+            ")"
         )
 
 
@@ -102,7 +121,16 @@ class Entity(BaseModel):
     ai: bool | None
 
     def __repr__(self):
-            return f"Entity(typ={self.typ}, id={self.id}"
+            return (f"Entity("
+                    f"typ={self.typ}, "
+                    f"name={self.name}"
+                    f"x={self.x}, "
+                    f"y={self.y}, "
+                    f"z={self.z}, "
+                    f"leben={self.leben}, "
+                    f"ai={self.ai}, "
+                    f"id={self.id}"
+                    f")")
 
     @staticmethod
     def von_string(typ: str):
