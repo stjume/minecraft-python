@@ -8,7 +8,7 @@ gestartet = False
 unterster_punkt = 0
 
 while True:
-    spieler = sk_minecraft.hole_spieler_koordinaten()
+    spieler = sk_minecraft.hole_spieler()
 
     block_unter_spieler = sk_minecraft.hole_block(spieler.x, spieler.y-1, spieler.z)
     # print(block_unter_spieler)

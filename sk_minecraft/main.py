@@ -42,7 +42,7 @@ def hole_entity(entity: Entity) -> Entity:
     return entity
 
 
-def hole_spieler_koordinaten(index: int = 0) -> Spieler:
+def hole_spieler(index: int = 0) -> Spieler:
     """
     Du bekommst ein Spieler Objekt zurück, welches x, y, z, rotation und name gibt
     Der index ist die Reihenfolge in der die Spieler dem Server beigetreten sind.
