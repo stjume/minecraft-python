@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
-from sk_minecraft import EntitySammlung
+from sk_minecraft.entity import EntitySammlung
 from sk_minecraft.material import MaterialSammlung
-from sk_minecraft.kern import _zu_enum_umwandeln
+from sk_minecraft.kern import _zu_enum_umwandeln, _bytes_zu_text
 
 
 class Material(BaseModel):
@@ -45,7 +45,7 @@ class Spieler(BaseModel):
     @staticmethod
     def von_rohdaten(data: bytes) -> "Spieler":
         """ rohdaten sind index, name, x, y, z """
-        _id, name, x, y, z, rot, schaut_auf, sneaked = data.decode("utf-8").split(" ")
+        _id, name, x, y, z, rot, schaut_auf, sneaked = _bytes_zu_text(data).split(" ")
         return Spieler(
             id=int(_id),
             name=name,
