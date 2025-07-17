@@ -84,8 +84,8 @@ def erzeuge_entity(x: int, y: int, z: int, entity: str) -> Entity:
     """
     befehl = f"spawnEntity {x} {y} {z} {entity}"
     _sende_befehl(befehl)
-    entity_id = _empfangen()
-    entity = Entity(typ=entity, id=_bytes_zu_text(entity_id))
+    data = _empfangen()
+    entity = Entity.von_api_format(_bytes_zu_text(data))
     return entity
 
 
