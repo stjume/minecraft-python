@@ -154,14 +154,24 @@ class Entity(BaseModel):
 
 class Item(BaseModel):
     """ Modelliert ein Item """
-    typ: str
+    typ: MaterialSammlung
+    anzeige_name: str | None
 
     @staticmethod
     def von_api_format(s: str):
-        return Item(typ=s)
+        """ wir erwarten hier ; getrennt inhalte"""
+        typ, anzeige_name = s.split(";")
+        if not anzeige_name:
+            anzeige_name = None
+
+        return Item(typ=_zu_enum_umwandeln(MaterialSammlung, typ), anzeige_name=anzeige_name)
+
+    @staticmethod
+    def von_string(typ: str):
+        return Item(typ=_zu_enum_umwandeln(MaterialSammlung, typ))
 
     def __repr__(self):
-        return f"Item(typ={self.typ})"
+        return f"Item(typ={self.typ}, anzeige_name={self.anzeige_name})"
 
 
 class InventarFeld(BaseModel):
@@ -177,7 +187,7 @@ class InventarFeld(BaseModel):
     def von_api_format(s: str):
         idx, itm, anz = s.split(":")
 
-        itm = Item.von_api_format(itm)
+        itm = Item.von_string(itm)
         return InventarFeld(index=int(idx), item=itm, anzahl=int(anz))
 
     def __repr__(self):
