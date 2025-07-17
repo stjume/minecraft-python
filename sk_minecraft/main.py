@@ -33,6 +33,15 @@ def hole_block(x: int, y: int, z: int) -> Material:
     return block
 
 
+def hole_entity(entity: Entity) -> Entity:
+    """ Bekomme den aktuellsten zustand eines bereits erstellten Entities """
+    befehl = f"getEntity {entity.id}"
+    _sende_befehl(befehl)
+    data = _empfangen()
+    entity = Entity.von_api_format(_bytes_zu_text(data))
+    return entity
+
+
 def hole_spieler_koordinaten(index: int = 0) -> Spieler:
     """
     Du bekommst ein Spieler Objekt zurück, welches x, y, z, rotation und name gibt
@@ -148,8 +157,6 @@ def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: 
         y: y-koordinate
         z: z-koordinate
         rotation: rotation: (optional) rotation des spielers
-
-    Returns:
 
     """
     befehl = f"setPlayerPos {spieler.id} {x} {y} {z}"

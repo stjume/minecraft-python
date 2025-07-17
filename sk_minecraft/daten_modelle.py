@@ -92,15 +92,36 @@ class Entity(BaseModel):
     """ Modelliert ein Entity """
     typ: EntitySammlung
     """ Typ des Entity's """
-    id: str
+    id: str | None
     """ Einzigartige ID für dieses Entity """
+    name: str | None
+    x: float | None
+    y: float | None
+    z: float | None
+    leben: float | None
+    ai: bool | None
 
     def __repr__(self):
             return f"Entity(typ={self.typ}, id={self.id}"
 
     @staticmethod
-    def von_string(typ: str, id_: str):
-        return Entity(typ=_zu_enum_umwandeln(EntitySammlung, typ), id=id_)
+    def von_string(typ: str):
+        return Entity(typ=_zu_enum_umwandeln(EntitySammlung, typ))
+
+    @staticmethod
+    def von_api_format(s: str):
+        _id, typ, name, x, y, z, leben, ai = s.split()
+        _typ = _zu_enum_umwandeln(EntitySammlung, typ)
+        return Entity(
+            id=_id,
+            typ=_typ,
+            name=name if name != "null" else None,
+            x=float(x),
+            y=float(y),
+            z=float(z),
+            leben=float(leben),
+            ai=ai == "true"
+        )
 
 
 class Item(BaseModel):
