@@ -216,7 +216,7 @@ def spieler_xp_fortschritt_setzen(spieler: Spieler, wert: float):
 
 def _setzt_spieler_eigenschaft(typ: str, spieler: Spieler, wert: float):
     """ interne funktion für Leben, hunger und xp verändern """
-    befehl = f"setPlayerStat {typ}, {spieler.id} {wert}"
+    befehl = f"setPlayerStat {typ} {spieler.id} {wert}"
     _sende_befehl(befehl)
 
 
