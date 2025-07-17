@@ -2,6 +2,7 @@
 
 import socket
 
+from sk_minecraft import EntitySammlung
 from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerzeichen_behandel, WertFehler
 from sk_minecraft.daten_modelle import Spieler, Material, Entity, Inventar, Item, InventarFeld, RichtungSammlung
 from typing import Literal
@@ -72,7 +73,7 @@ def sende_befehl(befehl: str):
     _sende_befehl(befehl)
 
 
-def erzeuge_entity(x: int, y: int, z: int, entity: str) -> Entity:
+def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
     """
     erzeuge eine entity an einer bestimmten position
     Eine Liste aller Entities findest du hier:
@@ -82,7 +83,7 @@ def erzeuge_entity(x: int, y: int, z: int, entity: str) -> Entity:
     Du bekommst ein Entity Objekt zurück.
     In diesem befindet sich eine eindeutige id, um später wieder auf das entity zugreifen zu können.
     """
-    befehl = f"spawnEntity {x} {y} {z} {entity}"
+    befehl = f"spawnEntity {x} {y} {z} {entity.value}"
     _sende_befehl(befehl)
     data = _empfangen()
     entity = Entity.von_api_format(_bytes_zu_text(data))
