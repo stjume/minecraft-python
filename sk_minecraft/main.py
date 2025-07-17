@@ -2,8 +2,8 @@
 
 import socket
 
-from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerzeichen_behandel
-from sk_minecraft.daten_modelle import Spieler, Block, Entity, Inventar, Item, InventarFeld, WertFehler
+from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerzeichen_behandel, _zu_enum_umwandeln
+from sk_minecraft.daten_modelle import Spieler, Material, Entity, Inventar, Item, InventarFeld, WertFehler
 from typing import Literal
 
 def setze_block(x: int, y: int, z: int, block_typ: str) -> None:
@@ -21,7 +21,7 @@ def setze_block(x: int, y: int, z: int, block_typ: str) -> None:
     _sende_befehl(befehl)
 
 
-def hole_block(x: int, y: int, z: int) -> Block:
+def hole_block(x: int, y: int, z: int) -> Material:
     """
     Frag ab was für ein Block sich an der Koordinate befindet
     Du bekommst ein Block-Objekt zurück, dass unter .typ den typ enthält
@@ -29,7 +29,7 @@ def hole_block(x: int, y: int, z: int) -> Block:
     befehl = f"getBlock {x} {y} {z}"
     _sende_befehl(befehl)
     data = _empfangen()
-    block = Block(x=x, y=y, z=z, typ=_bytes_zu_text(data))
+    block = Material.von_string(x=x, y=y, z=z, typ=_bytes_zu_text(data).upper())
     return block
 
 
@@ -41,7 +41,6 @@ def hole_spieler_koordinaten(index: int = 0) -> Spieler:
     """
     befehl = f"getPlayer {index}"
     _sende_befehl(befehl)
-    print("befehl gesendet")
     data = _empfangen()
     spieler = Spieler.von_rohdaten(data)
     return spieler
@@ -138,6 +137,7 @@ def hole_inventar(spieler: Spieler) -> Inventar:
         inventar[feld.index] = feld
 
     return inventar
+
 
 def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: int = None):
     """

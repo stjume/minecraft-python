@@ -4,7 +4,8 @@ diese datei stell auch einige hilfsfunktionen zur Verfügung
 """
 
 import socket
-from typing import Optional
+from enum import Enum
+from typing import Optional, Any, TypeVar, Type
 
 from sk_minecraft.daten_modelle import KeineDatenFehler
 
@@ -64,3 +65,10 @@ def _sende_befehl(befehl: str) -> None:
 
     befehl = f"{befehl}\n"
     verbindung.sendall(befehl.encode("utf-8"))
+
+
+E = TypeVar('E', bound=Enum)
+
+
+def _zu_enum_umwandeln(enum: Type[E], wert: Any) -> Optional[E]:
+    return enum._value2member_map_.get(wert)

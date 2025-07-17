@@ -1,7 +1,8 @@
-from enum import Enum
-from typing import Literal
-
 from pydantic import BaseModel
+
+from sk_minecraft import MaterialSammlung
+from sk_minecraft.kern import _zu_enum_umwandeln
+
 
 class Spieler(BaseModel):
     """ Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft geupdated """
@@ -49,15 +50,24 @@ class Spieler(BaseModel):
         )
 
 
-class Block(BaseModel):
-    x: int
-    y: int
-    z: int
-    typ: str
+class Material(BaseModel):
+    typ: MaterialSammlung
     """ Block Typ """
+    x: int | None = None
+    y: int | None = None
+    z: int | None = None
 
     def __repr__(self):
         return f"Block(typ={self.typ}, x={self.x}, y={self.y}, z={self.z})"
+
+    @staticmethod
+    def von_string(typ: str, x: int | None = None, y: int | None = None, z: int | None = None) -> "Material":
+        return Material(
+            typ=_zu_enum_umwandeln(MaterialSammlung, typ),
+            x=x,
+            y=y,
+            z=z
+        )
 
 
 class Entity(BaseModel):
