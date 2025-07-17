@@ -121,13 +121,3 @@ class Inventar(dict[int, InventarFeld]):
             if v.item == item:
                 return True
         return False
-
-
-class KeineDatenFehler(Exception):
-    """ Wird geworfen, wenn wir von der API nix empfangen """
-    pass
-
-
-class WertFehler(Exception):
-    """ ValueError aber deutsch :clown face: """
-    pass

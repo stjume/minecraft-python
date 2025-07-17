@@ -7,8 +7,6 @@ import socket
 from enum import Enum
 from typing import Optional, Any, TypeVar, Type
 
-from sk_minecraft.daten_modelle import KeineDatenFehler
-
 # Globale Variable für die Verbindung
 verbindung: Optional[socket.socket] = None
 
@@ -72,3 +70,13 @@ E = TypeVar('E', bound=Enum)
 
 def _zu_enum_umwandeln(enum: Type[E], wert: Any) -> Optional[E]:
     return enum._value2member_map_.get(wert)
+
+
+class KeineDatenFehler(Exception):
+    """ Wird geworfen, wenn wir von der API nix empfangen """
+    pass
+
+
+class WertFehler(Exception):
+    """ ValueError aber deutsch :clown face: """
+    pass
