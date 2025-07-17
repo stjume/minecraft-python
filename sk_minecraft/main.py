@@ -3,6 +3,7 @@
 import socket
 
 from sk_minecraft.entity import EntitySammlung
+from sk_minecraft.material import MaterialSammlung
 from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerzeichen_behandel, WertFehler
 from sk_minecraft.daten_modelle import Spieler, Material, Entity, Inventar, Item, InventarFeld, RichtungSammlung
 from typing import Literal
@@ -92,7 +93,7 @@ def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
 
 def gebe_item(
         spieler: Spieler,
-        item: Item | str,
+        item: MaterialSammlung,
         anzahl: int,
         name: str | None = None,
         inventar_feld: int | None = None,
@@ -114,7 +115,7 @@ def gebe_item(
     if isinstance(item, Item):
         item = item.typ
 
-    befehl = f"addInv {spieler.id} {item} {anzahl}"
+    befehl = f"addInv {spieler.id} {item.value} {anzahl}"
 
     if name is not None:
         befehl += f" name:{_leerzeichen_behandel(name)}"
