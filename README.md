@@ -31,7 +31,9 @@ Here is a **high-level checklist** for the Minecraft Python Backend API based on
 #### 🧍 **Player Commands**
 
 * [x] `getPlayer <index>` — Get player info (name, coords, rotation)
-* [ ] `setPlayerPos <playerindex> <x> <y> <z> ?rotation:?`
+* [x] `setPlayerPos <playerindex> <x> <y> <z> ?rotation:?`
+* [x] `setPlayerStat <type> <playerIndex> <value>`
+* [x] `setPlayerVelocity <type> <playerIndex> <value>`
 
 #### 💬 **Chat Commands**
 
@@ -41,6 +43,8 @@ Here is a **high-level checklist** for the Minecraft Python Backend API based on
 #### 🧱 **Entity Commands**
 
 * [x] `spawnEntity <x> <y> <z> <entityid>` — Spawn an entity at a location
+* [ ] `editEntity <target> ?name:String? ?position:x;y;z? ?ai:boolean?`
+* [ ] `getEntity <target>`
 
 #### 🎒 **Inventory Commands**
 
