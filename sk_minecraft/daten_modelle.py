@@ -5,52 +5,6 @@ from sk_minecraft.material import MaterialSammlung
 from sk_minecraft.kern import _zu_enum_umwandeln
 
 
-class Spieler(BaseModel):
-    """ Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft geupdated """
-    id: int
-    """ Eindeutige ID des Spielers """
-    name: str
-    """ Name des Spielers """
-    x: int
-    y: int
-    z: int
-    rotation: int
-    """ Rotation des Spielers von -180 bis 180 """
-    schaut_auf: str # TODO Block
-    """ Der nächste Block auf den Spieler schaut (maximal 100 Blöcke weit entfernt) """
-    sneaked: bool
-    """ True wenn Player sneaked """
-
-
-    @staticmethod
-    def von_rohdaten(data: bytes) -> "Spieler":
-        """ rohdaten sind index, name, x, y, z """
-        _id, name, x, y, z, rot, schaut_auf, sneaked = data.decode("utf-8").split(" ")
-        return Spieler(
-            id=int(_id),
-            name=name,
-            x=int(x),
-            y=int(y),
-            z=int(z),
-            rotation=int(rot),
-            schaut_auf=schaut_auf,
-            sneaked=sneaked.lower() == "true"
-        )
-
-    def __repr__(self):
-        return (
-            f"Spieler("
-            f"id={self.id}, "
-            f"name={self.name}, "
-            f"x={self.x}, "
-            f"y={self.y}, "
-            f"z={self.z}, "
-            f"rotation={self.rotation}, "
-            f"schaut_auf={self.schaut_auf}, "
-            f"sneaked={self.sneaked})"
-        )
-
-
 class Material(BaseModel):
     typ: MaterialSammlung
     """ Block Typ """
@@ -68,6 +22,52 @@ class Material(BaseModel):
             x=x,
             y=y,
             z=z
+        )
+
+
+class Spieler(BaseModel):
+    """ Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft geupdated """
+    id: int
+    """ Eindeutige ID des Spielers """
+    name: str
+    """ Name des Spielers """
+    x: int
+    y: int
+    z: int
+    rotation: int
+    """ Rotation des Spielers von -180 bis 180 """
+    schaut_auf: Material
+    """ Der nächste Block auf den Spieler schaut (maximal 100 Blöcke weit entfernt) """
+    sneaked: bool
+    """ True wenn Player sneaked """
+
+
+    @staticmethod
+    def von_rohdaten(data: bytes) -> "Spieler":
+        """ rohdaten sind index, name, x, y, z """
+        _id, name, x, y, z, rot, schaut_auf, sneaked = data.decode("utf-8").split(" ")
+        return Spieler(
+            id=int(_id),
+            name=name,
+            x=int(x),
+            y=int(y),
+            z=int(z),
+            rotation=int(rot),
+            schaut_auf=Material.von_string(schaut_auf),
+            sneaked=sneaked.lower() == "true"
+        )
+
+    def __repr__(self):
+        return (
+            f"Spieler("
+            f"id={self.id}, "
+            f"name={self.name}, "
+            f"x={self.x}, "
+            f"y={self.y}, "
+            f"z={self.z}, "
+            f"rotation={self.rotation}, "
+            f"schaut_auf={self.schaut_auf}, "
+            f"sneaked={self.sneaked})"
         )
 
 
