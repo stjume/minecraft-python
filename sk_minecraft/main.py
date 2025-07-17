@@ -174,6 +174,45 @@ def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung,
     _sende_befehl(befehl)
 
 
+def spieler_max_leben_setzten(spieler: Spieler, wert: float):
+    """ Setze die maximalen Leben einer Spielerin """
+    _setzt_spieler_eigenschaft("MAX_HEALTH", spieler, wert)
+
+
+def spieler_leben_setzen(spieler: Spieler, wert: float):
+    """
+    Setze die aktuellen Leben einer Spielerin
+    Ist der Wert größer als das gesetzte Maximum werden alle überschüssigen Leben ignoriert
+    """
+    _setzt_spieler_eigenschaft("HEALTH", spieler, wert)
+
+
+def spieler_hunger_setzen(spieler: Spieler, wert: float, sättigung: float | None = None):
+    """
+    Setze den Hunger eines Spielers
+    Du kannst optional auch noch die Sättigung setzen
+    """
+    _setzt_spieler_eigenschaft("FOOD_LEVEL", spieler, wert)
+    if sättigung is not None:
+        _setzt_spieler_eigenschaft("SATURATION", spieler, sättigung)
+
+
+def spieler_xp_level_setzen(spieler: Spieler, wert: float):
+    """ Setze das aktuelle Level einer Spielerin """
+    _setzt_spieler_eigenschaft("XP_LEVEL", spieler, wert)
+
+
+def spieler_xp_fortschritt_setzen(spieler: Spieler, wert: float):
+    """ Setze den Fortschritt innerhalb des Levels eines Spielers """
+    _setzt_spieler_eigenschaft("XP_PROGRESS", spieler, wert)
+
+
+def _setzt_spieler_eigenschaft(typ: str, spieler: Spieler, wert: float):
+    """ interne funktion für Leben, hunger und xp verändern """
+    befehl = f"setPlayerStat {typ}, {spieler.id} {wert}"
+    _sende_befehl(befehl)
+
+
 def validiere_id(id: str, type: Literal["MATERIAL","ENTITY"]):
     befehl = f"validate {type} {id}"
     _sende_befehl(befehl)
