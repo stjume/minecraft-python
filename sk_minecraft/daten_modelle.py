@@ -17,7 +17,7 @@ class RichtungSammlung(Enum):
 
 
 class Material(BaseModel):
-    typ: MaterialSammlung
+    typ: MaterialSammlung | None
     """ Block Typ """
     x: int | None = None
     y: int | None = None
