@@ -2,8 +2,8 @@
 
 import socket
 
-from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerzeichen_behandel, _zu_enum_umwandeln
-from sk_minecraft.daten_modelle import Spieler, Material, Entity, Inventar, Item, InventarFeld, WertFehler
+from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerzeichen_behandel, WertFehler
+from sk_minecraft.daten_modelle import Spieler, Material, Entity, Inventar, Item, InventarFeld
 from typing import Literal
 
 def setze_block(x: int, y: int, z: int, block_typ: str) -> None:

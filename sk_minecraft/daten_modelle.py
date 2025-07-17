@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from sk_minecraft import MaterialSammlung
+from sk_minecraft.material import MaterialSammlung
 from sk_minecraft.kern import _zu_enum_umwandeln
 
 
@@ -79,6 +79,9 @@ class Entity(BaseModel):
 
     def __repr__(self):
             return f"Entity(typ={self.typ}, id={self.id}"
+
+    # @staticmethod
+    # def von_string(typ: str, id):
 
 
 class Item(BaseModel):
