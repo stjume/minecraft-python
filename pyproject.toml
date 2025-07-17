@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sk_minecraft"
-version = "0.0.1"
+version = "1.0.0"
 description = "A Python package for sk_minecraft."
 authors = [
     { name = "Your Name", email = "your.email@example.com" }
@@ -16,6 +16,8 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 dependencies = []
+
+dynamic = ["dependencies", "optional-dependencies"]
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
