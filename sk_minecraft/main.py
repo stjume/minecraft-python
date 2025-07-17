@@ -96,7 +96,7 @@ def gebe_item(
         name: str | None = None,
         inventar_feld: int | None = None,
         unzerstörbar: bool = False
-):
+) -> Inventar:
     """
     Gebe einer Spieler:in ein Item
     Eine Liste aller Items kannst du hier finden:
@@ -126,6 +126,8 @@ def gebe_item(
 
     _sende_befehl(befehl)
 
+    return hole_inventar(spieler)
+
 
 def hole_inventar(spieler: Spieler) -> Inventar:
     """ Rufe das Inventar eines Spielers ab. Du bekommst ein Inventar Object (wie ein dict) zurück """
@@ -148,7 +150,7 @@ def hole_inventar(spieler: Spieler) -> Inventar:
     return inventar
 
 
-def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: int = None):
+def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: int = None) -> Spieler:
     """
     Verändere die position in x, y, z richtung und rotation
     Args:
@@ -168,8 +170,10 @@ def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: 
 
     _sende_befehl(befehl)
 
+    return hole_spieler(spieler.id)
 
-def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung, wert: float):
+
+def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung, wert: float) -> Spieler:
     """
 
     Args:
@@ -179,22 +183,25 @@ def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung,
     """
     befehl = f"setPlayerVelocity {richtung.value} {spieler.id} {wert}"
     _sende_befehl(befehl)
+    return hole_spieler(spieler.id)
 
 
-def spieler_max_leben_setzten(spieler: Spieler, wert: float):
+def spieler_max_leben_setzten(spieler: Spieler, wert: float) -> Spieler:
     """ Setze die maximalen Leben einer Spielerin """
     _setzt_spieler_eigenschaft("MAX_HEALTH", spieler, wert)
+    return hole_spieler(spieler.id)
 
 
-def spieler_leben_setzen(spieler: Spieler, wert: float):
+def spieler_leben_setzen(spieler: Spieler, wert: float) -> Spieler:
     """
     Setze die aktuellen Leben einer Spielerin
     Ist der Wert größer als das gesetzte Maximum werden alle überschüssigen Leben ignoriert
     """
     _setzt_spieler_eigenschaft("HEALTH", spieler, wert)
+    return hole_spieler(spieler.id)
 
 
-def spieler_hunger_setzen(spieler: Spieler, wert: float, sättigung: float | None = None):
+def spieler_hunger_setzen(spieler: Spieler, wert: float, sättigung: float | None = None) -> Spieler:
     """
     Setze den Hunger eines Spielers
     Du kannst optional auch noch die Sättigung setzen
@@ -203,15 +210,19 @@ def spieler_hunger_setzen(spieler: Spieler, wert: float, sättigung: float | Non
     if sättigung is not None:
         _setzt_spieler_eigenschaft("SATURATION", spieler, sättigung)
 
+    return hole_spieler(spieler.id)
 
-def spieler_xp_level_setzen(spieler: Spieler, wert: float):
+
+def spieler_xp_level_setzen(spieler: Spieler, wert: float) -> Spieler:
     """ Setze das aktuelle Level einer Spielerin """
     _setzt_spieler_eigenschaft("XP_LEVEL", spieler, wert)
+    return hole_spieler(spieler.id)
 
 
-def spieler_xp_fortschritt_setzen(spieler: Spieler, wert: float):
+def spieler_xp_fortschritt_setzen(spieler: Spieler, wert: float) -> Spieler:
     """ Setze den Fortschritt innerhalb des Levels eines Spielers """
     _setzt_spieler_eigenschaft("XP_PROGRESS", spieler, wert)
+    return hole_spieler(spieler.id)
 
 
 def _setzt_spieler_eigenschaft(typ: str, spieler: Spieler, wert: float):
