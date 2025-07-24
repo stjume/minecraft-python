@@ -124,7 +124,7 @@ def gebe_item(
         befehl += f" slot:{inventar_feld}"
 
     if unzerstörbar:
-        befehl += f" unbrekable"
+        befehl += f" unbreakable"
 
     _sende_befehl(befehl)
 
