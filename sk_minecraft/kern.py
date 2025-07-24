@@ -80,3 +80,7 @@ class KeineDatenFehler(Exception):
 class WertFehler(Exception):
     """ ValueError aber deutsch :clown face: """
     pass
+
+class InventarFeldLeerFehler(Exception):
+    """ Wird geworfen, wenn versucht wird auf ein Inventar-Feld zuzugreifen, dass leer ist. """
+    pass
