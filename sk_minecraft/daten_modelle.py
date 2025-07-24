@@ -5,11 +5,14 @@ from pydantic import BaseModel, ValidationError
 
 from sk_minecraft.entity import EntitySammlung
 from sk_minecraft.material import MaterialSammlung
-from sk_minecraft.kern import _zu_enum_umwandeln, _bytes_zu_text
+from sk_minecraft.kern import _zu_enum_umwandeln, _bytes_zu_text, InventarFeldLeerFehler
 
 
 class RichtungSammlung(Enum):
-    """ wird genutzt um Geschwindigkeiten zu modifizieren """
+    """
+    Arten, wie Geschwindigkeiten verändert werden können
+    Wird u.A. in spieler_geschwindigkeit_setzen() verwendet.
+    """
     Hoch = "UP"
     Runter = "DOWN"
     Zurück = "BACK"
@@ -17,6 +20,9 @@ class RichtungSammlung(Enum):
 
 
 class Material(BaseModel):
+    """
+    Modelliert einen Block in Minecraft, der sich zum Zeitpunkt der Abfrage an einer bestimmten Koordinate befindet.
+    """
     typ: MaterialSammlung | None
     """ Block Typ """
     x: int | None = None
@@ -43,7 +49,7 @@ class Material(BaseModel):
 
 
 class Spieler(BaseModel):
-    """ Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft geupdated """
+    """ Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft aktualisiert! """
     id: int
     """ Eindeutige ID des Spielers """
     name: str
@@ -108,17 +114,17 @@ class Spieler(BaseModel):
 
 
 class Entity(BaseModel):
-    """ Modelliert ein Entity """
+    """ Modelliert ein Entity. Viele der Informationen können leer (None) sein """
     typ: EntitySammlung
     """ Typ des Entity's """
-    id: str | None
+    id: str | None = None
     """ Einzigartige ID für dieses Entity """
-    name: str | None
-    x: float | None
-    y: float | None
-    z: float | None
-    leben: float | None
-    ai: bool | None
+    name: str | None = None
+    x: float | None = None
+    y: float | None = None
+    z: float | None = None
+    leben: float | None = None
+    ai: bool | None = None
 
     def __repr__(self):
             return (f"Entity("
@@ -134,6 +140,7 @@ class Entity(BaseModel):
 
     @staticmethod
     def von_string(typ: str):
+        # TODO: brauchen wir das? falls nein können wir die default-Nones entfernen
         return Entity(typ=_zu_enum_umwandeln(EntitySammlung, typ))
 
     @staticmethod
@@ -191,7 +198,12 @@ class InventarFeld(BaseModel):
 
 
 class Inventar(dict[int, InventarFeld]):
-    """ Zeigt von index des inventars auf InventarFeld """
+    """
+    Enthält das gesamte Inventar eines Spielers.
+    Die Struktur ist ein dict.
+    Das dict zeigt von Index des Inventars auf ein Objekt vom Typ InventarFeld, welcher die Infos über das Element in dem Feld enthält.
+    Hinweis: Felder, die Leer sind, sind nicht in dem dict enthalten!
+    """
     def __contains__(self, item: Item):
         """ Überprüfe, ob ein Item im Inventar ist """
         for _, v in self.items():
