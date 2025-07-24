@@ -13,6 +13,6 @@ sk_minecraft.verbinden("localhost", 12345)
 with open("entities.csv") as f:
     names = csv.reader(f)
     for row in names:
-        result = sk_minecraft.validiere_id(row[1], "ENTITY")
+        result = sk_minecraft._validiere_id(row[1], "ENTITY")
         if result == "Yes":
             print(",".join(row))

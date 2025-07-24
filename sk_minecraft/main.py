@@ -257,7 +257,7 @@ def entity_ai_setzen(entity: Entity, status: bool) -> Entity:
     return hole_entity(entity)
 
 
-def validiere_id(id: str, type: Literal["MATERIAL","ENTITY"]):
+def _validiere_id(id: str, type: Literal["MATERIAL", "ENTITY"]):
     befehl = f"validate {type} {id}"
     _sende_befehl(befehl)
     data = _empfangen()
