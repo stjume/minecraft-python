@@ -90,6 +90,24 @@ def sende_an_chat(nachricht: str):
     befehl = f"postChat {nachricht}"
     _sende_befehl(befehl)
 
+def hole_chat():
+    """
+    Hole alle Nachrichten die seit der letzen Abfrage in den Chat geschrieben wurden.
+    Returns:
+        Du bekommst eine Liste aller gesendeten Nachrichten zurück
+    """
+    befehl = f"pollChat"
+
+    _sende_befehl(befehl)
+    data = _empfangen()
+
+    nachrichten_str = _bytes_zu_text(data)
+
+    if(nachrichten_str == ""):
+        return []
+
+    nachrichten = nachrichten_str.split("|<-->|")
+    return nachrichten
 
 def sende_befehl(befehl: str):
     """
