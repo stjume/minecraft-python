@@ -108,6 +108,6 @@ def schreibe_dokumentation(ausgabedatei_pfad: str = 'library_documentation.txt')
         datei.write(f"Dokumentation für Bibliothek: {BIBLIOTHEK_NAME}\n\n")
         verarbeite_modul(modul, datei)
 
-
-# Standardverhalten: Beim direkten Ausführen die Dokumentation erstellen
-schreibe_dokumentation()
+if __name__ == "__main__":
+    # Standardverhalten: Beim direkten Ausführen die Dokumentation erstellen
+    schreibe_dokumentation()
