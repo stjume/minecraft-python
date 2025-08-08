@@ -72,15 +72,15 @@ def _zu_enum_umwandeln(enum: Type[E], wert: Any) -> Optional[E]:
     return enum._value2member_map_.get(wert)
 
 
-class KeineDatenFehler(Exception):
+class KeineDatenFehler(ValueError):
     """ Wird geworfen, wenn wir von der API nix empfangen """
     pass
 
 
-class WertFehler(Exception):
+class WertFehler(ValueError):
     """ ValueError aber deutsch :clown face: """
     pass
 
-class InventarFeldLeerFehler(Exception):
+class InventarFeldLeerFehler(KeyError):
     """ Wird geworfen, wenn versucht wird auf ein Inventar-Feld zuzugreifen, dass leer ist. """
     pass
