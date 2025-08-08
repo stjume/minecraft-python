@@ -98,7 +98,7 @@ def verarbeite_modul(modul_objekt: Any, ausgabe_datei: TextIO, ebene: int = 0) -
             verarbeite_modul(objekt, ausgabe_datei, ebene + 1)
 
 
-def schreibe_dokumentation(ausgabedatei_pfad: str = 'library_documentation.txt') -> None:
+def schreibe_dokumentation(ausgabedatei_pfad: str = f'{BIBLIOTHEK_NAME}_docs.txt') -> None:
     """Erstellt die Bibliotheksdokumentation als Textdatei.
 
     Args:
@@ -107,6 +107,8 @@ def schreibe_dokumentation(ausgabedatei_pfad: str = 'library_documentation.txt')
     with open(ausgabedatei_pfad, 'w', encoding='utf-8') as datei:
         datei.write(f"Dokumentation für Bibliothek: {BIBLIOTHEK_NAME}\n\n")
         verarbeite_modul(modul, datei)
+    
+    print(f"Dokumentation wurde erfolgreich in {ausgabedatei_pfad} gespeichert.")
 
 if __name__ == "__main__":
     # Standardverhalten: Beim direkten Ausführen die Dokumentation erstellen
