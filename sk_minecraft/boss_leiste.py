@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel
 
-from sk_minecraft.kern import _leerzeichen_behandel, WertFehler
+from sk_minecraft.kern import _leerzeichen_behandel, WertFehler, _sende_befehl
 
 
 class BossLeisteStil(Enum):
@@ -50,7 +50,7 @@ class BossLeiste(BaseModel):
 def _sende_boss_leiste_befehl(unter_befehl: str):
     # brauchen wir intern
     befehl = f"editBossBar {unter_befehl}"
-    _sende_boss_leiste_befehl(befehl)
+    _sende_befehl(befehl)
 
 
 def erzeuge_leiste(name: str, anzeige_text: str) -> BossLeiste:
