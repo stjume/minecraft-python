@@ -64,7 +64,7 @@ def erzeuge_leiste(name: str, anzeige_text: str) -> BossLeiste:
         Ein BossLeisten Objekt mit dessen Hilfe du die Leiste weiter konfigurieren kannst
     """
     befehl = f"spawnBossBar {name} {anzeige_text}"
-    _sende_boss_leiste_befehl(befehl)
+    _sende_befehl(befehl)
 
     # einige der werte sind beim erzeugen festgesetzt.
     return BossLeiste(
@@ -93,7 +93,7 @@ def setze_farbe(boss_leiste: BossLeiste, farbe: BossLeisteFarben) -> BossLeiste:
 
 def setze_wert(boss_leiste: BossLeiste, wert: float) -> BossLeiste:
     """ Setze zu welchem Anteil die leiste gefüllt sein soll (zwischen 0 und 1) """
-    if not 0 < wert <= 1:
+    if not 0 <= wert <= 1:
         raise WertFehler(f"Der Wert der Bossleiste muss zwischen 0 und 1 liegen. Du hast '{wert}' angegeben.")
 
     unter_befehl = f"value {boss_leiste.name} value:{wert}"
