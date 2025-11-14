@@ -1,5 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,jetbrains+all,java,git,macos,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,jetbrains+all,java,git,macos,linux
+*.env
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
