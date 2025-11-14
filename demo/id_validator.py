@@ -1,5 +1,6 @@
-import sk_minecraft
 import csv
+
+import sk_minecraft
 
 sk_minecraft.verbinden("localhost", 12345)
 
@@ -9,7 +10,7 @@ sk_minecraft.verbinden("localhost", 12345)
 #         result = sk_minecraft.validiere_id(row[1], "MATERIAL")
 #         if result == "Yes":
 #             print(",".join(row))
-        
+
 with open("entities.csv") as f:
     names = csv.reader(f)
     for row in names:

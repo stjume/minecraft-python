@@ -1,12 +1,22 @@
 """ haupt funktionalitäten der bibliothek """
 
-import socket
-
-from sk_minecraft.entity import EntitySammlung
-from sk_minecraft.material import MaterialSammlung
-from sk_minecraft.kern import _sende_befehl, _empfangen, _bytes_zu_text, _leerzeichen_behandel, WertFehler
-from sk_minecraft.daten_modelle import Spieler, Material, Entity, Inventar, Item, InventarFeld, RichtungSammlung
 from typing import Literal
+
+from sk_minecraft.daten_modelle import Entity
+from sk_minecraft.daten_modelle import Inventar
+from sk_minecraft.daten_modelle import InventarFeld
+from sk_minecraft.daten_modelle import Item
+from sk_minecraft.daten_modelle import Material
+from sk_minecraft.daten_modelle import RichtungSammlung
+from sk_minecraft.daten_modelle import Spieler
+from sk_minecraft.entity import EntitySammlung
+from sk_minecraft.kern import WertFehler
+from sk_minecraft.kern import _bytes_zu_text
+from sk_minecraft.kern import _empfangen
+from sk_minecraft.kern import _leerzeichen_behandel
+from sk_minecraft.kern import _sende_befehl
+from sk_minecraft.material import MaterialSammlung
+
 
 def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung) -> None:
     """
@@ -48,7 +58,7 @@ def hole_block(x: int, y: int, z: int) -> Material:
 
 
 def hole_entity(entity: Entity) -> Entity:
-    """ Bekomme den aktuellsten zustand eines bereits erstellten Entities
+    """Bekomme den aktuellsten zustand eines bereits erstellten Entities
     Args:
         Das Entity Objekt von dem du ein Update abfragen möchtest
     Returns:
@@ -90,6 +100,7 @@ def sende_an_chat(nachricht: str):
     befehl = f"postChat {nachricht}"
     _sende_befehl(befehl)
 
+
 def hole_chat():
     """
     Hole alle Nachrichten die seit der letzen Abfrage in den Chat geschrieben wurden.
@@ -103,11 +114,12 @@ def hole_chat():
 
     nachrichten_str = _bytes_zu_text(data)
 
-    if(nachrichten_str == ""):
+    if nachrichten_str == "":
         return []
 
     nachrichten = nachrichten_str.split("|<-->|")
     return nachrichten
+
 
 def sende_befehl(befehl: str):
     """
@@ -145,12 +157,12 @@ def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
 
 
 def gebe_item(
-        spieler: Spieler,
-        item: MaterialSammlung,
-        anzahl: int,
-        name: str | None = None,
-        inventar_feld: int | None = None,
-        unzerstörbar: bool = False
+    spieler: Spieler,
+    item: MaterialSammlung,
+    anzahl: int,
+    name: str | None = None,
+    inventar_feld: int | None = None,
+    unzerstörbar: bool = False,
 ) -> Inventar:
     """
     Gebe einer Spieler:in ein Item
@@ -195,7 +207,7 @@ def hole_inventar(spieler: Spieler) -> Inventar:
         spieler: Spieler von dem du das Inventar abfragen willst
 
     Returns:
-        Du bekommst ein Inventar Object (wie ein dict) zurück """
+        Du bekommst ein Inventar Object (wie ein dict) zurück"""
     befehl = f"getInv {spieler.id}"
     _sende_befehl(befehl)
     data = _empfangen()
@@ -234,7 +246,9 @@ def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: 
     befehl = f"setPlayerPos {spieler.id} {x} {y} {z}"
     if rotation is not None:
         if not -180 <= rotation <= 180:
-            raise WertFehler(f"Die Rotation eines Spielers muss zwischen -180 und 180 sein. Du hast '{rotation}' gesagt.")
+            raise WertFehler(
+                f"Die Rotation eines Spielers muss zwischen -180 und 180 sein. Du hast '{rotation}' gesagt."
+            )
 
         befehl += f" rotation:{rotation}"
 
@@ -262,7 +276,7 @@ def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung,
 
 
 def spieler_max_leben_setzten(spieler: Spieler, wert: float) -> Spieler:
-    """ Setze die maximalen Leben einer Spielerin """
+    """Setze die maximalen Leben einer Spielerin"""
     _setzt_spieler_eigenschaft("MAX_HEALTH", spieler, wert)
     return hole_spieler(spieler.id)
 
@@ -328,7 +342,7 @@ def spieler_xp_fortschritt_setzen(spieler: Spieler, wert: float) -> Spieler:
 
 
 def _setzt_spieler_eigenschaft(typ: str, spieler: Spieler, wert: float):
-    """ interne funktion für Leben, hunger und xp verändern """
+    """interne funktion für Leben, hunger und xp verändern"""
     befehl = f"setPlayerStat {typ} {spieler.id} {wert}"
     _sende_befehl(befehl)
 
@@ -381,7 +395,7 @@ def entity_ai_setzen(entity: Entity, status: bool) -> Entity:
 
 
 def _validiere_id(id: str, type: Literal["MATERIAL", "ENTITY"]):
-    """ nur für interne nutzung """
+    """nur für interne nutzung"""
     befehl = f"validate {type} {id}"
     _sende_befehl(befehl)
     data = _empfangen()

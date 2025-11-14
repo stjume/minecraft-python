@@ -1,13 +1,17 @@
 """ Ermöglicht das erstellen und konfigurieren von Bossleisten """
+
 from enum import Enum
 
 from pydantic import BaseModel
 
-from sk_minecraft.kern import _leerzeichen_behandel, WertFehler, _sende_befehl
+from sk_minecraft.kern import WertFehler
+from sk_minecraft.kern import _leerzeichen_behandel
+from sk_minecraft.kern import _sende_befehl
 
 
 class BossLeisteStil(Enum):
-    """ Möglichkeiten in denen der Stil einer Bossleiste angezeigt werden kann """
+    """Möglichkeiten in denen der Stil einer Bossleiste angezeigt werden kann"""
+
     DURCHGEZOGEN = "solid"
     SEGMENTE_6 = "segmented_6"
     SEGMENTE_10 = "segmented_10"
@@ -16,7 +20,8 @@ class BossLeisteStil(Enum):
 
 
 class BossLeisteFarben(Enum):
-    """ Farben in denen eine Bossleiste angezeigt werden kann """
+    """Farben in denen eine Bossleiste angezeigt werden kann"""
+
     BLAU = "blue"
     GRÜN = "green"
     PINK = "pink"
@@ -27,7 +32,8 @@ class BossLeisteFarben(Enum):
 
 
 class BossLeiste(BaseModel):
-    """ Modell einer Bossleiste """
+    """Modell einer Bossleiste"""
+
     name: str
     """ Der von dir für die Leiste gesetze Name """
     anzeige_text: str
@@ -40,11 +46,13 @@ class BossLeiste(BaseModel):
     """ Anzeige Farbe der Leiste (siehe BossLeisteFarbe) """
 
     def __repr__(self):
-        return (f"BossLeiste(name={self.name}, "
-                f"anzeige_text={self.anzeige_text}, "
-                f"wert={self.wert:.2f}, "
-                f"stil={self.stil}, "
-                f"farbe={self.farbe})")
+        return (
+            f"BossLeiste(name={self.name}, "
+            f"anzeige_text={self.anzeige_text}, "
+            f"wert={self.wert:.2f}, "
+            f"stil={self.stil}, "
+            f"farbe={self.farbe})"
+        )
 
 
 def _sende_boss_leiste_befehl(unter_befehl: str):
@@ -72,11 +80,12 @@ def erzeuge_leiste(name: str, anzeige_text: str) -> BossLeiste:
         anzeige_text=anzeige_text,
         wert=0.0,
         stil=BossLeisteStil.DURCHGEZOGEN,
-        farbe=BossLeisteFarben.LILA
+        farbe=BossLeisteFarben.LILA,
     )
 
+
 def setze_text(boss_leiste: BossLeiste, anzeige_text: str) -> BossLeiste:
-    """ Setze den Text der Leiste """
+    """Setze den Text der Leiste"""
     unter_befehl = f"text {boss_leiste.name} text:{_leerzeichen_behandel(anzeige_text)}"
     _sende_boss_leiste_befehl(unter_befehl)
     boss_leiste.anzeige_text = anzeige_text
@@ -84,7 +93,7 @@ def setze_text(boss_leiste: BossLeiste, anzeige_text: str) -> BossLeiste:
 
 
 def setze_farbe(boss_leiste: BossLeiste, farbe: BossLeisteFarben) -> BossLeiste:
-    """ Setze die Farbe der Leiste """
+    """Setze die Farbe der Leiste"""
     unter_befehl = f"color {boss_leiste.name} color:{farbe.value}"
     _sende_boss_leiste_befehl(unter_befehl)
     boss_leiste.farbe = farbe
@@ -92,7 +101,7 @@ def setze_farbe(boss_leiste: BossLeiste, farbe: BossLeisteFarben) -> BossLeiste:
 
 
 def setze_wert(boss_leiste: BossLeiste, wert: float) -> BossLeiste:
-    """ Setze zu welchem Anteil die leiste gefüllt sein soll (zwischen 0 und 1) """
+    """Setze zu welchem Anteil die leiste gefüllt sein soll (zwischen 0 und 1)"""
     if not 0 <= wert <= 1:
         raise WertFehler(f"Der Wert der Bossleiste muss zwischen 0 und 1 liegen. Du hast '{wert}' angegeben.")
 
@@ -103,16 +112,18 @@ def setze_wert(boss_leiste: BossLeiste, wert: float) -> BossLeiste:
 
 
 def setze_stil(boss_leiste: BossLeiste, stil: BossLeisteStil) -> BossLeiste:
-    """ Setze den Stil der Leiste """
+    """Setze den Stil der Leiste"""
     unter_befehl = f"style {boss_leiste.name} color:{stil.value}"
     _sende_boss_leiste_befehl(unter_befehl)
     boss_leiste.stil = stil
     return boss_leiste
 
+
 def loesche_leiste(boss_leiste: BossLeiste):
     """Lösche eine Leiste"""
     _loesche_leiste_str(boss_leiste.name)
 
+
 def _loesche_leiste_str(boss_leiste_name: str):
     befehl = f"deleteBossBar {boss_leiste_name}"
-    _sende_befehl(befehl) 
+    _sende_befehl(befehl)

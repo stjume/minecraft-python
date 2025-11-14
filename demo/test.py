@@ -1,4 +1,3 @@
-import datetime
 import sk_minecraft
 
 sk_minecraft.verbinden("localhost", 12345)
@@ -11,7 +10,7 @@ sk_minecraft.spieler_max_leben_setzten(spieler, 10)
 
 sk_minecraft.spieler_hunger_setzen(spieler, 20)
 
-sk_minecraft.spieler_xp_level_setzen(spieler, 10);
+sk_minecraft.spieler_xp_level_setzen(spieler, 10)
 
 sk_minecraft.spieler_xp_fortschritt_setzen(spieler, 0.5)
 

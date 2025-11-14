@@ -1,11 +1,14 @@
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel
+from pydantic import ValidationError
 
 from sk_minecraft.entity import EntitySammlung
+from sk_minecraft.kern import InventarFeldLeerFehler
+from sk_minecraft.kern import _bytes_zu_text
+from sk_minecraft.kern import _zu_enum_umwandeln
 from sk_minecraft.material import MaterialSammlung
-from sk_minecraft.kern import _zu_enum_umwandeln, _bytes_zu_text, InventarFeldLeerFehler
 
 
 class RichtungSammlung(Enum):
@@ -13,6 +16,7 @@ class RichtungSammlung(Enum):
     Arten, wie Geschwindigkeiten verändert werden können
     Wird u.A. in spieler_geschwindigkeit_setzen() verwendet.
     """
+
     Hoch = "UP"
     Runter = "DOWN"
     Zurück = "BACK"
@@ -23,6 +27,7 @@ class Material(BaseModel):
     """
     Modelliert einen Block in Minecraft, der sich zum Zeitpunkt der Abfrage an einer bestimmten Koordinate befindet.
     """
+
     typ: MaterialSammlung | None
     """ Block Typ """
     x: int | None = None
@@ -40,16 +45,12 @@ class Material(BaseModel):
             _typ = None
             print(f"Block '{typ}' ist von der Library nicht unterstützt. Der typ des Blocks ist auf None gesetzt.")
 
-        return Material(
-            typ=_typ,
-            x=x,
-            y=y,
-            z=z
-        )
+        return Material(typ=_typ, x=x, y=y, z=z)
 
 
 class Spieler(BaseModel):
-    """ Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft aktualisiert! """
+    """Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft aktualisiert!"""
+
     id: int
     """ Eindeutige ID des Spielers """
     name: str
@@ -70,11 +71,25 @@ class Spieler(BaseModel):
     xp_level: float
     xp_fortschritt: float
 
-
     @staticmethod
     def von_rohdaten(data: bytes) -> "Spieler":
-        """ rohdaten sind index, name, x, y, z """
-        _id, name, x, y, z, rot, schaut_auf, sneaked, max_leben, leben, hunger, sättigung, xp_level, xp_progress = _bytes_zu_text(data).split(" ")
+        """rohdaten sind index, name, x, y, z"""
+        (
+            _id,
+            name,
+            x,
+            y,
+            z,
+            rot,
+            schaut_auf,
+            sneaked,
+            max_leben,
+            leben,
+            hunger,
+            sättigung,
+            xp_level,
+            xp_progress,
+        ) = _bytes_zu_text(data).split(" ")
         return Spieler(
             id=int(_id),
             name=name,
@@ -89,7 +104,7 @@ class Spieler(BaseModel):
             sättigung=float(sättigung),
             xp_level=float(xp_level),
             xp_fortschritt=float(xp_level),
-            leben=float(leben)
+            leben=float(leben),
         )
 
     def __repr__(self):
@@ -114,7 +129,8 @@ class Spieler(BaseModel):
 
 
 class Entity(BaseModel):
-    """ Modelliert ein Entity. Viele der Informationen können leer (None) sein """
+    """Modelliert ein Entity. Viele der Informationen können leer (None) sein"""
+
     typ: EntitySammlung
     """ Typ des Entity's """
     id: str | None = None
@@ -127,16 +143,18 @@ class Entity(BaseModel):
     ai: bool | None = None
 
     def __repr__(self):
-            return (f"Entity("
-                    f"typ={self.typ}, "
-                    f"name={self.name}"
-                    f"x={self.x}, "
-                    f"y={self.y}, "
-                    f"z={self.z}, "
-                    f"leben={self.leben}, "
-                    f"ai={self.ai}, "
-                    f"id={self.id}"
-                    f")")
+        return (
+            f"Entity("
+            f"typ={self.typ}, "
+            f"name={self.name}"
+            f"x={self.x}, "
+            f"y={self.y}, "
+            f"z={self.z}, "
+            f"leben={self.leben}, "
+            f"ai={self.ai}, "
+            f"id={self.id}"
+            f")"
+        )
 
     @staticmethod
     def von_string(typ: str):
@@ -155,18 +173,19 @@ class Entity(BaseModel):
             y=float(y),
             z=float(z),
             leben=float(leben),
-            ai=ai == "true"
+            ai=ai == "true",
         )
 
 
 class Item(BaseModel):
-    """ Modelliert ein Item """
+    """Modelliert ein Item"""
+
     typ: MaterialSammlung
     anzeige_name: str | None
 
     @staticmethod
     def von_api_format(s: str):
-        """ wir erwarten hier ; getrennt inhalte"""
+        """wir erwarten hier ; getrennt inhalte"""
         typ, anzeige_name = s.split(";")
         if not anzeige_name:
             anzeige_name = None
@@ -178,7 +197,8 @@ class Item(BaseModel):
 
 
 class InventarFeld(BaseModel):
-    """ Ein Feld im Inventar eine:r Spieler:in """
+    """Ein Feld im Inventar eine:r Spieler:in"""
+
     index: int
     """ Index wo das Feld im Inventar liegt """
     item: Item
@@ -204,8 +224,9 @@ class Inventar(dict[int, InventarFeld]):
     Das dict zeigt von Index des Inventars auf ein Objekt vom Typ InventarFeld, welcher die Infos über das Element in dem Feld enthält.
     Hinweis: Felder, die Leer sind, sind nicht in dem dict enthalten!
     """
+
     def __contains__(self, item: Item):
-        """ Überprüfe, ob ein Item im Inventar ist """
+        """Überprüfe, ob ein Item im Inventar ist"""
         for _, v in self.items():
             if v.item == item:
                 return True
