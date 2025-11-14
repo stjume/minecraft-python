@@ -2,7 +2,7 @@
 kern der bibliothek, hier wird mit dem server kommuniziert
 diese datei stell auch einige hilfsfunktionen zur Verfügung
 """
-
+import os
 import socket
 from enum import Enum
 from typing import Optional, Any, TypeVar, Type
@@ -23,6 +23,17 @@ def verbinden(ip: str, port: int) -> None:
     global verbindung
     if verbindung is not None:
         verbindung.close()
+
+    # hierdurch können wir leichter entwickeln, ohne jedes Mal alle temporär anpassen zu müssen
+    _ip = os.getenv("SK_SERVER_OVERWRITE")
+    if _ip is not None:
+        spacer = "#" * 100
+        print(f"{spacer}\n"
+              f"IP wurde von von Environment Variable von '{ip}' auf '{_ip}', "
+              f"(env var name: 'SK_SERVER_OVERWRITE') überschrieben\n"
+              f"{spacer}")
+        ip = _ip
+
     verbindung = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     verbindung.connect((ip, port))
 
