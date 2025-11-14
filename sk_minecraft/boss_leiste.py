@@ -107,12 +107,12 @@ def setze_stil(boss_leiste: BossLeiste, stil: BossLeisteStil) -> BossLeiste:
     unter_befehl = f"style {boss_leiste.name} color:{stil.value}"
     _sende_boss_leiste_befehl(unter_befehl)
     boss_leiste.stil = stil
-    return BossLeiste
+    return boss_leiste
 
 def loesche_leiste(boss_leiste: BossLeiste):
-    befehl = f"deleteBossBar {boss_leiste.name}"
-    _sende_befehl(befehl) 
+    """Lösche eine Leiste"""
+    _loesche_leiste_str(boss_leiste.name)
 
-def loesche_leiste_str(boss_leiste_name: str):
+def _loesche_leiste_str(boss_leiste_name: str):
     befehl = f"deleteBossBar {boss_leiste_name}"
     _sende_befehl(befehl) 
