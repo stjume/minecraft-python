@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from pydantic import ValidationError
 
 from sk_minecraft.entity import EntitySammlung
+from sk_minecraft.kern import ARG_SEPARATOR
 from sk_minecraft.kern import InventarFeldLeerFehler
 from sk_minecraft.kern import _bytes_zu_text
 from sk_minecraft.kern import _zu_enum_umwandeln
@@ -89,7 +90,7 @@ class Spieler(BaseModel):
             sättigung,
             xp_level,
             xp_progress,
-        ) = _bytes_zu_text(data).split(" ")
+        ) = _bytes_zu_text(data).split(ARG_SEPARATOR)
         return Spieler(
             id=int(_id),
             name=name,
@@ -163,7 +164,7 @@ class Entity(BaseModel):
 
     @staticmethod
     def von_api_format(s: str):
-        _id, typ, name, x, y, z, leben, ai = s.split()
+        _id, typ, name, x, y, z, leben, ai = s.split(ARG_SEPARATOR)
         _typ = _zu_enum_umwandeln(EntitySammlung, typ)
         return Entity(
             id=_id,

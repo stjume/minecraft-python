@@ -1,4 +1,4 @@
-""" haupt funktionalitäten der bibliothek """
+"""haupt funktionalitäten der bibliothek"""
 
 from typing import Literal
 
@@ -10,10 +10,11 @@ from sk_minecraft.daten_modelle import Material
 from sk_minecraft.daten_modelle import RichtungSammlung
 from sk_minecraft.daten_modelle import Spieler
 from sk_minecraft.entity import EntitySammlung
+from sk_minecraft.kern import ARG_SEPARATOR
 from sk_minecraft.kern import WertFehler
+from sk_minecraft.kern import _baue_command
 from sk_minecraft.kern import _bytes_zu_text
 from sk_minecraft.kern import _empfangen
-from sk_minecraft.kern import _leerzeichen_behandel
 from sk_minecraft.kern import _sende_befehl
 from sk_minecraft.material import MaterialSammlung
 
@@ -33,7 +34,7 @@ def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung) -> None:
         block_typ (MaterialSammlung): Block als Element aus der MaterialSammlung, z.B. MaterialSammlung.Melone
     """
     # TODO: Das genaue Befehlsformat für das Protokoll festlegen
-    befehl = f"setBlock {x} {y} {z} {block_typ.value}"
+    befehl = _baue_command("setBlock", x, y, z, block_typ.value)
     _sende_befehl(befehl)
 
 
@@ -50,7 +51,7 @@ def hole_block(x: int, y: int, z: int) -> Material:
     Returns:
         Den Block an der Koordinate als Datentyp `Material`
     """
-    befehl = f"getBlock {x} {y} {z}"
+    befehl = _baue_command("getBlock", x, y, z)
     _sende_befehl(befehl)
     data = _empfangen()
     block = Material.von_string(x=x, y=y, z=z, typ=_bytes_zu_text(data).upper())
@@ -65,7 +66,7 @@ def hole_entity(entity: Entity) -> Entity:
         Eine aktualisierte Version des entsprechenden Entities
 
     """
-    befehl = f"getEntity {entity.id}"
+    befehl = _baue_command("getEntity", entity.id)
     _sende_befehl(befehl)
     data = _empfangen()
     entity = Entity.von_api_format(_bytes_zu_text(data))
@@ -82,7 +83,7 @@ def hole_spieler(index: int = 0) -> Spieler:
     Returns:
         Du bekommst ein Spieler Objekt zurück, welches eine Menge Infos über den Spieler enthält
     """
-    befehl = f"getPlayer {index}"
+    befehl = _baue_command("getPlayer", index)
     _sende_befehl(befehl)
     data = _empfangen()
     spieler = Spieler.von_rohdaten(data)
@@ -97,7 +98,7 @@ def sende_an_chat(nachricht: str):
     Args:
         nachricht: Die Nachricht, die du versenden willst
     """
-    befehl = f"postChat {nachricht}"
+    befehl = _baue_command("postChat", nachricht)
     _sende_befehl(befehl)
 
 
@@ -107,7 +108,7 @@ def hole_chat():
     Returns:
         Du bekommst eine Liste aller gesendeten Nachrichten zurück
     """
-    befehl = f"pollChat"
+    befehl = _baue_command("pollChat")
 
     _sende_befehl(befehl)
     data = _empfangen()
@@ -117,7 +118,7 @@ def hole_chat():
     if nachrichten_str == "":
         return []
 
-    nachrichten = nachrichten_str.split("|<-->|")
+    nachrichten = nachrichten_str.split(ARG_SEPARATOR)
     return nachrichten
 
 
@@ -130,7 +131,7 @@ def sende_befehl(befehl: str):
     """
     if befehl.startswith("/"):
         print("Achtung: Du hast ein '/' am Anfang des Befehls eingegeben. Das ist vermutlich nicht notwendig!")
-    befehl = f"chatCommand {befehl}"
+    befehl = _baue_command("chatCommand", befehl)
     _sende_befehl(befehl)
 
 
@@ -149,7 +150,7 @@ def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
     Returns:
         Du bekommst ein Entity Objekt zurück. Mit diesem kannst du später wieder auf das Entity zugreifen.
     """
-    befehl = f"spawnEntity {x} {y} {z} {entity.value}"
+    befehl = _baue_command("spawnEntity", x, y, z, entity.value)
     _sende_befehl(befehl)
     data = _empfangen()
     entity = Entity.von_api_format(_bytes_zu_text(data))
@@ -184,17 +185,18 @@ def gebe_item(
     if isinstance(item, Item):
         item = item.typ
 
-    befehl = f"addInv {spieler.id} {item.value} {anzahl}"
+    args = ["addInv", spieler.id, item.value, anzahl]
 
     if name is not None:
-        befehl += f" name:{_leerzeichen_behandel(name)}"
+        args.append(f"name:{name}")
 
     if inventar_feld is not None:
-        befehl += f" slot:{inventar_feld}"
+        args.append(f"slot:{inventar_feld}")
 
     if unzerstörbar:
-        befehl += f" unbreakable"
+        args.append("unbreakable")
 
+    befehl = _baue_command(*args)
     _sende_befehl(befehl)
 
     return hole_inventar(spieler)
@@ -208,18 +210,18 @@ def hole_inventar(spieler: Spieler) -> Inventar:
 
     Returns:
         Du bekommst ein Inventar Object (wie ein dict) zurück"""
-    befehl = f"getInv {spieler.id}"
+    befehl = _baue_command("getInv", spieler.id)
     _sende_befehl(befehl)
     data = _empfangen()
 
     # beispiel für (simple) empfangende daten:
     # (index,name;optional;infos:anzahl)
-    # 0:LILY_OF_THE_VALLEY:1 4:STONE_PRESSURE_PLATE:1 25:DISPENSER:1 29:TARGET:1
+    # 0:LILY_OF_THE_VALLEY:1𝇉4:STONE_PRESSURE_PLATE:1𝇉25:DISPENSER:1𝇉29:TARGET:1
     inventar_info = _bytes_zu_text(data)
     if not inventar_info:
         return Inventar()
 
-    item_infos = inventar_info.split(" ")
+    item_infos = inventar_info.split(ARG_SEPARATOR)
 
     # baue inventar dict zusammen
     inventar = Inventar()
@@ -243,15 +245,16 @@ def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: 
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem er bewegt wurde)
     """
-    befehl = f"setPlayerPos {spieler.id} {x} {y} {z}"
+    args = ["setPlayerPos", spieler.id, x, y, z]
     if rotation is not None:
         if not -180 <= rotation <= 180:
             raise WertFehler(
                 f"Die Rotation eines Spielers muss zwischen -180 und 180 sein. Du hast '{rotation}' gesagt."
             )
 
-        befehl += f" rotation:{rotation}"
+        args.append(f"rotation:{rotation}")
 
+    befehl = _baue_command(*args)
     _sende_befehl(befehl)
 
     return hole_spieler(spieler.id)
@@ -270,7 +273,7 @@ def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung,
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem die Geschwindigkeit verändert wurde)
 
     """
-    befehl = f"setPlayerVelocity {richtung.value} {spieler.id} {wert}"
+    befehl = _baue_command("setPlayerVelocity", richtung.value, spieler.id, wert)
     _sende_befehl(befehl)
     return hole_spieler(spieler.id)
 
@@ -343,7 +346,7 @@ def spieler_xp_fortschritt_setzen(spieler: Spieler, wert: float) -> Spieler:
 
 def _setzt_spieler_eigenschaft(typ: str, spieler: Spieler, wert: float):
     """interne funktion für Leben, hunger und xp verändern"""
-    befehl = f"setPlayerStat {typ} {spieler.id} {wert}"
+    befehl = _baue_command("setPlayerStat", typ, spieler.id, wert)
     _sende_befehl(befehl)
 
 
@@ -356,7 +359,7 @@ def entity_name_setzen(entity: Entity, name: str) -> Entity:
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    befehl = f"editEntity {entity.id} name:{name}"
+    befehl = _baue_command("editEntity", entity.id, f"name:{name}")
     _sende_befehl(befehl)
     return hole_entity(entity)
 
@@ -373,7 +376,7 @@ def entity_position_setzen(entity: Entity, x: float, y: float, z: float) -> Enti
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    befehl = f"editEntity {entity.id} position:{x};{y};{z}"
+    befehl = _baue_command("editEntity", entity.id, f"position:{x};{y};{z}")
     _sende_befehl(befehl)
     return hole_entity(entity)
 
@@ -389,14 +392,14 @@ def entity_ai_setzen(entity: Entity, status: bool) -> Entity:
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    befehl = f"editEntity {entity.id} ai:{status}"
+    befehl = _baue_command("editEntity", entity.id, f"ai:{status}")
     _sende_befehl(befehl)
     return hole_entity(entity)
 
 
 def _validiere_id(id: str, type: Literal["MATERIAL", "ENTITY"]):
     """nur für interne nutzung"""
-    befehl = f"validate {type} {id}"
+    befehl = _baue_command("validate", type, id)
     _sende_befehl(befehl)
     data = _empfangen()
 

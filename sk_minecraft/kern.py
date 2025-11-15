@@ -14,6 +14,8 @@ from typing import TypeVar
 # Globale Variable für die Verbindung
 verbindung: Optional[socket.socket] = None
 
+ARG_SEPARATOR = "𝇉"
+
 
 def verbinden(ip: str, port: int) -> None:
     """
@@ -55,15 +57,17 @@ def _empfangen(timeout: float = 2.0) -> bytes | None:
     return data
 
 
+def _baue_command(*args: Any) -> str:
+    """
+    Nimmt alle argumente entgegen, konvertiert sie in strings und baut daraus den fertigen command
+    """
+    return ARG_SEPARATOR.join(map(str, args))
+
+
 def _bytes_zu_text(b: bytes) -> str:
     # brauchen wir intern
     # häppchen zu text :)
     return b.decode("utf-8").strip()
-
-
-def _leerzeichen_behandel(s: str) -> str:
-    # brauchen wir intern
-    return s.replace(" ", "|&s&|")
 
 
 def _sende_befehl(befehl: str) -> None:
