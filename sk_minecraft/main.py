@@ -151,6 +151,7 @@ def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
         Du bekommst ein Entity Objekt zurück. Mit diesem kannst du später wieder auf das Entity zugreifen.
     """
     befehl = _baue_command("spawnEntity", x, y, z, entity.value)
+    print(befehl)
     _sende_befehl(befehl)
     data = _empfangen()
     entity = Entity.von_api_format(_bytes_zu_text(data))
@@ -393,6 +394,19 @@ def entity_ai_setzen(entity: Entity, status: bool) -> Entity:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
     befehl = _baue_command("editEntity", entity.id, f"ai:{status}")
+    _sende_befehl(befehl)
+    return hole_entity(entity)
+
+
+def entity_leben_setzen(entity: Entity, leben: float) -> Entity:
+    """
+    Setzen den Leben eines Entities. Wenn Leben auf 0 gesetzt werden, stirbt es.
+
+    Args:
+        entity: Das zu bearbeitende Entity, nicht EntitySammlung!
+        leben: Wie viele Leben das Entity haben soll (0=tot).
+    """
+    befehl = _baue_command("editEntity", entity.id, f"health:{leben}")
     _sende_befehl(befehl)
     return hole_entity(entity)
 
