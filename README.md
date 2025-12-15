@@ -29,6 +29,12 @@ Wenn der Server für dich aufgesetzt wurde brauchst du die IP und Port.
 
 Öffne dein Terminal (macOS/Linux) oder die Eingabeaufforderung/PowerShell (Windows) und installiere das Paket:
 
+#### Windows
+```bash
+py -m pip install sk_minecraft
+```
+
+#### Linux / MacOS
 ```bash
 python3 -m pip install sk_minecraft
 ```
