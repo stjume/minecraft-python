@@ -21,7 +21,7 @@ Wenn du noch ganz neu in Python und Programmierung bist: keine Sorge. Folge einf
 - Einen Minecraft‑Java‑Edition‑Server, auf dem das passende Server Plugin läuft.
 Mehr dazu findest du in der Dokumentation des [Server Plugins](https://github.com/sk-jume/minecraft-python-backend).
 Wenn der Server für dich aufgesetzt wurde brauchst du die IP und Port.
-- Python 3.9 oder neuer auf deinem Computer. Falls noch nicht installiert: von `https://www.python.org/downloads/` herunterladen und installieren.
+- Python 3.10 oder neuer auf deinem Computer. Falls noch nicht installiert: von `https://www.python.org/downloads/` herunterladen und installieren.
     - Achte darauf Python zum "PATH" während dem Install hinzuzufügen.
 - Wir empfehlen darüber hinaus [Pycharm](https://www.jetbrains.com/pycharm/download) zu benutzten, die kostenfreie Version ohne Abo reicht völlig aus!
 
