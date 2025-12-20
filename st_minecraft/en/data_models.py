@@ -8,8 +8,8 @@ from st_minecraft.core.core import ARG_SEPARATOR
 from st_minecraft.core.core import InventoryFieldEmptyError
 from st_minecraft.core.core import _bytes_to_text
 from st_minecraft.core.core import _to_enum
-from st_minecraft.en.entity import EntitySammlung
-from st_minecraft.en.material import MaterialSammlung
+from st_minecraft.en.entity import EntityCollection
+from st_minecraft.en.material import MaterialCollection
 
 
 class RichtungSammlung(Enum):
@@ -29,7 +29,7 @@ class Material(BaseModel):
     Models a block in Minecraft that is located at a specific coordinate at the time of the query.
     """
 
-    type: MaterialSammlung | None
+    type: MaterialCollection | None
     """ Block type """
     x: int | None = None
     y: int | None = None
@@ -43,7 +43,7 @@ class Material(BaseModel):
         type: str, x: int | None = None, y: int | None = None, z: int | None = None
     ) -> Optional["Material"]:
         try:
-            _type = _to_enum(MaterialSammlung, type)
+            _type = _to_enum(MaterialCollection, type)
         except ValidationError:
             _type = None
             print(f"Block '{type}' is not supported by the library. The type of the block is set to None.")
@@ -134,7 +134,7 @@ class Player(BaseModel):
 class Entity(BaseModel):
     """Models an entity. Many of the information can be empty (None)"""
 
-    type: EntitySammlung
+    type: EntityCollection
     """ Type of the entity """
     id: str | None = None
     """ Unique ID for this entity """
@@ -162,12 +162,12 @@ class Entity(BaseModel):
     @staticmethod
     def from_string(type: str):
         # TODO: do we need this? if not we can remove the default Nones
-        return Entity(type=_to_enum(EntitySammlung, type))
+        return Entity(type=_to_enum(EntityCollection, type))
 
     @staticmethod
     def from_api_format(s: str):
         _id, type, name, x, y, z, health, ai = s.split(ARG_SEPARATOR)
-        _type = _to_enum(EntitySammlung, type)
+        _type = _to_enum(EntityCollection, type)
         return Entity(
             id=_id,
             type=_type,
@@ -183,7 +183,7 @@ class Entity(BaseModel):
 class Item(BaseModel):
     """Models an item"""
 
-    type: MaterialSammlung
+    type: MaterialCollection
     display_name: str | None
 
     @staticmethod
@@ -193,7 +193,7 @@ class Item(BaseModel):
         if not display_name:
             display_name = None
 
-        return Item(type=_to_enum(MaterialSammlung, type), display_name=display_name)
+        return Item(type=_to_enum(MaterialCollection, type), display_name=display_name)
 
     def __repr__(self):
         return f"Item(type={self.type}, display_name={self.display_name})"

@@ -107,7 +107,7 @@ def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
     Returns:
         Du bekommst ein Entity Objekt zurück. Mit diesem kannst du später wieder auf das Entity zugreifen.
     """
-    e = __st_minecraft_en.spawn_entity(x, y, z, entity)
+    e = __st_minecraft_en.spawn_entity(x, y, z, entity.zu_englisch())
     return Entity.von_englisch(e)
 
 

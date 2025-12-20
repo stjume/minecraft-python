@@ -15,8 +15,8 @@ from st_minecraft.en.data_models import Item
 from st_minecraft.en.data_models import Material
 from st_minecraft.en.data_models import Player
 from st_minecraft.en.data_models import RichtungSammlung
-from st_minecraft.en.entity import EntitySammlung
-from st_minecraft.en.material import MaterialSammlung
+from st_minecraft.en.entity import EntityCollection
+from st_minecraft.en.material import MaterialCollection
 
 
 def set_block(x: int, y: int, z: int, block_type: MaterialSammlung) -> None:
@@ -135,7 +135,7 @@ def send_command(command: str):
     _send_command(command)
 
 
-def spawn_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
+def spawn_entity(x: int, y: int, z: int, entity: EntityCollection) -> Entity:
     """
     Spawn an entity at a specific position
     A list of all entities can be found here:
@@ -160,7 +160,7 @@ def spawn_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
 
 def give_item(
     player: Player,
-    item: MaterialSammlung,
+    item: MaterialCollection,
     amount: int,
     name: str | None = None,
     inventory_slot: int | None = None,
