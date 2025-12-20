@@ -2,8 +2,18 @@
 
 from enum import Enum
 
+from st_minecraft.en.material import MaterialCollection as _Collection
+
 
 class MaterialSammlung(Enum):
+
+    @staticmethod
+    def von_englisch(e: _Collection) -> "MaterialSammlung":
+        return MaterialSammlung._value2member_map_[e.value]
+
+    def zu_englisch(self) -> _Collection:
+        return _Collection._value2member_map_[self.value]
+
     Akazienholzknopf = "ACACIA_BUTTON"
     Akazienholztür = "ACACIA_DOOR"
     Akazienholzzaun = "ACACIA_FENCE"

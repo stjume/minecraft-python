@@ -2,8 +2,17 @@
 
 from enum import Enum
 
+from st_minecraft.en.entity import EntityCollection as _Collection
+
 
 class EntitySammlung(Enum):
+    @staticmethod
+    def von_englisch(e: _Collection) -> "EntitySammlung":
+        return EntitySammlung._value2member_map_[e.value]
+
+    def zu_englisch(self) -> _Collection:
+        return EntitySammlung._value2member_map_[self.value]
+
     Hilfsgeist = "ALLAY"
     Partikelwolke = "AREA_EFFECT_CLOUD"
     Rüstungsständer = "ARMOR_STAND"
