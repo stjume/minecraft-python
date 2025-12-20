@@ -46,10 +46,10 @@ class Material(BaseModel):
         if m is None:
             return None
 
-        return Material(typ=m.type, x=m.x, y=m.y, z=m.z)
+        return Material(typ=MaterialSammlung.von_englisch(m.type), x=m.x, y=m.y, z=m.z)
 
     def zu_englisch(self) -> _MaterialEN:
-        return _MaterialEN(type=self.typ, x=self.x, y=self.y, z=self.z)
+        return _MaterialEN(type=self.typ.zu_englisch(), x=self.x, y=self.y, z=self.z)
 
 
 class Spieler(BaseModel):
@@ -168,11 +168,20 @@ class Entity(BaseModel):
 
     @staticmethod
     def von_englisch(e: _EntityEN):
-        return Entity(typ=e.type, id=e.id, name=e.name, x=e.x, y=e.y, z=e.z, leben=e.health, ai=e.ai)
+        return Entity(
+            typ=EntitySammlung.von_englisch(e.type), id=e.id, name=e.name, x=e.x, y=e.y, z=e.z, leben=e.health, ai=e.ai
+        )
 
     def zu_englisch(self) -> _EntityEN:
         return _EntityEN(
-            type=self.typ, id=self.id, name=self.name, x=self.x, y=self.y, z=self.z, health=self.leben, ai=self.ai
+            type=self.typ.zu_englisch(),
+            id=self.id,
+            name=self.name,
+            x=self.x,
+            y=self.y,
+            z=self.z,
+            health=self.leben,
+            ai=self.ai,
         )
 
 
@@ -187,7 +196,7 @@ class Item(BaseModel):
 
     @staticmethod
     def von_englisch(i: _ItemEN):
-        return Item(typ=i.type, anzeige_name=i.display_name)
+        return Item(typ=MaterialSammlung.von_englisch(i.type), anzeige_name=i.display_name)
 
 
 class InventarFeld(BaseModel):
