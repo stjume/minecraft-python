@@ -1,20 +1,13 @@
-"""haupt funktionalitäten der bibliothek"""
+"""haupt-funktionalitäten der bibliothek"""
 
-from typing import Literal
-
-from st_minecraft.core.core import ARG_SEPARATOR
-from st_minecraft.core.core import WertFehler
+import st_minecraft.en as __st_minecraft_en
 from st_minecraft.core.core import _build_command
-from st_minecraft.core.core import _bytes_to_text
-from st_minecraft.core.core import _receive
 from st_minecraft.core.core import _send_command
-from st_minecraft.daten_modelle import Entity
-from st_minecraft.daten_modelle import Inventar
-from st_minecraft.daten_modelle import InventarFeld
-from st_minecraft.daten_modelle import Item
-from st_minecraft.daten_modelle import Material
-from st_minecraft.daten_modelle import RichtungSammlung
-from st_minecraft.daten_modelle import Spieler
+from st_minecraft.de.daten_modelle import Entity
+from st_minecraft.de.daten_modelle import Inventar
+from st_minecraft.de.daten_modelle import Material
+from st_minecraft.de.daten_modelle import RichtungSammlung
+from st_minecraft.de.daten_modelle import Spieler
 from st_minecraft.entity import EntitySammlung
 from st_minecraft.material import MaterialSammlung
 
@@ -34,8 +27,7 @@ def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung) -> None:
         block_typ (MaterialSammlung): Block als Element aus der MaterialSammlung, z.B. MaterialSammlung.Melone
     """
     # TODO: Das genaue Befehlsformat für das Protokoll festlegen
-    befehl = _build_command("setBlock", x, y, z, block_typ.value)
-    _send_command(befehl)
+    return __st_minecraft_en.set_block(x, y, z, block_typ)
 
 
 def hole_block(x: int, y: int, z: int) -> Material:
@@ -51,11 +43,9 @@ def hole_block(x: int, y: int, z: int) -> Material:
     Returns:
         Den Block an der Koordinate als Datentyp `Material`
     """
-    befehl = _build_command("getBlock", x, y, z)
-    _send_command(befehl)
-    data = _receive()
-    block = Material.von_string(x=x, y=y, z=z, typ=_bytes_to_text(data).upper())
-    return block
+    m = __st_minecraft_en.get_block(x, y, z)
+
+    return Material.von_englisch(m)
 
 
 def hole_entity(entity: Entity) -> Entity:
@@ -66,11 +56,8 @@ def hole_entity(entity: Entity) -> Entity:
         Eine aktualisierte Version des entsprechenden Entities
 
     """
-    befehl = _build_command("getEntity", entity.id)
-    _send_command(befehl)
-    data = _receive()
-    entity = Entity.von_api_format(_bytes_to_text(data))
-    return entity
+    e = __st_minecraft_en.get_entity(entity)
+    return Entity.von_englisch(e)
 
 
 def hole_spieler(index: int = 0) -> Spieler:
@@ -83,11 +70,8 @@ def hole_spieler(index: int = 0) -> Spieler:
     Returns:
         Du bekommst ein Spieler Objekt zurück, welches eine Menge Infos über den Spieler enthält
     """
-    befehl = _build_command("getPlayer", index)
-    _send_command(befehl)
-    data = _receive()
-    spieler = Spieler.von_rohdaten(data)
-    return spieler
+    p = __st_minecraft_en.get_player(index)
+    return Spieler.von_englisch(p)
 
 
 def sende_an_chat(nachricht: str):
@@ -98,28 +82,16 @@ def sende_an_chat(nachricht: str):
     Args:
         nachricht: Die Nachricht, die du versenden willst
     """
-    befehl = _build_command("postChat", nachricht)
-    _send_command(befehl)
+    return __st_minecraft_en.send_to_chat(nachricht)
 
 
-def hole_chat():
+def hole_chat():  # TODO signature
     """
     Hole alle Nachrichten die seit der letzen Abfrage in den Chat geschrieben wurden.
     Returns:
         Du bekommst eine Liste aller gesendeten Nachrichten zurück
     """
-    befehl = _build_command("pollChat")
-
-    _send_command(befehl)
-    data = _receive()
-
-    nachrichten_str = _bytes_to_text(data)
-
-    if nachrichten_str == "":
-        return []
-
-    nachrichten = nachrichten_str.split(ARG_SEPARATOR)
-    return nachrichten
+    return __st_minecraft_en.get_chat()
 
 
 def sende_befehl(befehl: str):
@@ -129,6 +101,7 @@ def sende_befehl(befehl: str):
     Args:
         befehl: Der Befehl als String ohne das Slash / am Anfang.
     """
+
     if befehl.startswith("/"):
         print("Achtung: Du hast ein '/' am Anfang des Befehls eingegeben. Das ist vermutlich nicht notwendig!")
     befehl = _build_command("chatCommand", befehl)
@@ -150,12 +123,8 @@ def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
     Returns:
         Du bekommst ein Entity Objekt zurück. Mit diesem kannst du später wieder auf das Entity zugreifen.
     """
-    befehl = _build_command("spawnEntity", x, y, z, entity.value)
-    print(befehl)
-    _send_command(befehl)
-    data = _receive()
-    entity = Entity.von_api_format(_bytes_to_text(data))
-    return entity
+    e = __st_minecraft_en.spawn_entity(x, y, z, entity)
+    return Entity.von_englisch(e)
 
 
 def gebe_item(
@@ -183,24 +152,8 @@ def gebe_item(
         Du bekommst Informationen über den Inventarzustand der Spielerin nach der Item-Vergabe zurück
 
     """
-    if isinstance(item, Item):
-        item = item.typ
-
-    args = ["addInv", spieler.id, item.value, anzahl]
-
-    if name is not None:
-        args.append(f"name:{name}")
-
-    if inventar_feld is not None:
-        args.append(f"slot:{inventar_feld}")
-
-    if unzerstörbar:
-        args.append("unbreakable")
-
-    befehl = _build_command(*args)
-    _send_command(befehl)
-
-    return hole_inventar(spieler)
+    i = __st_minecraft_en.give_item(spieler, item, anzahl, name, inventar_feld, unzerstörbar)
+    return Inventar.von_englisch(i)
 
 
 def hole_inventar(spieler: Spieler) -> Inventar:
@@ -211,29 +164,9 @@ def hole_inventar(spieler: Spieler) -> Inventar:
 
     Returns:
         Du bekommst ein Inventar Object (wie ein dict) zurück"""
-    befehl = _build_command("getInv", spieler.id)
-    _send_command(befehl)
-    data = _receive()
 
-    # beispiel für (simple) empfangende daten:
-    # (index,name;optional;infos:anzahl)
-    # 0:LILY_OF_THE_VALLEY:1𝇉4:STONE_PRESSURE_PLATE:1𝇉25:DISPENSER:1𝇉29:TARGET:1
-    inventar_info = _bytes_to_text(data)
-    if not inventar_info:
-        return Inventar()
-
-    item_infos = inventar_info.split(ARG_SEPARATOR)
-
-    # baue inventar dict zusammen
-    inventar = Inventar()
-    for item in item_infos:
-        # leere strings abfangen
-        if not item:
-            continue
-        feld = InventarFeld.von_api_format(item)
-        inventar[feld.index] = feld
-
-    return inventar
+    i = __st_minecraft_en.get_inventory(spieler)
+    return Inventar.von_englisch(i)
 
 
 def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: int = None) -> Spieler:
@@ -249,19 +182,9 @@ def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: 
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem er bewegt wurde)
     """
-    args = ["setPlayerPos", spieler.id, x, y, z]
-    if rotation is not None:
-        if not -180 <= rotation <= 180:
-            raise WertFehler(
-                f"Die Rotation eines Spielers muss zwischen -180 und 180 sein. Du hast '{rotation}' gesagt."
-            )
 
-        args.append(f"rotation:{rotation}")
-
-    befehl = _build_command(*args)
-    _send_command(befehl)
-
-    return hole_spieler(spieler.id)
+    p = __st_minecraft_en.set_player_position(spieler, x, y, z, rotation)
+    return Spieler.von_englisch(p)
 
 
 def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung, wert: float) -> Spieler:
@@ -277,15 +200,14 @@ def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung,
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem die Geschwindigkeit verändert wurde)
 
     """
-    befehl = _build_command("setPlayerVelocity", richtung.value, spieler.id, wert)
-    _send_command(befehl)
-    return hole_spieler(spieler.id)
+    p = __st_minecraft_en.set_player_velocity(spieler, richtung, wert)
+    return Spieler.von_englisch(p)
 
 
 def spieler_max_leben_setzten(spieler: Spieler, wert: float) -> Spieler:
     """Setze die maximalen Leben einer Spielerin"""
-    _setzt_spieler_eigenschaft("MAX_HEALTH", spieler, wert)
-    return hole_spieler(spieler.id)
+    p = __st_minecraft_en.set_player_max_health(spieler, wert)
+    return Spieler.von_englisch(p)
 
 
 def spieler_leben_setzen(spieler: Spieler, wert: float) -> Spieler:
@@ -298,8 +220,8 @@ def spieler_leben_setzen(spieler: Spieler, wert: float) -> Spieler:
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem die Leben verändert wurden)
     """
-    _setzt_spieler_eigenschaft("HEALTH", spieler, wert)
-    return hole_spieler(spieler.id)
+    p = __st_minecraft_en.set_player_health(spieler, wert)
+    return Spieler.von_englisch(p)
 
 
 def spieler_hunger_setzen(spieler: Spieler, wert: float, sättigung: float | None = None) -> Spieler:
@@ -314,11 +236,8 @@ def spieler_hunger_setzen(spieler: Spieler, wert: float, sättigung: float | Non
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem der Hunger verändert wurde)
     """
-    _setzt_spieler_eigenschaft("FOOD_LEVEL", spieler, wert)
-    if sättigung is not None:
-        _setzt_spieler_eigenschaft("SATURATION", spieler, sättigung)
-
-    return hole_spieler(spieler.id)
+    p = __st_minecraft_en.set_player_hunger(spieler, wert, sättigung)
+    return Spieler.von_englisch(p)
 
 
 def spieler_xp_level_setzen(spieler: Spieler, wert: float) -> Spieler:
@@ -331,8 +250,8 @@ def spieler_xp_level_setzen(spieler: Spieler, wert: float) -> Spieler:
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem das Level verändert wurde)
     """
-    _setzt_spieler_eigenschaft("XP_LEVEL", spieler, wert)
-    return hole_spieler(spieler.id)
+    p = __st_minecraft_en.set_player_xp_level(spieler, wert)
+    return Spieler.von_englisch(p)
 
 
 def spieler_xp_fortschritt_setzen(spieler: Spieler, wert: float) -> Spieler:
@@ -344,14 +263,8 @@ def spieler_xp_fortschritt_setzen(spieler: Spieler, wert: float) -> Spieler:
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem der Fortschritt verändert wurde)
     """
-    _setzt_spieler_eigenschaft("XP_PROGRESS", spieler, wert)
-    return hole_spieler(spieler.id)
-
-
-def _setzt_spieler_eigenschaft(typ: str, spieler: Spieler, wert: float):
-    """interne funktion für Leben, hunger und xp verändern"""
-    befehl = _build_command("setPlayerStat", typ, spieler.id, wert)
-    _send_command(befehl)
+    p = __st_minecraft_en.set_player_xp_progress(spieler, wert)
+    return Spieler.von_englisch(p)
 
 
 def entity_name_setzen(entity: Entity, name: str) -> Entity:
@@ -363,9 +276,8 @@ def entity_name_setzen(entity: Entity, name: str) -> Entity:
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    befehl = _build_command("editEntity", entity.id, f"name:{name}")
-    _send_command(befehl)
-    return hole_entity(entity)
+    e = __st_minecraft_en.set_entity_name(entity, name)
+    return Entity.von_englisch(e)
 
 
 def entity_position_setzen(entity: Entity, x: float, y: float, z: float) -> Entity:
@@ -380,9 +292,8 @@ def entity_position_setzen(entity: Entity, x: float, y: float, z: float) -> Enti
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    befehl = _build_command("editEntity", entity.id, f"position:{x};{y};{z}")
-    _send_command(befehl)
-    return hole_entity(entity)
+    e = __st_minecraft_en.set_entity_position(entity, x, y, z)
+    return Entity.von_englisch(e)
 
 
 def entity_ai_setzen(entity: Entity, status: bool) -> Entity:
@@ -396,9 +307,8 @@ def entity_ai_setzen(entity: Entity, status: bool) -> Entity:
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    befehl = _build_command("editEntity", entity.id, f"ai:{status}")
-    _send_command(befehl)
-    return hole_entity(entity)
+    e = __st_minecraft_en.set_entity_ai(entity, status)
+    return Entity.von_englisch(e)
 
 
 def entity_leben_setzen(entity: Entity, leben: float) -> Entity:
@@ -409,15 +319,5 @@ def entity_leben_setzen(entity: Entity, leben: float) -> Entity:
         entity: Das zu bearbeitende Entity, nicht EntitySammlung!
         leben: Wie viele Leben das Entity haben soll (0=tot).
     """
-    befehl = _build_command("editEntity", entity.id, f"health:{leben}")
-    _send_command(befehl)
-    return hole_entity(entity)
-
-
-def _validiere_id(id: str, type: Literal["MATERIAL", "ENTITY"]):
-    """nur für interne nutzung"""
-    befehl = _build_command("validate", type, id)
-    _send_command(befehl)
-    data = _receive()
-
-    return _bytes_to_text(data)
+    e = __st_minecraft_en.set_entity_health(entity, leben)
+    return Entity.von_englisch(e)
