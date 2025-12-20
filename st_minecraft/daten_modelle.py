@@ -4,12 +4,12 @@ from typing import Optional
 from pydantic import BaseModel
 from pydantic import ValidationError
 
-from sk_minecraft.entity import EntitySammlung
-from sk_minecraft.kern import ARG_SEPARATOR
-from sk_minecraft.kern import InventarFeldLeerFehler
-from sk_minecraft.kern import _bytes_zu_text
-from sk_minecraft.kern import _zu_enum_umwandeln
-from sk_minecraft.material import MaterialSammlung
+from st_minecraft.entity import EntitySammlung
+from st_minecraft.kern import ARG_SEPARATOR
+from st_minecraft.kern import InventarFeldLeerFehler
+from st_minecraft.kern import _bytes_zu_text
+from st_minecraft.kern import _zu_enum_umwandeln
+from st_minecraft.material import MaterialSammlung
 
 
 class RichtungSammlung(Enum):

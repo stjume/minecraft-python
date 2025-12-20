@@ -31,12 +31,12 @@ Wenn der Server für dich aufgesetzt wurde brauchst du die IP und Port.
 
 #### Windows
 ```bash
-py -m pip install sk_minecraft
+py -m pip install st_minecraft
 ```
 
 #### Linux / MacOS
 ```bash
-python3 -m pip install sk_minecraft
+python3 -m pip install st_minecraft
 ```
 
 ### Quickstart (kopieren & einfügen)

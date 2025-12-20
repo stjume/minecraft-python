@@ -8,7 +8,7 @@ from pathlib import Path
 
 def baue_material_enum(
     block_quelldatei: Path = Path("blocks_items_validated.csv"),
-    ziel_datei: Path = Path("../sk_minecraft/material.py"),
+    ziel_datei: Path = Path("../st_minecraft/material.py"),
 ):
     """
     Auto generiert ein Enum für alle Blöcke in einer .csv datei
@@ -30,7 +30,7 @@ class MaterialSammlung(Enum):
 
 def baue_entity_enum(
     entity_quelldatei: Path = Path("entities_validated.csv"),
-    ziel_datei: Path = Path("../sk_minecraft/entity.py"),
+    ziel_datei: Path = Path("../st_minecraft/entity.py"),
 ):
     """analog zu baue_block_enum() aber für Entities"""
     code = """''' Diese Datei ist auto-generiert! Siehe ressourcen/generiere_enums.py im git repo! '''

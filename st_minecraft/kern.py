@@ -48,7 +48,25 @@ def verbinden(ip: str, port: int) -> None:
 
 def _empfangen(timeout: float = 2.0) -> bytes | None:
     # brauchen wir intern
-    verbindung.settimeout(timeout)  # Timeout in Sekunden
+
+    # hierdurch können wir leichter entwickeln, ohne jedes Mal alle temporär anpassen zu müssen
+    _timeout = os.getenv("SK_TIMEOUT_OVERWRITE")
+    if _timeout is not None:
+        if _timeout == "None":
+            _timeout = None
+
+        spacer = "#" * 100
+        print(
+            f"{spacer}\n"
+            f"Timeout wurde von von Environment Variable von '{timeout}' auf '{_timeout}', "
+            f"(env var name: 'SK_TIMEOUT_OVERWRITE') überschrieben\n"
+            f"{spacer}"
+        )
+        timeout = _timeout
+
+    if timeout:
+        verbindung.settimeout(timeout)  # Timeout in Sekunden
+
     try:
         data = verbindung.recv(1024)
     except socket.timeout:

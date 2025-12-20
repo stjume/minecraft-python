@@ -1,11 +1,11 @@
-""" sk_minecraft package """
+""" st_minecraft package """
 
-from sk_minecraft.kern import verbinden  # noqa: unused-import
-from sk_minecraft.main import *  # noqa: unused-import
+from st_minecraft.kern import verbinden  # noqa: unused-import
+from st_minecraft.main import *  # noqa: unused-import
 
 try:
-    from sk_minecraft.entity import *  # noqa: unused-import
-    from sk_minecraft.material import *  # noqa: unused-import
+    from st_minecraft.entity import *  # noqa: unused-import
+    from st_minecraft.material import *  # noqa: unused-import
 
 except ModuleNotFoundError as e:
     raise RuntimeError(

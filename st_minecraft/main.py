@@ -2,21 +2,21 @@
 
 from typing import Literal
 
-from sk_minecraft.daten_modelle import Entity
-from sk_minecraft.daten_modelle import Inventar
-from sk_minecraft.daten_modelle import InventarFeld
-from sk_minecraft.daten_modelle import Item
-from sk_minecraft.daten_modelle import Material
-from sk_minecraft.daten_modelle import RichtungSammlung
-from sk_minecraft.daten_modelle import Spieler
-from sk_minecraft.entity import EntitySammlung
-from sk_minecraft.kern import ARG_SEPARATOR
-from sk_minecraft.kern import WertFehler
-from sk_minecraft.kern import _baue_command
-from sk_minecraft.kern import _bytes_zu_text
-from sk_minecraft.kern import _empfangen
-from sk_minecraft.kern import _sende_befehl
-from sk_minecraft.material import MaterialSammlung
+from st_minecraft.daten_modelle import Entity
+from st_minecraft.daten_modelle import Inventar
+from st_minecraft.daten_modelle import InventarFeld
+from st_minecraft.daten_modelle import Item
+from st_minecraft.daten_modelle import Material
+from st_minecraft.daten_modelle import RichtungSammlung
+from st_minecraft.daten_modelle import Spieler
+from st_minecraft.entity import EntitySammlung
+from st_minecraft.kern import ARG_SEPARATOR
+from st_minecraft.kern import WertFehler
+from st_minecraft.kern import _baue_command
+from st_minecraft.kern import _bytes_zu_text
+from st_minecraft.kern import _empfangen
+from st_minecraft.kern import _sende_befehl
+from st_minecraft.material import MaterialSammlung
 
 
 def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung) -> None:
@@ -227,6 +227,9 @@ def hole_inventar(spieler: Spieler) -> Inventar:
     # baue inventar dict zusammen
     inventar = Inventar()
     for item in item_infos:
+        # leere strings abfangen
+        if not item:
+            continue
         feld = InventarFeld.von_api_format(item)
         inventar[feld.index] = feld
 

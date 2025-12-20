@@ -13,12 +13,12 @@ für die Formatierung angepasst worden.
 
 Beispiel Prompt, den du vor das Einfügen der generierten Dokumentation setzen kannst:
 
-Ich gebe dir die API reference einer python library, mit dem namen sk_minecraft die du nicht kennst.
+Ich gebe dir die API reference einer python library, mit dem namen st_minecraft die du nicht kennst.
 
 Bitte antworte alle folgenden fragen basierend auf dem was du nun über die library weißt.
 Stelle sicher, dass du KEINE neuen Funktionen erfindest.
 
-Alle funktionen und Objekte sind direkt über sk_minecraft.<objekt> erreichbar,
+Alle funktionen und Objekte sind direkt über st_minecraft.<objekt> erreichbar,
  achte auch darauf, dass du alle imports richtig setzt.
  Bitte bevorzuge den modul import über den objekt import.
 
@@ -33,7 +33,7 @@ import inspect
 from typing import Any
 from typing import TextIO
 
-BIBLIOTHEK_NAME = "sk_minecraft"
+BIBLIOTHEK_NAME = "st_minecraft"
 modul = importlib.import_module(BIBLIOTHEK_NAME)
 
 
