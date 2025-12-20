@@ -4,10 +4,10 @@ from typing import Optional
 from pydantic import BaseModel
 from pydantic import ValidationError
 
-from st_minecraft.core import ARG_SEPARATOR
-from st_minecraft.core import InventoryFieldEmptyError
-from st_minecraft.core import _bytes_to_text
-from st_minecraft.core import _to_enum
+from st_minecraft.en.core import ARG_SEPARATOR
+from st_minecraft.en.core import InventoryFieldEmptyError
+from st_minecraft.en.core import _bytes_to_text
+from st_minecraft.en.core import _to_enum
 from st_minecraft.entity import EntitySammlung
 from st_minecraft.material import MaterialSammlung
 

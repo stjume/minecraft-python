@@ -2,12 +2,6 @@
 
 from typing import Literal
 
-from st_minecraft.core import ARG_SEPARATOR
-from st_minecraft.core import WertFehler
-from st_minecraft.core import _build_command
-from st_minecraft.core import _bytes_to_text
-from st_minecraft.core import _receive
-from st_minecraft.core import _send_command
 from st_minecraft.daten_modelle import Entity
 from st_minecraft.daten_modelle import Inventar
 from st_minecraft.daten_modelle import InventarFeld
@@ -15,6 +9,12 @@ from st_minecraft.daten_modelle import Item
 from st_minecraft.daten_modelle import Material
 from st_minecraft.daten_modelle import RichtungSammlung
 from st_minecraft.daten_modelle import Spieler
+from st_minecraft.en.core import ARG_SEPARATOR
+from st_minecraft.en.core import WertFehler
+from st_minecraft.en.core import _build_command
+from st_minecraft.en.core import _bytes_to_text
+from st_minecraft.en.core import _receive
+from st_minecraft.en.core import _send_command
 from st_minecraft.entity import EntitySammlung
 from st_minecraft.material import MaterialSammlung
 
