@@ -4,10 +4,10 @@ from enum import Enum
 
 from pydantic import BaseModel
 
-from st_minecraft.en.core import ARG_SEPARATOR
-from st_minecraft.en.core import WertFehler
-from st_minecraft.en.core import _build_command
-from st_minecraft.en.core import _send_command
+from st_minecraft.core.core import ARG_SEPARATOR
+from st_minecraft.core.core import WertFehler
+from st_minecraft.core.core import _build_command
+from st_minecraft.core.core import _send_command
 
 
 class BossLeisteStil(Enum):

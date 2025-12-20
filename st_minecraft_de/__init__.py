@@ -1,7 +1,7 @@
 """ st_minecraft package """
 
-from st_minecraft.en.core import connect  # noqa: unused-import
-from st_minecraft.main import *  # noqa: unused-import
+from st_minecraft.core.core import connect  # noqa: unused-import
+from st_minecraft.de.main import *  # noqa: unused-import
 
 try:
     from st_minecraft.entity import *  # noqa: unused-import
