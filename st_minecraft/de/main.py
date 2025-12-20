@@ -1,8 +1,6 @@
 """haupt-funktionalitäten der bibliothek"""
 
 import st_minecraft.en as __st_minecraft_en
-from st_minecraft.core.core import _build_command
-from st_minecraft.core.core import _send_command
 from st_minecraft.de.daten_modelle import Entity
 from st_minecraft.de.daten_modelle import Inventar
 from st_minecraft.de.daten_modelle import Material
@@ -94,20 +92,6 @@ def hole_chat():  # TODO signature
     return __st_minecraft_en.get_chat()
 
 
-def sende_befehl(befehl: str):
-    """
-    Führe einen Minecraft Command aus, als würdest du ihn auf dem Server eingeben.
-    Das / am Anfang eines Commands ist nicht notwendig.
-    Args:
-        befehl: Der Befehl als String ohne das Slash / am Anfang.
-    """
-
-    if befehl.startswith("/"):
-        print("Achtung: Du hast ein '/' am Anfang des Befehls eingegeben. Das ist vermutlich nicht notwendig!")
-    befehl = _build_command("chatCommand", befehl)
-    _send_command(befehl)
-
-
 def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
     """
     Erzeuge eine entity an einer bestimmten Position
@@ -152,7 +136,7 @@ def gebe_item(
         Du bekommst Informationen über den Inventarzustand der Spielerin nach der Item-Vergabe zurück
 
     """
-    i = __st_minecraft_en.give_item(spieler, item, anzahl, name, inventar_feld, unzerstörbar)
+    i = __st_minecraft_en.give_item(spieler.zu_englisch(), item, anzahl, name, inventar_feld, unzerstörbar)
     return Inventar.von_englisch(i)
 
 
@@ -165,7 +149,7 @@ def hole_inventar(spieler: Spieler) -> Inventar:
     Returns:
         Du bekommst ein Inventar Object (wie ein dict) zurück"""
 
-    i = __st_minecraft_en.get_inventory(spieler)
+    i = __st_minecraft_en.get_inventory(spieler.zu_englisch())
     return Inventar.von_englisch(i)
 
 
@@ -183,7 +167,7 @@ def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: 
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem er bewegt wurde)
     """
 
-    p = __st_minecraft_en.set_player_position(spieler, x, y, z, rotation)
+    p = __st_minecraft_en.set_player_position(spieler.zu_englisch(), x, y, z, rotation)
     return Spieler.von_englisch(p)
 
 
@@ -200,13 +184,13 @@ def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung,
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem die Geschwindigkeit verändert wurde)
 
     """
-    p = __st_minecraft_en.set_player_velocity(spieler, richtung, wert)
+    p = __st_minecraft_en.set_player_velocity(spieler.zu_englisch(), richtung, wert)
     return Spieler.von_englisch(p)
 
 
 def spieler_max_leben_setzten(spieler: Spieler, wert: float) -> Spieler:
     """Setze die maximalen Leben einer Spielerin"""
-    p = __st_minecraft_en.set_player_max_health(spieler, wert)
+    p = __st_minecraft_en.set_player_max_health(spieler.zu_englisch(), wert)
     return Spieler.von_englisch(p)
 
 
@@ -220,7 +204,7 @@ def spieler_leben_setzen(spieler: Spieler, wert: float) -> Spieler:
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem die Leben verändert wurden)
     """
-    p = __st_minecraft_en.set_player_health(spieler, wert)
+    p = __st_minecraft_en.set_player_health(spieler.zu_englisch(), wert)
     return Spieler.von_englisch(p)
 
 
@@ -236,7 +220,7 @@ def spieler_hunger_setzen(spieler: Spieler, wert: float, sättigung: float | Non
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem der Hunger verändert wurde)
     """
-    p = __st_minecraft_en.set_player_hunger(spieler, wert, sättigung)
+    p = __st_minecraft_en.set_player_hunger(spieler.zu_englisch(), wert, sättigung)
     return Spieler.von_englisch(p)
 
 
@@ -250,7 +234,7 @@ def spieler_xp_level_setzen(spieler: Spieler, wert: float) -> Spieler:
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem das Level verändert wurde)
     """
-    p = __st_minecraft_en.set_player_xp_level(spieler, wert)
+    p = __st_minecraft_en.set_player_xp_level(spieler.zu_englisch(), wert)
     return Spieler.von_englisch(p)
 
 
@@ -263,7 +247,7 @@ def spieler_xp_fortschritt_setzen(spieler: Spieler, wert: float) -> Spieler:
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem der Fortschritt verändert wurde)
     """
-    p = __st_minecraft_en.set_player_xp_progress(spieler, wert)
+    p = __st_minecraft_en.set_player_xp_progress(spieler.zu_englisch(), wert)
     return Spieler.von_englisch(p)
 
 

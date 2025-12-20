@@ -48,6 +48,9 @@ class Material(BaseModel):
 
         return Material(typ=m.type, x=m.x, y=m.y, z=m.z)
 
+    def zu_englisch(self) -> _MaterialEN:
+        return _MaterialEN(type=self.typ, x=self.x, y=self.y, z=self.z)
+
 
 class Spieler(BaseModel):
     """Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft aktualisiert!"""
@@ -89,6 +92,24 @@ class Spieler(BaseModel):
             sättigung=p.saturation,
             xp_level=p.xp_level,
             xp_fortschritt=p.xp_progress,
+        )
+
+    def zu_englisch(self) -> _PlayerEN:
+        return _PlayerEN(
+            id=self.id,
+            name=self.name,
+            x=self.x,
+            y=self.y,
+            z=self.z,
+            rotation=self.rotation,
+            looking_at=self.schaut_auf.zu_englisch(),
+            sneaked=self.sneaked,
+            max_health=self.max_leben,
+            health=self.leben,
+            hunger=self.hunger,
+            saturation=self.sättigung,
+            xp_level=self.xp_level,
+            xp_progress=self.xp_fortschritt,
         )
 
     def __repr__(self):
@@ -149,6 +170,11 @@ class Entity(BaseModel):
     def von_englisch(e: _EntityEN):
         return Entity(typ=e.type, id=e.id, name=e.name, x=e.x, y=e.y, z=e.z, leben=e.health, ai=e.ai)
 
+    def zu_englisch(self) -> _EntityEN:
+        return _EntityEN(
+            type=self.typ, id=self.id, name=self.name, x=self.x, y=self.y, z=self.z, health=self.leben, ai=self.ai
+        )
+
 
 class Item(BaseModel):
     """Modelliert ein Item"""
@@ -181,6 +207,9 @@ class InventarFeld(BaseModel):
     def von_englisch(i: _InventoryFieldEN):
         return InventarFeld(index=i.index, item=Item.von_englisch(i.item), anzahl=i.amount)
 
+    def zu_englisch(self) -> _InventoryFieldEN:
+        return _InventoryFieldEN(index=self.index, item=self.item.zu_englisch(), amount=self.anzahl)
+
 
 class Inventar(dict[int, InventarFeld]):
     """
@@ -207,3 +236,6 @@ class Inventar(dict[int, InventarFeld]):
     @staticmethod
     def von_englisch(i: _InventoryEN):
         return Inventar({index: InventarFeld.von_englisch(field) for index, field in i.items()})
+
+    def zu_englisch(self) -> _InventoryEN:
+        return _InventoryEN({index: field.zu_englisch() for index, field in self.items()})
