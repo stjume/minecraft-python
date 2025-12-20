@@ -6,7 +6,7 @@ For it to work as intended, it should be executed from the directory in which it
 from pathlib import Path
 
 
-def build_material_enum(
+def build_german_material_enum(
     block_source_file: Path = Path("blocks_items_validated.csv"),
     target_file: Path = Path("../st_minecraft/de/material.py"),
 ):
@@ -21,11 +21,19 @@ def build_material_enum(
     code = """''' Diese Datei ist auto-generiert! Siehe ressourcen/generate_enums.py im git repo! '''
 
 from enum import Enum
+from st_minecraft.en.material import MaterialCollection as _Collection
 
 
 class MaterialSammlung(Enum):
+
+    @staticmethod
+    def von_englisch(e: _Collection) -> "MaterialSammlung":
+        return MaterialSammlung._value2member_map_[e.value]
+
+    def zu_englisch(self) -> _Collection:
+        return _Collection._value2member_map_[self.value]
 """
-    _write_enum(code, block_source_file, target_file)
+    _write_german_enum(code, block_source_file, target_file)
 
 
 def build_material_enum_english(
@@ -45,12 +53,12 @@ def build_material_enum_english(
 from enum import Enum
 
 
-class MaterialSammlung(Enum):
+class MaterialCollection(Enum):
 """
     _write_enum_english(code, block_source_file, target_file)
 
 
-def build_entity_enum(
+def build_german_entity_enum(
     entity_source_file: Path = Path("entities_validated.csv"),
     target_file: Path = Path("../st_minecraft/de/entity.py"),
 ):
@@ -58,11 +66,18 @@ def build_entity_enum(
     code = """''' Diese Datei ist auto-generiert! Siehe ressourcen/generate_enums.py im git repo! '''
 
 from enum import Enum
+from st_minecraft.en.entity import EntityCollection as _Collection
 
 
 class EntitySammlung(Enum):
+    @staticmethod
+    def von_englisch(e: _Collection) -> "EntitySammlung":
+        return EntitySammlung._value2member_map_[e.value]
+
+    def zu_englisch(self) -> _Collection:
+        return EntitySammlung._value2member_map_[self.value]
 """
-    _write_enum(code, entity_source_file, target_file)
+    _write_german_enum(code, entity_source_file, target_file)
 
 
 def build_entity_enum_english(
@@ -75,12 +90,12 @@ def build_entity_enum_english(
 from enum import Enum
 
 
-class EntitySammlung(Enum):
+class EntityCollection(Enum):
 """
     _write_enum_english(code, entity_source_file, target_file)
 
 
-def _write_enum(enum_source_code: str, source_file: Path, target_file: Path):
+def _write_german_enum(enum_source_code: str, source_file: Path, target_file: Path):
     """
     Fills the body of the enum by simply appending new lines
     Enum then has the style BlockName = "MINECRAFT_ID_ALL_CAPS"
@@ -124,14 +139,14 @@ def _write_enum_english(enum_source_code: str, source_file: Path, target_file: P
         if english_name in already_seen_names:
             continue
 
-        enum_source_code += f'    {english_name} = "{english_name}"\n'
+        enum_source_code += f'    {english_name} = "{minecraft_id.upper()}"\n'
         already_seen_names.add(english_name)
 
     target_file.write_text(enum_source_code)
 
 
 if __name__ == "__main__":
-    build_material_enum()
-    build_entity_enum()
+    build_german_material_enum()
+    build_german_entity_enum()
     build_material_enum_english()
     build_entity_enum_english()
