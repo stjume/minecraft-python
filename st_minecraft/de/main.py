@@ -6,8 +6,8 @@ from st_minecraft.de.daten_modelle import Inventar
 from st_minecraft.de.daten_modelle import Material
 from st_minecraft.de.daten_modelle import RichtungSammlung
 from st_minecraft.de.daten_modelle import Spieler
-from st_minecraft.entity import EntitySammlung
-from st_minecraft.material import MaterialSammlung
+from st_minecraft.de.entity import EntitySammlung
+from st_minecraft.de.material import MaterialSammlung
 
 
 def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung) -> None:

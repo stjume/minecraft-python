@@ -8,8 +8,8 @@ from st_minecraft.core.core import ARG_SEPARATOR
 from st_minecraft.core.core import InventoryFieldEmptyError
 from st_minecraft.core.core import _bytes_to_text
 from st_minecraft.core.core import _to_enum
-from st_minecraft.entity import EntitySammlung
-from st_minecraft.material import MaterialSammlung
+from st_minecraft.en.entity import EntitySammlung
+from st_minecraft.en.material import MaterialSammlung
 
 
 class RichtungSammlung(Enum):

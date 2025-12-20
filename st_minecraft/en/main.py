@@ -15,8 +15,8 @@ from st_minecraft.en.data_models import Item
 from st_minecraft.en.data_models import Material
 from st_minecraft.en.data_models import Player
 from st_minecraft.en.data_models import RichtungSammlung
-from st_minecraft.entity import EntitySammlung
-from st_minecraft.material import MaterialSammlung
+from st_minecraft.en.entity import EntitySammlung
+from st_minecraft.en.material import MaterialSammlung
 
 
 def set_block(x: int, y: int, z: int, block_type: MaterialSammlung) -> None:

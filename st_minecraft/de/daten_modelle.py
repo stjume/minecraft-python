@@ -5,14 +5,14 @@ from pydantic import BaseModel
 
 from st_minecraft.core.core import InventoryFieldEmptyError
 from st_minecraft.core.core import _to_enum
+from st_minecraft.de.entity import EntitySammlung
+from st_minecraft.de.material import MaterialSammlung
 from st_minecraft.en import Entity as _EntityEN
 from st_minecraft.en import Inventory as _InventoryEN
 from st_minecraft.en import InventoryField as _InventoryFieldEN
 from st_minecraft.en import Item as _ItemEN
 from st_minecraft.en import Material as _MaterialEN
 from st_minecraft.en import Player as _PlayerEN
-from st_minecraft.entity import EntitySammlung
-from st_minecraft.material import MaterialSammlung
 
 
 class RichtungSammlung(Enum):
