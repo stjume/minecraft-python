@@ -4,11 +4,11 @@ from typing import Optional
 from pydantic import BaseModel
 from pydantic import ValidationError
 
+from st_minecraft.core import ARG_SEPARATOR
+from st_minecraft.core import InventoryFieldEmptyError
+from st_minecraft.core import _bytes_to_text
+from st_minecraft.core import _to_enum
 from st_minecraft.entity import EntitySammlung
-from st_minecraft.kern import ARG_SEPARATOR
-from st_minecraft.kern import InventarFeldLeerFehler
-from st_minecraft.kern import _bytes_zu_text
-from st_minecraft.kern import _zu_enum_umwandeln
 from st_minecraft.material import MaterialSammlung
 
 
@@ -41,7 +41,7 @@ class Material(BaseModel):
     @staticmethod
     def von_string(typ: str, x: int | None = None, y: int | None = None, z: int | None = None) -> Optional["Material"]:
         try:
-            _typ = _zu_enum_umwandeln(MaterialSammlung, typ)
+            _typ = _to_enum(MaterialSammlung, typ)
         except ValidationError:
             _typ = None
             print(f"Block '{typ}' ist von der Library nicht unterstützt. Der typ des Blocks ist auf None gesetzt.")
@@ -90,7 +90,7 @@ class Spieler(BaseModel):
             sättigung,
             xp_level,
             xp_progress,
-        ) = _bytes_zu_text(data).split(ARG_SEPARATOR)
+        ) = _bytes_to_text(data).split(ARG_SEPARATOR)
         return Spieler(
             id=int(_id),
             name=name,
@@ -160,12 +160,12 @@ class Entity(BaseModel):
     @staticmethod
     def von_string(typ: str):
         # TODO: brauchen wir das? falls nein können wir die default-Nones entfernen
-        return Entity(typ=_zu_enum_umwandeln(EntitySammlung, typ))
+        return Entity(typ=_to_enum(EntitySammlung, typ))
 
     @staticmethod
     def von_api_format(s: str):
         _id, typ, name, x, y, z, leben, ai = s.split(ARG_SEPARATOR)
-        _typ = _zu_enum_umwandeln(EntitySammlung, typ)
+        _typ = _to_enum(EntitySammlung, typ)
         return Entity(
             id=_id,
             typ=_typ,
@@ -191,7 +191,7 @@ class Item(BaseModel):
         if not anzeige_name:
             anzeige_name = None
 
-        return Item(typ=_zu_enum_umwandeln(MaterialSammlung, typ), anzeige_name=anzeige_name)
+        return Item(typ=_to_enum(MaterialSammlung, typ), anzeige_name=anzeige_name)
 
     def __repr__(self):
         return f"Item(typ={self.typ}, anzeige_name={self.anzeige_name})"
@@ -238,4 +238,4 @@ class Inventar(dict[int, InventarFeld]):
             super().__getitem__(item)
         # ich glaube, hier ist der peak der library. ein nicht-generischer wrapper um den KeyError.
         except KeyError:
-            raise InventarFeldLeerFehler(f"Das Feld {item} ist leer. Daher kannst du hier nicht drauf zugreifen.")
+            raise InventoryFieldEmptyError(f"Das Feld {item} ist leer. Daher kannst du hier nicht drauf zugreifen.")

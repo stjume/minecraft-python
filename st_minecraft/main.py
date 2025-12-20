@@ -2,6 +2,12 @@
 
 from typing import Literal
 
+from st_minecraft.core import ARG_SEPARATOR
+from st_minecraft.core import WertFehler
+from st_minecraft.core import _build_command
+from st_minecraft.core import _bytes_to_text
+from st_minecraft.core import _receive
+from st_minecraft.core import _send_command
 from st_minecraft.daten_modelle import Entity
 from st_minecraft.daten_modelle import Inventar
 from st_minecraft.daten_modelle import InventarFeld
@@ -10,12 +16,6 @@ from st_minecraft.daten_modelle import Material
 from st_minecraft.daten_modelle import RichtungSammlung
 from st_minecraft.daten_modelle import Spieler
 from st_minecraft.entity import EntitySammlung
-from st_minecraft.kern import ARG_SEPARATOR
-from st_minecraft.kern import WertFehler
-from st_minecraft.kern import _baue_command
-from st_minecraft.kern import _bytes_zu_text
-from st_minecraft.kern import _empfangen
-from st_minecraft.kern import _sende_befehl
 from st_minecraft.material import MaterialSammlung
 
 
@@ -34,8 +34,8 @@ def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung) -> None:
         block_typ (MaterialSammlung): Block als Element aus der MaterialSammlung, z.B. MaterialSammlung.Melone
     """
     # TODO: Das genaue Befehlsformat für das Protokoll festlegen
-    befehl = _baue_command("setBlock", x, y, z, block_typ.value)
-    _sende_befehl(befehl)
+    befehl = _build_command("setBlock", x, y, z, block_typ.value)
+    _send_command(befehl)
 
 
 def hole_block(x: int, y: int, z: int) -> Material:
@@ -51,10 +51,10 @@ def hole_block(x: int, y: int, z: int) -> Material:
     Returns:
         Den Block an der Koordinate als Datentyp `Material`
     """
-    befehl = _baue_command("getBlock", x, y, z)
-    _sende_befehl(befehl)
-    data = _empfangen()
-    block = Material.von_string(x=x, y=y, z=z, typ=_bytes_zu_text(data).upper())
+    befehl = _build_command("getBlock", x, y, z)
+    _send_command(befehl)
+    data = _receive()
+    block = Material.von_string(x=x, y=y, z=z, typ=_bytes_to_text(data).upper())
     return block
 
 
@@ -66,10 +66,10 @@ def hole_entity(entity: Entity) -> Entity:
         Eine aktualisierte Version des entsprechenden Entities
 
     """
-    befehl = _baue_command("getEntity", entity.id)
-    _sende_befehl(befehl)
-    data = _empfangen()
-    entity = Entity.von_api_format(_bytes_zu_text(data))
+    befehl = _build_command("getEntity", entity.id)
+    _send_command(befehl)
+    data = _receive()
+    entity = Entity.von_api_format(_bytes_to_text(data))
     return entity
 
 
@@ -83,9 +83,9 @@ def hole_spieler(index: int = 0) -> Spieler:
     Returns:
         Du bekommst ein Spieler Objekt zurück, welches eine Menge Infos über den Spieler enthält
     """
-    befehl = _baue_command("getPlayer", index)
-    _sende_befehl(befehl)
-    data = _empfangen()
+    befehl = _build_command("getPlayer", index)
+    _send_command(befehl)
+    data = _receive()
     spieler = Spieler.von_rohdaten(data)
     return spieler
 
@@ -98,8 +98,8 @@ def sende_an_chat(nachricht: str):
     Args:
         nachricht: Die Nachricht, die du versenden willst
     """
-    befehl = _baue_command("postChat", nachricht)
-    _sende_befehl(befehl)
+    befehl = _build_command("postChat", nachricht)
+    _send_command(befehl)
 
 
 def hole_chat():
@@ -108,12 +108,12 @@ def hole_chat():
     Returns:
         Du bekommst eine Liste aller gesendeten Nachrichten zurück
     """
-    befehl = _baue_command("pollChat")
+    befehl = _build_command("pollChat")
 
-    _sende_befehl(befehl)
-    data = _empfangen()
+    _send_command(befehl)
+    data = _receive()
 
-    nachrichten_str = _bytes_zu_text(data)
+    nachrichten_str = _bytes_to_text(data)
 
     if nachrichten_str == "":
         return []
@@ -131,8 +131,8 @@ def sende_befehl(befehl: str):
     """
     if befehl.startswith("/"):
         print("Achtung: Du hast ein '/' am Anfang des Befehls eingegeben. Das ist vermutlich nicht notwendig!")
-    befehl = _baue_command("chatCommand", befehl)
-    _sende_befehl(befehl)
+    befehl = _build_command("chatCommand", befehl)
+    _send_command(befehl)
 
 
 def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
@@ -150,11 +150,11 @@ def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
     Returns:
         Du bekommst ein Entity Objekt zurück. Mit diesem kannst du später wieder auf das Entity zugreifen.
     """
-    befehl = _baue_command("spawnEntity", x, y, z, entity.value)
+    befehl = _build_command("spawnEntity", x, y, z, entity.value)
     print(befehl)
-    _sende_befehl(befehl)
-    data = _empfangen()
-    entity = Entity.von_api_format(_bytes_zu_text(data))
+    _send_command(befehl)
+    data = _receive()
+    entity = Entity.von_api_format(_bytes_to_text(data))
     return entity
 
 
@@ -197,8 +197,8 @@ def gebe_item(
     if unzerstörbar:
         args.append("unbreakable")
 
-    befehl = _baue_command(*args)
-    _sende_befehl(befehl)
+    befehl = _build_command(*args)
+    _send_command(befehl)
 
     return hole_inventar(spieler)
 
@@ -211,14 +211,14 @@ def hole_inventar(spieler: Spieler) -> Inventar:
 
     Returns:
         Du bekommst ein Inventar Object (wie ein dict) zurück"""
-    befehl = _baue_command("getInv", spieler.id)
-    _sende_befehl(befehl)
-    data = _empfangen()
+    befehl = _build_command("getInv", spieler.id)
+    _send_command(befehl)
+    data = _receive()
 
     # beispiel für (simple) empfangende daten:
     # (index,name;optional;infos:anzahl)
     # 0:LILY_OF_THE_VALLEY:1𝇉4:STONE_PRESSURE_PLATE:1𝇉25:DISPENSER:1𝇉29:TARGET:1
-    inventar_info = _bytes_zu_text(data)
+    inventar_info = _bytes_to_text(data)
     if not inventar_info:
         return Inventar()
 
@@ -258,8 +258,8 @@ def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: 
 
         args.append(f"rotation:{rotation}")
 
-    befehl = _baue_command(*args)
-    _sende_befehl(befehl)
+    befehl = _build_command(*args)
+    _send_command(befehl)
 
     return hole_spieler(spieler.id)
 
@@ -277,8 +277,8 @@ def spieler_geschwindigkeit_setzen(spieler: Spieler, richtung: RichtungSammlung,
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem die Geschwindigkeit verändert wurde)
 
     """
-    befehl = _baue_command("setPlayerVelocity", richtung.value, spieler.id, wert)
-    _sende_befehl(befehl)
+    befehl = _build_command("setPlayerVelocity", richtung.value, spieler.id, wert)
+    _send_command(befehl)
     return hole_spieler(spieler.id)
 
 
@@ -350,8 +350,8 @@ def spieler_xp_fortschritt_setzen(spieler: Spieler, wert: float) -> Spieler:
 
 def _setzt_spieler_eigenschaft(typ: str, spieler: Spieler, wert: float):
     """interne funktion für Leben, hunger und xp verändern"""
-    befehl = _baue_command("setPlayerStat", typ, spieler.id, wert)
-    _sende_befehl(befehl)
+    befehl = _build_command("setPlayerStat", typ, spieler.id, wert)
+    _send_command(befehl)
 
 
 def entity_name_setzen(entity: Entity, name: str) -> Entity:
@@ -363,8 +363,8 @@ def entity_name_setzen(entity: Entity, name: str) -> Entity:
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    befehl = _baue_command("editEntity", entity.id, f"name:{name}")
-    _sende_befehl(befehl)
+    befehl = _build_command("editEntity", entity.id, f"name:{name}")
+    _send_command(befehl)
     return hole_entity(entity)
 
 
@@ -380,8 +380,8 @@ def entity_position_setzen(entity: Entity, x: float, y: float, z: float) -> Enti
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    befehl = _baue_command("editEntity", entity.id, f"position:{x};{y};{z}")
-    _sende_befehl(befehl)
+    befehl = _build_command("editEntity", entity.id, f"position:{x};{y};{z}")
+    _send_command(befehl)
     return hole_entity(entity)
 
 
@@ -396,8 +396,8 @@ def entity_ai_setzen(entity: Entity, status: bool) -> Entity:
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    befehl = _baue_command("editEntity", entity.id, f"ai:{status}")
-    _sende_befehl(befehl)
+    befehl = _build_command("editEntity", entity.id, f"ai:{status}")
+    _send_command(befehl)
     return hole_entity(entity)
 
 
@@ -409,15 +409,15 @@ def entity_leben_setzen(entity: Entity, leben: float) -> Entity:
         entity: Das zu bearbeitende Entity, nicht EntitySammlung!
         leben: Wie viele Leben das Entity haben soll (0=tot).
     """
-    befehl = _baue_command("editEntity", entity.id, f"health:{leben}")
-    _sende_befehl(befehl)
+    befehl = _build_command("editEntity", entity.id, f"health:{leben}")
+    _send_command(befehl)
     return hole_entity(entity)
 
 
 def _validiere_id(id: str, type: Literal["MATERIAL", "ENTITY"]):
     """nur für interne nutzung"""
-    befehl = _baue_command("validate", type, id)
-    _sende_befehl(befehl)
-    data = _empfangen()
+    befehl = _build_command("validate", type, id)
+    _send_command(befehl)
+    data = _receive()
 
-    return _bytes_zu_text(data)
+    return _bytes_to_text(data)

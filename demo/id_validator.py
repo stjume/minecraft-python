@@ -2,7 +2,7 @@ import csv
 
 import st_minecraft
 
-st_minecraft.verbinden("localhost", 12345)
+st_minecraft.connect("localhost", 12345)
 
 # with open("blocks_items.csv") as f:
 #     names = csv.reader(f)

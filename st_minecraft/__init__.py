@@ -1,6 +1,6 @@
 """ st_minecraft package """
 
-from st_minecraft.kern import verbinden  # noqa: unused-import
+from st_minecraft.core import connect  # noqa: unused-import
 from st_minecraft.main import *  # noqa: unused-import
 
 try:

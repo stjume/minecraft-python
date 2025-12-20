@@ -4,10 +4,10 @@ from enum import Enum
 
 from pydantic import BaseModel
 
-from st_minecraft.kern import ARG_SEPARATOR
-from st_minecraft.kern import WertFehler
-from st_minecraft.kern import _baue_command
-from st_minecraft.kern import _sende_befehl
+from st_minecraft.core import ARG_SEPARATOR
+from st_minecraft.core import WertFehler
+from st_minecraft.core import _build_command
+from st_minecraft.core import _send_command
 
 
 class BossLeisteStil(Enum):
@@ -59,7 +59,7 @@ class BossLeiste(BaseModel):
 def _sende_boss_leiste_befehl(unter_befehl: str):
     # brauchen wir intern
     befehl = f"editBossBar{ARG_SEPARATOR}{unter_befehl}"
-    _sende_befehl(befehl)
+    _send_command(befehl)
 
 
 def erzeuge_leiste(name: str, anzeige_text: str) -> BossLeiste:
@@ -72,8 +72,8 @@ def erzeuge_leiste(name: str, anzeige_text: str) -> BossLeiste:
     Returns:
         Ein BossLeisten Objekt mit dessen Hilfe du die Leiste weiter konfigurieren kannst
     """
-    befehl = _baue_command("spawnBossBar", name, anzeige_text)
-    _sende_befehl(befehl)
+    befehl = _build_command("spawnBossBar", name, anzeige_text)
+    _send_command(befehl)
 
     # einige der werte sind beim erzeugen festgesetzt.
     return BossLeiste(
@@ -87,7 +87,7 @@ def erzeuge_leiste(name: str, anzeige_text: str) -> BossLeiste:
 
 def setze_text(boss_leiste: BossLeiste, anzeige_text: str) -> BossLeiste:
     """Setze den Text der Leiste"""
-    unter_befehl = _baue_command("text", boss_leiste.name, f"text:{anzeige_text}")
+    unter_befehl = _build_command("text", boss_leiste.name, f"text:{anzeige_text}")
     _sende_boss_leiste_befehl(unter_befehl)
     boss_leiste.anzeige_text = anzeige_text
     return boss_leiste
@@ -95,7 +95,7 @@ def setze_text(boss_leiste: BossLeiste, anzeige_text: str) -> BossLeiste:
 
 def setze_farbe(boss_leiste: BossLeiste, farbe: BossLeisteFarben) -> BossLeiste:
     """Setze die Farbe der Leiste"""
-    unter_befehl = _baue_command("color", boss_leiste.name, f"color:{farbe.value}")
+    unter_befehl = _build_command("color", boss_leiste.name, f"color:{farbe.value}")
     _sende_boss_leiste_befehl(unter_befehl)
     boss_leiste.farbe = farbe
     return boss_leiste
@@ -106,7 +106,7 @@ def setze_wert(boss_leiste: BossLeiste, wert: float) -> BossLeiste:
     if not 0 <= wert <= 1:
         raise WertFehler(f"Der Wert der Bossleiste muss zwischen 0 und 1 liegen. Du hast '{wert}' angegeben.")
 
-    unter_befehl = _baue_command("value", boss_leiste.name, f"value:{wert}")
+    unter_befehl = _build_command("value", boss_leiste.name, f"value:{wert}")
     _sende_boss_leiste_befehl(unter_befehl)
     boss_leiste.wert = wert
     return boss_leiste
@@ -114,7 +114,7 @@ def setze_wert(boss_leiste: BossLeiste, wert: float) -> BossLeiste:
 
 def setze_stil(boss_leiste: BossLeiste, stil: BossLeisteStil) -> BossLeiste:
     """Setze den Stil der Leiste"""
-    unter_befehl = _baue_command("style", boss_leiste.name, f"color:{stil.value}")
+    unter_befehl = _build_command("style", boss_leiste.name, f"color:{stil.value}")
     _sende_boss_leiste_befehl(unter_befehl)
     boss_leiste.stil = stil
     return boss_leiste
@@ -126,5 +126,5 @@ def loesche_leiste(boss_leiste: BossLeiste):
 
 
 def _loesche_leiste_str(boss_leiste_name: str):
-    befehl = _baue_command("deleteBossBar", boss_leiste_name)
-    _sende_befehl(befehl)
+    befehl = _build_command("deleteBossBar", boss_leiste_name)
+    _send_command(befehl)

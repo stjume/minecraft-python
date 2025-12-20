@@ -1,6 +1,6 @@
 import st_minecraft
 
-st_minecraft.verbinden("localhost", 12345)
+st_minecraft.connect("localhost", 12345)
 
 print("verbunden")
 
