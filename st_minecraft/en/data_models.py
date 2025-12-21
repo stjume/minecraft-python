@@ -77,6 +77,9 @@ class Player(BaseModel):
     @staticmethod
     def from_raw_data(data: bytes) -> "Player":
         """raw data is index, name, x, y, z"""
+        if data == b"error invalid_index\n":
+            raise ConnectionError(f"Can't fetch player. Are you sure this player is connected?")
+
         (
             _id,
             name,
