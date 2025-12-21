@@ -12,16 +12,16 @@ from st_minecraft.en.entity import EntityCollection
 from st_minecraft.en.material import MaterialCollection
 
 
-class RichtungSammlung(Enum):
+class DirectionCollection(Enum):
     """
     Ways in which speeds can be changed
     Used among others in set_player_velocity()
     """
 
-    Hoch = "UP"
-    Runter = "DOWN"
-    Zurück = "BACK"
-    Vorwärts = "LOOKING"
+    Up = "UP"
+    Down = "DOWN"
+    Back = "BACK"
+    Forward = "LOOKING"
 
 
 class Material(BaseModel):
@@ -63,7 +63,7 @@ class Player(BaseModel):
     z: int
     rotation: int
     """ Rotation of the player from -180 to 180 """
-    looking_at: Material
+    looking_at: Material | None
     """ The next block the player is looking at (maximum 100 blocks away) """
     sneaked: bool
     """ True if player is sneaking """

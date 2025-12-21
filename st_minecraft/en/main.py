@@ -8,13 +8,13 @@ from st_minecraft.core.core import _build_command
 from st_minecraft.core.core import _bytes_to_text
 from st_minecraft.core.core import _receive
 from st_minecraft.core.core import _send_command
+from st_minecraft.en.data_models import DirectionCollection
 from st_minecraft.en.data_models import Entity
 from st_minecraft.en.data_models import Inventory
 from st_minecraft.en.data_models import InventoryField
 from st_minecraft.en.data_models import Item
 from st_minecraft.en.data_models import Material
 from st_minecraft.en.data_models import Player
-from st_minecraft.en.data_models import RichtungSammlung
 from st_minecraft.en.entity import EntityCollection
 from st_minecraft.en.material import MaterialCollection
 
@@ -262,7 +262,7 @@ def set_player_position(player: Player, x: int, y: int, z: int, rotation: int = 
     return get_player(player.id)
 
 
-def set_player_velocity(player: Player, direction: RichtungSammlung, value: float) -> Player:
+def set_player_velocity(player: Player, direction: DirectionCollection, value: float) -> Player:
     """
     Change the movement speed of a player in different directions.
     All directions you can influence can be found in RichtungSammlung

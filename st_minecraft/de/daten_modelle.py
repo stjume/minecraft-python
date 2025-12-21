@@ -7,6 +7,7 @@ from st_minecraft.core.core import InventoryFieldEmptyError
 from st_minecraft.core.core import _to_enum
 from st_minecraft.de.entity import EntitySammlung
 from st_minecraft.de.material import MaterialSammlung
+from st_minecraft.en import DirectionCollection as _DirectionCollection
 from st_minecraft.en import Entity as _EntityEN
 from st_minecraft.en import Inventory as _InventoryEN
 from st_minecraft.en import InventoryField as _InventoryFieldEN
@@ -25,6 +26,13 @@ class RichtungSammlung(Enum):
     Runter = "DOWN"
     Zurück = "BACK"
     Vorwärts = "LOOKING"
+
+    @staticmethod
+    def von_englisch(e: _DirectionCollection) -> "RichtungSammlung":
+        return RichtungSammlung._value2member_map_[e.value]
+
+    def zu_englisch(self) -> _DirectionCollection:
+        return _DirectionCollection._value2member_map_[self.value]
 
 
 class Material(BaseModel):
