@@ -9,9 +9,10 @@ from st_minecraft.de.daten_modelle import RichtungSammlung
 from st_minecraft.de.daten_modelle import Spieler
 from st_minecraft.de.entity import EntitySammlung
 from st_minecraft.de.material import MaterialSammlung
+from st_minecraft.en.daten_modelle import Dimension
 
 
-def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung) -> None:
+def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung, dimension: Dimension = Dimension.Welt) -> None:
     """
     Setzt einen Block im Minecraft-Spiel.
     Du kannst damit auch bereits existierende Blöcke ersetzen.
@@ -24,12 +25,13 @@ def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung) -> None:
         y (int): Y-Koordinate für den Block
         z (int): Z-Koordinate für den Block
         block_typ (MaterialSammlung): Block als Element aus der MaterialSammlung, z.B. MaterialSammlung.Melone
+        dimension (Dimension): Dimension in der nach dem Block gesucht werden soll (Standard: Dimension.Welt)
     """
     # TODO: Das genaue Befehlsformat für das Protokoll festlegen
-    return __st_minecraft_en.set_block(x, y, z, block_typ)
+    return __st_minecraft_en.set_block(x, y, z, block_typ, dimension.zu_englisch())
 
 
-def hole_block(x: int, y: int, z: int) -> Material:
+def hole_block(x: int, y: int, z: int, dimension: Dimension = Dimension.Welt) -> Material:
     """
     Frag ab was für ein Block sich an der Koordinate befindet
     Du bekommst ein Block-Objekt zurück, dass unter .typ den typ enthält
@@ -39,10 +41,11 @@ def hole_block(x: int, y: int, z: int) -> Material:
         x (int): X-Koordinate des Blocks
         y (int): Y-Koordinate des Blocks
         z (int): Z-Koordinate des Blocks
+        dimension (Dimension): Dimension in der nach dem Block gesucht werden soll (Standard: Dimension.Welt)
     Returns:
         Den Block an der Koordinate als Datentyp `Material`
     """
-    m = __st_minecraft_en.get_block(x, y, z)
+    m = __st_minecraft_en.get_block(x, y, z, dimension.zu_englisch())
 
     return Material.von_englisch(m)
 
@@ -55,7 +58,7 @@ def hole_entity(entity: Entity) -> Entity:
         Eine aktualisierte Version des entsprechenden Entities
 
     """
-    e = __st_minecraft_en.get_entity(entity)
+    e = __st_minecraft_en.get_entity(entity.zu_englisch())
     return Entity.von_englisch(e)
 
 
@@ -137,7 +140,7 @@ def zeige_titel(
     )
 
 
-def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
+def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung, dimension: Dimension = Dimension.Welt) -> Entity:
     """
     Erzeuge eine entity an einer bestimmten Position
     Eine Liste aller Entities findest du hier:
@@ -148,11 +151,12 @@ def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
         y (int): Y-Koordinate an der das Entity gespawnt werden soll
         z (int): Z-Koordinate an der das Entity gespawnt werden soll
         entity: Ein Element aus der EntitySammlung z.B. EntitySammlung.Schaf
+        dimension (Dimension): Dimension in der das Entity gespawnt werden soll (Standard: Dimension.World)
 
     Returns:
         Du bekommst ein Entity Objekt zurück. Mit diesem kannst du später wieder auf das Entity zugreifen.
     """
-    e = __st_minecraft_en.spawn_entity(x, y, z, entity.zu_englisch())
+    e = __st_minecraft_en.spawn_entity(x, y, z, entity.zu_englisch(), dimension.zu_englisch())
     return Entity.von_englisch(e)
 
 
@@ -198,7 +202,9 @@ def hole_inventar(spieler: Spieler) -> Inventar:
     return Inventar.von_englisch(i)
 
 
-def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: int = None) -> Spieler:
+def spieler_position_setzen(
+    spieler: Spieler, x: int, y: int, z: int, rotation: int = None, dimension: Dimension = Dimension.World
+) -> Spieler:
     """
     Verändere die position in x-, y-, z-Richtung und Rotation
     Args:
@@ -207,12 +213,13 @@ def spieler_position_setzen(spieler: Spieler, x: int, y: int, z: int, rotation: 
         y: neue y-koordinate
         z: neue z-koordinate
         rotation: rotation: (optional) rotation des spielers (von -180 bis 180), wenn du sie nicht angibst, wird sie nicht verändert.
+        dimension (Dimension): Dimension in die der Spieler gesetzt werden soll (Standard: Dimension.World)
 
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem er bewegt wurde)
     """
 
-    p = __st_minecraft_en.set_player_position(spieler.zu_englisch(), x, y, z, rotation)
+    p = __st_minecraft_en.set_player_position(spieler.zu_englisch(), x, y, z, rotation, dimension.zu_englisch())
     return Spieler.von_englisch(p)
 
 
@@ -305,11 +312,13 @@ def entity_name_setzen(entity: Entity, name: str) -> Entity:
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    e = __st_minecraft_en.set_entity_name(entity, name)
+    e = __st_minecraft_en.set_entity_name(entity.zu_englisch(), name)
     return Entity.von_englisch(e)
 
 
-def entity_position_setzen(entity: Entity, x: float, y: float, z: float) -> Entity:
+def entity_position_setzen(
+    entity: Entity, x: float, y: float, z: float, dimension: Dimension = Dimension.World
+) -> Entity:
     """
     Setzen die Position eines Entities
 
@@ -318,10 +327,11 @@ def entity_position_setzen(entity: Entity, x: float, y: float, z: float) -> Enti
         x (int): neue X-Koordinate
         y (int): neue Y-Koordinate
         z (int): neue Z-Koordinate
+        dimension (Dimension): Dimension in die das Entity gesetzt werden soll (Standard: Dimension.World)
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    e = __st_minecraft_en.set_entity_position(entity, x, y, z)
+    e = __st_minecraft_en.set_entity_position(entity.zu_englisch(), x, y, z, dimension.zu_englisch())
     return Entity.von_englisch(e)
 
 
@@ -336,7 +346,7 @@ def entity_ai_setzen(entity: Entity, status: bool) -> Entity:
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    e = __st_minecraft_en.set_entity_ai(entity, status)
+    e = __st_minecraft_en.set_entity_ai(entity.zu_englisch(), status)
     return Entity.von_englisch(e)
 
 
@@ -348,5 +358,5 @@ def entity_leben_setzen(entity: Entity, leben: float) -> Entity:
         entity: Das zu bearbeitende Entity, nicht EntitySammlung!
         leben: Wie viele Leben das Entity haben soll (0=tot).
     """
-    e = __st_minecraft_en.set_entity_health(entity, leben)
+    e = __st_minecraft_en.set_entity_health(entity.zu_englisch(), leben)
     return Entity.von_englisch(e)

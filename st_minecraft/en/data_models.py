@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Literal
 from typing import Optional
 
 from pydantic import BaseModel
@@ -10,6 +11,14 @@ from st_minecraft.core.core import _bytes_to_text
 from st_minecraft.core.core import _to_enum
 from st_minecraft.en.entity import EntityCollection
 from st_minecraft.en.material import MaterialCollection
+
+dimensionT = Literal["world", "world_nether", "world_the_end"]
+
+
+class Dimension(Enum):
+    World = "world"
+    Nether = "world_nether"
+    End = "world_the_end"
 
 
 class DirectionCollection(Enum):
@@ -34,13 +43,18 @@ class Material(BaseModel):
     x: int | None = None
     y: int | None = None
     z: int | None = None
+    dimension: Dimension | None = None
 
     def __repr__(self):
-        return f"Block(type={self.type}, x={self.x}, y={self.y}, z={self.z})"
+        return f"Block(type={self.type}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
 
     @staticmethod
     def from_string(
-        type: str, x: int | None = None, y: int | None = None, z: int | None = None
+        type: str,
+        x: int | None = None,
+        y: int | None = None,
+        z: int | None = None,
+        dimension: dimensionT | None = None,
     ) -> Optional["Material"]:
         try:
             _type = _to_enum(MaterialCollection, type)
@@ -48,7 +62,7 @@ class Material(BaseModel):
             _type = None
             print(f"Block '{type}' is not supported by the library. The type of the block is set to None.")
 
-        return Material(type=_type, x=x, y=y, z=z)
+        return Material(type=_type, x=x, y=y, z=z, dimension=_to_enum(Dimension, dimension))
 
 
 class Player(BaseModel):
@@ -61,6 +75,7 @@ class Player(BaseModel):
     x: int
     y: int
     z: int
+    dimension: Dimension
     rotation: int
     """ Rotation of the player from -180 to 180 """
     looking_at: Material | None
@@ -86,6 +101,7 @@ class Player(BaseModel):
             x,
             y,
             z,
+            dimension,
             rot,
             looking_at,
             sneaked,
@@ -102,6 +118,7 @@ class Player(BaseModel):
             x=int(x),
             y=int(y),
             z=int(z),
+            dimension=_to_enum(Dimension, dimension),
             rotation=int(rot),
             looking_at=Material.from_string(looking_at),
             sneaked=sneaked.lower() == "true",
@@ -121,6 +138,7 @@ class Player(BaseModel):
             f"x={self.x}, "
             f"y={self.y}, "
             f"z={self.z}, "
+            f"dimension={self.dimension}, "
             f"rotation={self.rotation}, "
             f"health={self.health}, "
             f"max_health={self.max_health}, "
@@ -145,6 +163,7 @@ class Entity(BaseModel):
     x: float | None = None
     y: float | None = None
     z: float | None = None
+    dimension: Dimension | None = None
     health: float | None = None
     ai: bool | None = None
 
@@ -156,6 +175,7 @@ class Entity(BaseModel):
             f"x={self.x}, "
             f"y={self.y}, "
             f"z={self.z}, "
+            f"dimension={self.dimension}, "
             f"health={self.health}, "
             f"ai={self.ai}, "
             f"id={self.id}"
@@ -169,7 +189,7 @@ class Entity(BaseModel):
 
     @staticmethod
     def from_api_format(s: str):
-        _id, type, name, x, y, z, health, ai = s.split(ARG_SEPARATOR)
+        _id, type, name, x, y, z, dimension, health, ai = s.split(ARG_SEPARATOR)
         _type = _to_enum(EntityCollection, type)
         return Entity(
             id=_id,
@@ -178,6 +198,7 @@ class Entity(BaseModel):
             x=float(x),
             y=float(y),
             z=float(z),
+            dimension=_to_enum(Dimension, dimension),
             health=float(health),
             ai=ai == "true",
         )

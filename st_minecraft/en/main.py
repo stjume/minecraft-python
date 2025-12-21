@@ -1,6 +1,7 @@
 """main functionalities of the library"""
 
 from typing import Literal
+from typing import cast
 
 from st_minecraft.core.core import ARG_SEPARATOR
 from st_minecraft.core.core import WertFehler
@@ -8,6 +9,7 @@ from st_minecraft.core.core import _build_command
 from st_minecraft.core.core import _bytes_to_text
 from st_minecraft.core.core import _receive
 from st_minecraft.core.core import _send_command
+from st_minecraft.en.data_models import Dimension
 from st_minecraft.en.data_models import DirectionCollection
 from st_minecraft.en.data_models import Entity
 from st_minecraft.en.data_models import Inventory
@@ -16,11 +18,12 @@ from st_minecraft.en.data_models import Item
 from st_minecraft.en.data_models import Material
 from st_minecraft.en.data_models import Message
 from st_minecraft.en.data_models import Player
+from st_minecraft.en.data_models import dimensionT
 from st_minecraft.en.entity import EntityCollection
 from st_minecraft.en.material import MaterialCollection
 
 
-def set_block(x: int, y: int, z: int, block_type: MaterialCollection) -> None:
+def set_block(x: int, y: int, z: int, block_type: MaterialCollection, dimension: Dimension = Dimension.World) -> None:
     """
     Places a block in the Minecraft game.
     You can also use this to replace already existing blocks.
@@ -32,14 +35,15 @@ def set_block(x: int, y: int, z: int, block_type: MaterialCollection) -> None:
         x (int): X coordinate for the block
         y (int): Y coordinate for the block
         z (int): Z coordinate for the block
-        block_type (MaterialSammlung): Block as an element from MaterialSammlung, e.g. MaterialSammlung.Melone
+        block_type (MaterialCollection): Block as an element from MaterialCollection, e.g. MaterialCollection.Melone
+        dimension (Dimension): dimension to look for the block (default.: Dimension.World)
     """
     # TODO: Determine the exact command format for the protocol
-    command = _build_command("setBlock", x, y, z, block_type.value)
+    command = _build_command("setBlock", x, y, z, dimension.value, block_type.value)
     _send_command(command)
 
 
-def get_block(x: int, y: int, z: int) -> Material:
+def get_block(x: int, y: int, z: int, dimension: Dimension = Dimension.World) -> Material:
     """
     Query what type of block is at the coordinate
     You get a block object back that contains the type under .typ
@@ -49,13 +53,16 @@ def get_block(x: int, y: int, z: int) -> Material:
         x (int): X coordinate of the block
         y (int): Y coordinate of the block
         z (int): Z coordinate of the block
+        dimension (Dimension): dimension to look for the block (default.: Dimension.World)
     Returns:
         The block at the coordinate as data type `Material`
     """
-    command = _build_command("getBlock", x, y, z)
+    command = _build_command("getBlock", x, y, z, dimension.value)
     _send_command(command)
     data = _receive()
-    block = Material.from_string(x=x, y=y, z=z, type=_bytes_to_text(data).upper())
+    block = Material.from_string(
+        x=x, y=y, z=z, dimension=cast(dimensionT, dimension.value), type=_bytes_to_text(data).upper()
+    )
     return block
 
 
@@ -181,7 +188,7 @@ def send_command(command: str):
     _send_command(command)
 
 
-def spawn_entity(x: int, y: int, z: int, entity: EntityCollection) -> Entity:
+def spawn_entity(x: int, y: int, z: int, entity: EntityCollection, dimension: Dimension = Dimension.World) -> Entity:
     """
     Spawn an entity at a specific position
     A list of all entities can be found here:
@@ -192,11 +199,12 @@ def spawn_entity(x: int, y: int, z: int, entity: EntityCollection) -> Entity:
         y (int): Y coordinate where the entity should be spawned
         z (int): Z coordinate where the entity should be spawned
         entity: An element from EntitySammlung e.g. EntitySammlung.Schaf
+        dimension (Dimension): dimension to look for the block (default.: Dimension.World)
 
     Returns:
         You get an Entity object back. With this you can later access the entity again.
     """
-    command = _build_command("spawnEntity", x, y, z, entity.value)
+    command = _build_command("spawnEntity", x, y, z, dimension.value, entity.value)
     print(command)
     _send_command(command)
     data = _receive()
@@ -282,7 +290,9 @@ def get_inventory(player: Player) -> Inventory:
     return inventory
 
 
-def set_player_position(player: Player, x: int, y: int, z: int, rotation: int = None) -> Player:
+def set_player_position(
+    player: Player, x: int, y: int, z: int, rotation: int = None, dimension: Dimension = Dimension.World
+) -> Player:
     """
     Change the position in x-, y-, z-direction and rotation
     Args:
@@ -291,11 +301,13 @@ def set_player_position(player: Player, x: int, y: int, z: int, rotation: int = 
         y: new y coordinate
         z: new z coordinate
         rotation: (optional) rotation of the player (from -180 to 180), if you don't specify it, it won't be changed.
+        dimension (Dimension): dimension to put the player in (default.: Dimension.World)
+
 
     Returns:
         You get an updated version of the player back (state after being moved)
     """
-    args = ["setPlayerPos", player.id, x, y, z]
+    args = ["setPlayerPos", player.id, x, y, z, dimension.value]
     if rotation is not None:
         if not -180 <= rotation <= 180:
             raise WertFehler(f"A player's rotation must be between -180 and 180. You said '{rotation}'.")
@@ -412,7 +424,7 @@ def set_entity_name(entity: Entity, name: str) -> Entity:
     return get_entity(entity)
 
 
-def set_entity_position(entity: Entity, x: float, y: float, z: float) -> Entity:
+def set_entity_position(entity: Entity, x: float, y: float, z: float, dimension: Dimension = Dimension.World) -> Entity:
     """
     Set the position of an entity
 
@@ -421,10 +433,11 @@ def set_entity_position(entity: Entity, x: float, y: float, z: float) -> Entity:
         x (int): new X coordinate
         y (int): new Y coordinate
         z (int): new Z coordinate
+        dimension (Dimension): dimension to look for the block (default.: Dimension.World)
     Returns:
         An updated version of the entity (state after the change)
     """
-    command = _build_command("editEntity", entity.id, f"position:{x};{y};{z}")
+    command = _build_command("editEntity", entity.id, f"position:{x};{y};{z};{dimension.value}")
     _send_command(command)
     return get_entity(entity)
 

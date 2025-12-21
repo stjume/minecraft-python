@@ -7,6 +7,7 @@ from st_minecraft.core.core import InventoryFieldEmptyError
 from st_minecraft.core.core import _to_enum
 from st_minecraft.de.entity import EntitySammlung
 from st_minecraft.de.material import MaterialSammlung
+from st_minecraft.en import Dimension
 from st_minecraft.en import DirectionCollection as _DirectionCollection
 from st_minecraft.en import Entity as _EntityEN
 from st_minecraft.en import Inventory as _InventoryEN
@@ -46,22 +47,35 @@ class Material(BaseModel):
     x: int | None = None
     y: int | None = None
     z: int | None = None
+    dimension: Dimension | None = None
 
     def __repr__(self):
-        return f"Block(typ={self.typ}, x={self.x}, y={self.y}, z={self.z})"
+        return f"Block(typ={self.typ}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
 
     @staticmethod
     def von_englisch(m: _MaterialEN | None) -> Optional["Material"]:
         if m is None:
             return None
 
-        return Material(typ=MaterialSammlung.von_englisch(m.type), x=m.x, y=m.y, z=m.z)
+        return Material(
+            typ=MaterialSammlung.von_englisch(m.type),
+            x=m.x,
+            y=m.y,
+            z=m.z,
+            dimension=m.dimension,
+        )
 
     def zu_englisch(self) -> _MaterialEN:
         if self.typ is None:
             return None
 
-        return _MaterialEN(type=self.typ.zu_englisch(), x=self.x, y=self.y, z=self.z)
+        return _MaterialEN(
+            type=self.typ.zu_englisch(),
+            x=self.x,
+            y=self.y,
+            z=self.z,
+            dimension=self.dimension,
+        )
 
 
 class Spieler(BaseModel):
@@ -74,6 +88,7 @@ class Spieler(BaseModel):
     x: int
     y: int
     z: int
+    dimension: Dimension
     rotation: int
     """ Rotation des Spielers von -180 bis 180 """
     schaut_auf: Material | None
@@ -95,6 +110,7 @@ class Spieler(BaseModel):
             x=p.x,
             y=p.y,
             z=p.z,
+            dimension=p.dimension,
             rotation=p.rotation,
             schaut_auf=Material.von_englisch(p.looking_at),
             sneaked=p.sneaked,
@@ -113,6 +129,7 @@ class Spieler(BaseModel):
             x=self.x,
             y=self.y,
             z=self.z,
+            dimension=dimension,
             rotation=self.rotation,
             looking_at=self.schaut_auf.zu_englisch(),
             sneaked=self.sneaked,
@@ -132,8 +149,9 @@ class Spieler(BaseModel):
             f"x={self.x}, "
             f"y={self.y}, "
             f"z={self.z}, "
+            f"dimension={self.dimension}, "
             f"rotation={self.rotation}, "
-            f"leben={self.leben}"
+            f"leben={self.leben}, "
             f"max_leben={self.max_leben}, "
             f"hunger={self.hunger}, "
             f"sättigung={self.sättigung}, "
@@ -156,6 +174,7 @@ class Entity(BaseModel):
     x: float | None = None
     y: float | None = None
     z: float | None = None
+    dimension: Dimension | None = None
     leben: float | None = None
     ai: bool | None = None
 
@@ -163,14 +182,15 @@ class Entity(BaseModel):
         return (
             f"Entity("
             f"typ={self.typ}, "
-            f"name={self.name}"
+            f"name={self.name}, "
             f"x={self.x}, "
             f"y={self.y}, "
             f"z={self.z}, "
+            f"dimension={self.dimension}, "
             f"leben={self.leben}, "
             f"ai={self.ai}, "
-            f"id={self.id}"
-            f")"
+            f"id={self.id}, "
+            ")"
         )
 
     @staticmethod
@@ -181,7 +201,15 @@ class Entity(BaseModel):
     @staticmethod
     def von_englisch(e: _EntityEN):
         return Entity(
-            typ=EntitySammlung.von_englisch(e.type), id=e.id, name=e.name, x=e.x, y=e.y, z=e.z, leben=e.health, ai=e.ai
+            typ=EntitySammlung.von_englisch(e.type),
+            id=e.id,
+            name=e.name,
+            x=e.x,
+            y=e.y,
+            z=e.z,
+            dimension=e.dimension,
+            leben=e.health,
+            ai=e.ai,
         )
 
     def zu_englisch(self) -> _EntityEN:
@@ -192,6 +220,7 @@ class Entity(BaseModel):
             x=self.x,
             y=self.y,
             z=self.z,
+            dimension=e.dimension,
             health=self.leben,
             ai=self.ai,
         )
