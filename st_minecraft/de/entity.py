@@ -1,17 +1,25 @@
-""" Diese Datei ist auto-generiert! Siehe ressourcen/generate_enums.py im git repo! """
+"""Diese Datei ist auto-generiert! Siehe ressourcen/generate_enums.py im git repo! """
 
 from enum import Enum
+from typing import Optional
 
 from st_minecraft.en.entity import EntityCollection as _Collection
 
 
 class EntitySammlung(Enum):
-    @staticmethod
-    def von_englisch(e: _Collection) -> "EntitySammlung":
-        return EntitySammlung._value2member_map_[e.value]
 
-    def zu_englisch(self) -> _Collection:
-        return EntitySammlung._value2member_map_[self.value]
+    @staticmethod
+    def von_englisch(e: _Collection) -> Optional["EntitySammlung"]:
+        try:
+            return EntitySammlung._value2member_map_[e.value]
+        except KeyError:
+            return None
+
+    def zu_englisch(self) -> Optional[_Collection]:
+        try:
+            return EntitySammlung._value2member_map_[self.value]
+        except KeyError:
+            return None
 
     Hilfsgeist = "ALLAY"
     Partikelwolke = "AREA_EFFECT_CLOUD"

@@ -1,6 +1,7 @@
-""" Diese Datei ist auto-generiert! Siehe ressourcen/generate_enums.py im git repo! """
+"""Diese Datei ist auto-generiert! Siehe ressourcen/generate_enums.py im git repo! """
 
 from enum import Enum
+from typing import Optional
 
 from st_minecraft.en.material import MaterialCollection as _Collection
 
@@ -8,11 +9,17 @@ from st_minecraft.en.material import MaterialCollection as _Collection
 class MaterialSammlung(Enum):
 
     @staticmethod
-    def von_englisch(e: _Collection) -> "MaterialSammlung":
-        return MaterialSammlung._value2member_map_[e.value]
+    def von_englisch(e: _Collection) -> Optional["MaterialSammlung"]:
+        try:
+            return MaterialSammlung._value2member_map_[e.value]
+        except (KeyError, AttributeError):
+            return None
 
-    def zu_englisch(self) -> _Collection:
-        return _Collection._value2member_map_[self.value]
+    def zu_englisch(self) -> Optional[_Collection]:
+        try:
+            return _Collection._value2member_map_[self.value]
+        except (KeyError, AttributeError):
+            return None
 
     Akazienholzknopf = "ACACIA_BUTTON"
     Akazienholztür = "ACACIA_DOOR"

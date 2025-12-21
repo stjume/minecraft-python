@@ -49,6 +49,9 @@ class Material(BaseModel):
         return Material(typ=MaterialSammlung.von_englisch(m.type), x=m.x, y=m.y, z=m.z)
 
     def zu_englisch(self) -> _MaterialEN:
+        if self.typ is None:
+            return None
+
         return _MaterialEN(type=self.typ.zu_englisch(), x=self.x, y=self.y, z=self.z)
 
 
@@ -64,7 +67,7 @@ class Spieler(BaseModel):
     z: int
     rotation: int
     """ Rotation des Spielers von -180 bis 180 """
-    schaut_auf: Material
+    schaut_auf: Material | None
     """ Der nächste Block auf den Spieler schaut (maximal 100 Blöcke weit entfernt) """
     sneaked: bool
     """ True wenn Player sneaked """

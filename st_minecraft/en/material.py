@@ -1,4 +1,4 @@
-""" This file is auto-generated! See ressourcen/generate_enums.py in the git repo! """
+"""This file is auto-generated! See ressourcen/generate_enums.py in the git repo! """
 
 from enum import Enum
 

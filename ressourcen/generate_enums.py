@@ -18,21 +18,30 @@ def build_german_material_enum(
         target_file: Path where the generated enum file should be written
     """
 
-    code = """''' Diese Datei ist auto-generiert! Siehe ressourcen/generate_enums.py im git repo! '''
+    code = '''"""Diese Datei ist auto-generiert! Siehe ressourcen/generate_enums.py im git repo! """
 
 from enum import Enum
+from typing import Optional
+
 from st_minecraft.en.material import MaterialCollection as _Collection
 
 
 class MaterialSammlung(Enum):
 
     @staticmethod
-    def von_englisch(e: _Collection) -> "MaterialSammlung":
-        return MaterialSammlung._value2member_map_[e.value]
+    def von_englisch(e: _Collection) -> Optional["MaterialSammlung"]:
+        try:
+            return MaterialSammlung._value2member_map_[e.value]
+        except (KeyError, AttributeError):
+            return None
 
-    def zu_englisch(self) -> _Collection:
-        return _Collection._value2member_map_[self.value]
-"""
+    def zu_englisch(self) -> Optional[_Collection]:
+        try:
+            return _Collection._value2member_map_[self.value]
+        except (KeyError, AttributeError):
+            return None
+
+'''
     _write_german_enum(code, block_source_file, target_file)
 
 
@@ -48,13 +57,13 @@ def build_material_enum_english(
         target_file: Path where the generated enum file should be written
     """
 
-    code = """''' This file is auto-generated! See ressourcen/generate_enums.py in the git repo! '''
+    code = '''"""This file is auto-generated! See ressourcen/generate_enums.py in the git repo! """
 
 from enum import Enum
 
 
 class MaterialCollection(Enum):
-"""
+'''
     _write_enum_english(code, block_source_file, target_file)
 
 
@@ -63,20 +72,30 @@ def build_german_entity_enum(
     target_file: Path = Path("../st_minecraft/de/entity.py"),
 ):
     """Analogous to build_material_enum() but for Entities"""
-    code = """''' Diese Datei ist auto-generiert! Siehe ressourcen/generate_enums.py im git repo! '''
+    code = '''"""Diese Datei ist auto-generiert! Siehe ressourcen/generate_enums.py im git repo! """
 
 from enum import Enum
+from typing import Optional
+
 from st_minecraft.en.entity import EntityCollection as _Collection
 
 
 class EntitySammlung(Enum):
-    @staticmethod
-    def von_englisch(e: _Collection) -> "EntitySammlung":
-        return EntitySammlung._value2member_map_[e.value]
 
-    def zu_englisch(self) -> _Collection:
-        return EntitySammlung._value2member_map_[self.value]
-"""
+    @staticmethod
+    def von_englisch(e: _Collection) -> Optional["EntitySammlung"]:
+        try:
+            return EntitySammlung._value2member_map_[e.value]
+        except KeyError:
+            return None
+
+    def zu_englisch(self) -> Optional[_Collection]:
+        try:
+            return EntitySammlung._value2member_map_[self.value]
+        except KeyError:
+            return None
+
+'''
     _write_german_enum(code, entity_source_file, target_file)
 
 
@@ -85,13 +104,13 @@ def build_entity_enum_english(
     target_file: Path = Path("../st_minecraft/en/entity.py"),
 ):
     """Analogous to build_material_enum_english() but for Entities"""
-    code = """''' This file is auto-generated! See ressourcen/generate_enums.py in the git repo! '''
+    code = '''""" This file is auto-generated! See ressourcen/generate_enums.py in the git repo! """
 
 from enum import Enum
 
 
 class EntityCollection(Enum):
-"""
+'''
     _write_enum_english(code, entity_source_file, target_file)
 
 
