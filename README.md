@@ -1,33 +1,39 @@
-## sk_minecraft
+> [!CAUTION]
+> This library is in early development. We currently only permit private use. Any sort of commertial use is prohibited. This might change with future versions, when a final license is chosen.
+Caution
 
-Bibliothek zum Interagieren mit einem Minecraft Server durch Python Programme.
-Es handelt sich hier um den Frontend Part, welcher die Nutzung unseres [Server Plugins](https://github.com/sk-jume/minecraft-python-backend) auf Serverseite voraussetzt.
+## st_minecraft
 
-Die Bibliothek ist konzipiert, um Kindern spielerisch durch Interaktionen mit Minecraft die Programmiersprache python beizubringen.
-Sie ist *nicht* für den prduktiv-betrieb gedacht!
+(Eine deutsche Version dieser README ist in der Datei [README_DE.md](README_DE.md) verfügbar. Beachten Sie, dass die englische Version die _Hauptversion_ ist. Die deutsche Version _könnte_ veraltet sein.)
 
-### Verfügbare Interaktionen
-- Blöcke setzen und auslesen
-- Spieler abfragen und bewegen
-- Chat‑Nachrichten senden, empfangen und Befehle ausführen
-- Entities (Mobs, Items, etc.) spawnen und bearbeiten
-- Spieler‑Inventar verwalten
-- Mit Bossleisten arbeiten
+Library for interacting with a Minecraft server through Python programs.
+This is the frontend part, which requires the use of our [Server Plugin](https://github.com/sk-jume/minecraft-python-backend) on the server side.
 
-Wenn du noch ganz neu in Python und Programmierung bist: keine Sorge. Folge einfach den Schritten unten und kopiere das Beispiel. In wenigen Minuten solltest du erste Ergebnisse sehen.
+The library is designed to teach children the Python programming language playfully through interactions with Minecraft.
+It is *not* intended for production use!
 
-### Was du brauchst
+### Available Interactions
+- Set and read blocks
+- Query and move players
+- Send and receive chat messages and execute commands
+- Spawn and edit entities (mobs, items, etc.)
+- Manage player inventory
+- Work with boss bars
 
-- Einen Minecraft‑Java‑Edition‑Server, auf dem das passende Server Plugin läuft.
-Mehr dazu findest du in der Dokumentation des [Server Plugins](https://github.com/sk-jume/minecraft-python-backend).
-Wenn der Server für dich aufgesetzt wurde brauchst du die IP und Port.
-- Python 3.10 oder neuer auf deinem Computer. Falls noch nicht installiert: von `https://www.python.org/downloads/` herunterladen und installieren.
-    - Achte darauf Python zum "PATH" während dem Install hinzuzufügen.
-- Wir empfehlen darüber hinaus [Pycharm](https://www.jetbrains.com/pycharm/download) zu benutzten, die kostenfreie Version ohne Abo reicht völlig aus!
+If you're completely new to Python and programming: don't worry. Just follow the steps below and copy the example. You should see first results in a few minutes.
 
-### Installation mit pip
+### What You Need
 
-Öffne dein Terminal (macOS/Linux) oder die Eingabeaufforderung/PowerShell (Windows) und installiere das Paket:
+- A Minecraft Java Edition server with the appropriate server plugin running.
+  More information can be found in the documentation of the [Server Plugin](https://github.com/sk-jume/minecraft-python-backend).
+  If the server has been set up for you, you need the IP and port.
+- Python 3.10 or newer on your computer. If not yet installed: download and install from `https://www.python.org/downloads/`.
+    - Make sure to add Python to "PATH" during installation.
+- We also recommend using [PyCharm](https://www.jetbrains.com/pycharm/download), the free version without subscription is completely sufficient!
+
+### Installation with pip
+
+Open your terminal (macOS/Linux) or command prompt/PowerShell (Windows) and install the package:
 
 #### Windows
 ```bash
@@ -39,74 +45,85 @@ py -m pip install st_minecraft
 python3 -m pip install st_minecraft
 ```
 
-### Quickstart (kopieren & einfügen)
+### Quickstart (copy & paste)
 
-Beispiele, wie du die Library benutzt findest du in [demo/](demo/).
+Examples of how to use the library can be found in [demo/](demo/).
 
 
-### So ist die Bibliothek aufgebaut
+### How the Library is Structured
 
-Die Funktionsnamen sind auf Deutsch gehalten und einsteigerfreundlich:
-- Blöcke: `setze_block(...)`, `hole_block(...)`
-- Spieler: `hole_spieler(...)`, `spieler_position_setzen(...)`, `spieler_leben_setzen(...)`, `spieler_hunger_setzen(...)`, `spieler_xp_level_setzen(...)`, `spieler_geschwindigkeit_setzen(...)`
-- Chat & Befehle: `sende_an_chat(...)`, `sende_befehl(...)`
+The function names are available in german and english and kept beginner-friendly:
+
+#### English examples
+- Blocks: `set_block(...)`, `get_block(...)`
+- Players: `get_player(...)`, `set_player_position(...)`, `set_player_health(...)`, `set_player_hunger(...)`, `set_player_xp_level(...)`, `set_player_velocity(...)`
+- Chat & Commands: `send_to_chat(...)`, `send_command(...)`
+- Entities: `spawn_entity(...)`, `set_entity_name(...)`, `set_entity_position(...)`, `set_entity_ai(...)`
+- Inventory: `give_item(...)`, `get_inventory(...)`
+
+Block and entity types come from the English enums `MaterialCollection` and `EntityCollection` (e.g., `MaterialCollection.Melon`, `EntityCollection.Sheep`).
+
+#### German examples
+- Blocks: `setze_block(...)`, `hole_block(...)`
+- Players: `hole_spieler(...)`, `spieler_position_setzen(...)`, `spieler_leben_setzen(...)`, `spieler_hunger_setzen(...)`, `spieler_xp_level_setzen(...)`, `spieler_geschwindigkeit_setzen(...)`
+- Chat & Commands: `sende_an_chat(...)`, `sende_befehl(...)`
 - Entities: `erzeuge_entity(...)`, `entity_name_setzen(...)`, `entity_position_setzen(...)`, `entity_ai_setzen(...)`
-- Inventar: `gebe_item(...)`, `hole_inventar(...)`
+- Inventory: `gebe_item(...)`, `hole_inventar(...)`
 
-Block‑ und Entity‑Typen kommen aus den deutschen Enums `MaterialSammlung` und `EntitySammlung` (z. B. `MaterialSammlung.Melone`, `EntitySammlung.Schaf`).
+Block and entity types come from the German enums `MaterialSammlung` and `EntitySammlung` (e.g., `MaterialSammlung.Melone`, `EntitySammlung.Schaf`).
 
-### Fehlerbehebung
+### Troubleshooting
 
-- RuntimeError: „Keine Verbindung zum Server. Bitte zuerst verbinden.“
-  - Rufe zuerst `verbinden(HOST, PORT)` auf. Prüfe IP/Port und ob der Server läuft.
-- Timeout/Keine Antwort vom Server
-  - Der Server ist ggf. nicht erreichbar oder das Backend läuft nicht. Prüfe zusätzlich IP und Port.
-- Ich kenne die Koordinaten (x, y, z) nicht
-  - Stelle dich im Spiel an die gewünschte Stelle und drücke F3 (Java Edition), um deine Position zu sehen. Alternativ mit kleinen Testkoordinaten in der Nähe des Spawns beginnen.
+- RuntimeError: "No connection to server. Please connect first."
+  - First call `connect(HOST, PORT)`. Check IP/port and whether the server is running.
+- Timeout/No response from server
+  - The server may not be reachable or the backend is not running. Also check IP and port.
+- I don't know the coordinates (x, y, z)
+  - Stand at the desired location in the game and press F3 (Java Edition) to see your position. Alternatively, start with small test coordinates near the spawn.
 
 ---
 
-## Funktionsabdeckung zum [Backend](https://github.com/sk-jume/minecraft-python-backend)
+## Feature Coverage for [Backend](https://github.com/sk-jume/minecraft-python-backend)
 
-Hier ist eine grobe Checkliste der Backend‑Befehle und was davon in dieser Bibliothek umgesetzt ist:
+Here is a rough checklist of backend commands and what is implemented in this library:
 
-### Checkliste der API‑Befehle
+### API Commands Checklist
 
-#### Block‑Befehle
+#### Block Commands
 
-* [x] `setBlock <x> <y> <z> <blockid>` — Setzt einen Block an einer bestimmten Position
-* [x] `getBlock <x> <y> <z>` — Liest den Block‑Typ an einer Position aus
+* [x] `setBlock <x> <y> <z> <blockid>` — Sets a block at a specific position
+* [x] `getBlock <x> <y> <z>` — Reads the block type at a position
 
-#### Spieler‑Befehle
+#### Player Commands
 
-* [x] `getPlayer <index>` — Spielerdaten abrufen (Name, Koordinaten, Rotation)
+* [x] `getPlayer <index>` — Retrieve player data (name, coordinates, rotation)
 * [x] `setPlayerPos <playerindex> <x> <y> <z> ?rotation:?`
 * [x] `setPlayerStat <type> <playerIndex> <value>`
 * [x] `setPlayerVelocity <type> <playerIndex> <value>`
 
-#### Chat‑Befehle
+#### Chat Commands
 
-* [x] `postChat <message>` — Nachricht in den In‑Game‑Chat senden
-* [x] `chatCommand <command>` — Befehl per Chat ausführen (ohne `/`)
+* [x] `postChat <message>` — Send message to in-game chat
+* [x] `chatCommand <command>` — Execute command via chat (without `/`)
 
-#### Entity‑Befehle
+#### Entity Commands
 
-* [x] `spawnEntity <x> <y> <z> <entityid>` — Entity an Position spawnen
+* [x] `spawnEntity <x> <y> <z> <entityid>` — Spawn entity at position
 * [x] `editEntity <target> ?name:String? ?position:x;y;z? ?ai:boolean?`
 * [x] `getEntity <target>`
 
-#### Inventar‑Befehle
+#### Inventory Commands
 
-* [x] `addInv <playerIndex> <materialId> <amount> ?name:? ?slot:? !unbreakable!` — Item ins Spieler‑Inventar legen
-* [x] `getInv <playerIndex>` — Aktuellen Inventarinhalt eines Spielers abrufen
+* [x] `addInv <playerIndex> <materialId> <amount> ?name:? ?slot:? !unbreakable!` — Place item in player inventory
+* [x] `getInv <playerIndex>` — Retrieve current inventory contents of a player
 
 #### ⚡ Batching
 
-* [ ] `batch ;|;<command>;|;<command>` — Mehrere Befehle in einer Nachricht
+* [ ] `batch ;|;<command>;|;<command>` — Multiple commands in one message
 
-#### Bossleisten‑Befehle
+#### Boss Bar Commands
 
-* [x] `spawnBossBar <name> <text>` — Bossleiste mit Namen und Text erstellen
-* [x] `editBossBar <command> <name> ?text:? ?color:? ?value:? ?style:?` — Existierende Bossleiste bearbeiten
+* [x] `spawnBossBar <name> <text>` — Create boss bar with name and text
+* [x] `editBossBar <command> <name> ?text:? ?color:? ?value:? ?style:?` — Edit existing boss bar
 
-(Teile dieser Readme wurden mit Hilfe von AI generiert und danach manuell auf Richtigkeit überprüft).
+(Parts of this README were generated with the help of AI and then manually checked for correctness).
