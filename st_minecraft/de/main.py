@@ -9,10 +9,10 @@ from st_minecraft.de.daten_modelle import RichtungSammlung
 from st_minecraft.de.daten_modelle import Spieler
 from st_minecraft.de.entity import EntitySammlung
 from st_minecraft.de.material import MaterialSammlung
-from st_minecraft.en.daten_modelle import Dimension
+from st_minecraft.en import Dimension
 
 
-def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung, dimension: Dimension = Dimension.Welt) -> None:
+def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung, dimension: Dimension = Dimension.World) -> None:
     """
     Setzt einen Block im Minecraft-Spiel.
     Du kannst damit auch bereits existierende Blöcke ersetzen.
@@ -25,13 +25,13 @@ def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung, dimension: 
         y (int): Y-Koordinate für den Block
         z (int): Z-Koordinate für den Block
         block_typ (MaterialSammlung): Block als Element aus der MaterialSammlung, z.B. MaterialSammlung.Melone
-        dimension (Dimension): Dimension in der nach dem Block gesucht werden soll (Standard: Dimension.Welt)
+        dimension (Dimension): Dimension in der nach dem Block gesucht werden soll (Standard: Dimension.World)
     """
     # TODO: Das genaue Befehlsformat für das Protokoll festlegen
-    return __st_minecraft_en.set_block(x, y, z, block_typ, dimension.zu_englisch())
+    return __st_minecraft_en.set_block(x, y, z, block_typ.zu_englisch(), dimension)
 
 
-def hole_block(x: int, y: int, z: int, dimension: Dimension = Dimension.Welt) -> Material:
+def hole_block(x: int, y: int, z: int, dimension: Dimension = Dimension.World) -> Material:
     """
     Frag ab was für ein Block sich an der Koordinate befindet
     Du bekommst ein Block-Objekt zurück, dass unter .typ den typ enthält
@@ -41,11 +41,11 @@ def hole_block(x: int, y: int, z: int, dimension: Dimension = Dimension.Welt) ->
         x (int): X-Koordinate des Blocks
         y (int): Y-Koordinate des Blocks
         z (int): Z-Koordinate des Blocks
-        dimension (Dimension): Dimension in der nach dem Block gesucht werden soll (Standard: Dimension.Welt)
+        dimension (Dimension): Dimension in der nach dem Block gesucht werden soll (Standard: Dimension.World)
     Returns:
         Den Block an der Koordinate als Datentyp `Material`
     """
-    m = __st_minecraft_en.get_block(x, y, z, dimension.zu_englisch())
+    m = __st_minecraft_en.get_block(x, y, z, dimension)
 
     return Material.von_englisch(m)
 
@@ -140,7 +140,7 @@ def zeige_titel(
     )
 
 
-def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung, dimension: Dimension = Dimension.Welt) -> Entity:
+def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung, dimension: Dimension = Dimension.World) -> Entity:
     """
     Erzeuge eine entity an einer bestimmten Position
     Eine Liste aller Entities findest du hier:
@@ -156,7 +156,7 @@ def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung, dimension: Di
     Returns:
         Du bekommst ein Entity Objekt zurück. Mit diesem kannst du später wieder auf das Entity zugreifen.
     """
-    e = __st_minecraft_en.spawn_entity(x, y, z, entity.zu_englisch(), dimension.zu_englisch())
+    e = __st_minecraft_en.spawn_entity(x, y, z, entity.zu_englisch(), dimension)
     return Entity.von_englisch(e)
 
 
@@ -219,7 +219,7 @@ def spieler_position_setzen(
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem er bewegt wurde)
     """
 
-    p = __st_minecraft_en.set_player_position(spieler.zu_englisch(), x, y, z, rotation, dimension.zu_englisch())
+    p = __st_minecraft_en.set_player_position(spieler.zu_englisch(), x, y, z, rotation, dimension)
     return Spieler.von_englisch(p)
 
 
@@ -331,7 +331,7 @@ def entity_position_setzen(
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """
-    e = __st_minecraft_en.set_entity_position(entity.zu_englisch(), x, y, z, dimension.zu_englisch())
+    e = __st_minecraft_en.set_entity_position(entity.zu_englisch(), x, y, z, dimension)
     return Entity.von_englisch(e)
 
 
