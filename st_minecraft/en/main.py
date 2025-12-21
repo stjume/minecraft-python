@@ -291,7 +291,7 @@ def get_inventory(player: Player) -> Inventory:
 
 
 def set_player_position(
-    player: Player, x: int, y: int, z: int, rotation: int = None, dimension: Dimension = Dimension.World
+    player: Player, x: int, y: int, z: int, *, rotation: int = None, dimension: Dimension = Dimension.World
 ) -> Player:
     """
     Change the position in x-, y-, z-direction and rotation

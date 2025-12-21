@@ -129,7 +129,7 @@ class Spieler(BaseModel):
             x=self.x,
             y=self.y,
             z=self.z,
-            dimension=dimension,
+            dimension=self.dimension,
             rotation=self.rotation,
             looking_at=self.schaut_auf.zu_englisch(),
             sneaked=self.sneaked,
@@ -220,7 +220,7 @@ class Entity(BaseModel):
             x=self.x,
             y=self.y,
             z=self.z,
-            dimension=e.dimension,
+            dimension=self.dimension,
             health=self.leben,
             ai=self.ai,
         )

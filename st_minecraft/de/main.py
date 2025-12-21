@@ -203,10 +203,12 @@ def hole_inventar(spieler: Spieler) -> Inventar:
 
 
 def spieler_position_setzen(
-    spieler: Spieler, x: int, y: int, z: int, rotation: int = None, dimension: Dimension = Dimension.World
+    spieler: Spieler, x: int, y: int, z: int, *, rotation: int = None, dimension: Dimension = Dimension.World
 ) -> Spieler:
     """
-    Verändere die position in x-, y-, z-Richtung und Rotation
+    Verändere die position in x-, y-, z-Richtung, Dimension und Rotation
+    Dimension und Rotation müssen dabei Key-Word Argumente sein.
+
     Args:
         spieler: Zu bearbeitender Spieler
         x: neue x-koordinate
@@ -219,7 +221,7 @@ def spieler_position_setzen(
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem er bewegt wurde)
     """
 
-    p = __st_minecraft_en.set_player_position(spieler.zu_englisch(), x, y, z, rotation, dimension)
+    p = __st_minecraft_en.set_player_position(spieler.zu_englisch(), x, y, z, rotation=rotation, dimension=dimension)
     return Spieler.von_englisch(p)
 
 

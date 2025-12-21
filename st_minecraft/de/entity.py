@@ -17,7 +17,7 @@ class EntitySammlung(Enum):
 
     def zu_englisch(self) -> Optional[_Collection]:
         try:
-            return EntitySammlung._value2member_map_[self.value]
+            return _Collection._value2member_map_[self.value]
         except KeyError:
             return None
 
