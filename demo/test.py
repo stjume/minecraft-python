@@ -1,12 +1,12 @@
-import st_minecraft
+import st_minecraft.de as st_minecraft
 
-st_minecraft.connect("localhost", 12345)
+st_minecraft.verbinden("localhost", 12345)
 
 spieler = st_minecraft.hole_spieler()
 
-st_minecraft.spieler_leben_setzen(spieler, 5)
+st_minecraft.spieler_leben_setzen(spieler, 20)
 
-st_minecraft.spieler_max_leben_setzten(spieler, 10)
+st_minecraft.spieler_max_leben_setzten(spieler, 40)
 
 st_minecraft.spieler_hunger_setzen(spieler, 20)
 
