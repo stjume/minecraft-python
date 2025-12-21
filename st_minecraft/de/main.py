@@ -95,6 +95,13 @@ def hole_chat() -> list[Nachricht]:
     return [Nachricht.von_englisch(n) for n in nachrichten]
 
 
+def sende_befehl(befehl: str) -> None:
+    """
+    Sende einen Befehl an den Server.
+    Args:
+        befehl: Der Befehl, der an den Server gesendet werden soll (ohne / am Anfang)
+    """
+    return __st_minecraft_en.send_command(befehl)
 def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
     """
     Erzeuge eine entity an einer bestimmten Position
