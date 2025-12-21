@@ -4,6 +4,7 @@ import st_minecraft.en as __st_minecraft_en
 from st_minecraft.de.daten_modelle import Entity
 from st_minecraft.de.daten_modelle import Inventar
 from st_minecraft.de.daten_modelle import Material
+from st_minecraft.de.daten_modelle import Nachricht
 from st_minecraft.de.daten_modelle import RichtungSammlung
 from st_minecraft.de.daten_modelle import Spieler
 from st_minecraft.de.entity import EntitySammlung
@@ -83,13 +84,15 @@ def sende_an_chat(nachricht: str):
     return __st_minecraft_en.send_to_chat(nachricht)
 
 
-def hole_chat():  # TODO signature
+def hole_chat() -> list[Nachricht]:
     """
     Hole alle Nachrichten die seit der letzen Abfrage in den Chat geschrieben wurden.
     Returns:
         Du bekommst eine Liste aller gesendeten Nachrichten zurück
     """
-    return __st_minecraft_en.get_chat()
+    nachrichten = __st_minecraft_en.get_chat()
+
+    return [Nachricht.von_englisch(n) for n in nachrichten]
 
 
 def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:

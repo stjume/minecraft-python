@@ -14,6 +14,7 @@ from st_minecraft.en.data_models import Inventory
 from st_minecraft.en.data_models import InventoryField
 from st_minecraft.en.data_models import Item
 from st_minecraft.en.data_models import Material
+from st_minecraft.en.data_models import Message
 from st_minecraft.en.data_models import Player
 from st_minecraft.en.entity import EntityCollection
 from st_minecraft.en.material import MaterialCollection
@@ -102,7 +103,7 @@ def send_to_chat(message: str):
     _send_command(command)
 
 
-def get_chat():
+def get_chat() -> list[Message]:
     """
     Get all messages that have been written to the chat since the last query.
     Returns:
@@ -118,7 +119,12 @@ def get_chat():
     if messages_str == "":
         return []
 
-    messages = messages_str.split(ARG_SEPARATOR)
+    messages_str = messages_str.split(ARG_SEPARATOR)
+
+    messages = [
+        Message(text=text, sender_name=player_name) for player_name, text in map(lambda s: s.split(":"), messages_str)
+    ]
+
     return messages
 
 

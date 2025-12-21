@@ -244,3 +244,14 @@ class Inventory(dict[int, InventoryField]):
         # I think this is the peak of the library. A non-generic wrapper around KeyError.
         except KeyError:
             raise InventoryFieldEmptyError(f"Field {item} is empty. Therefore you cannot access it here.")
+
+
+class Message(BaseModel):
+    """
+    Represents a message sent to the chat by the user
+    """
+
+    text: str
+    """The text sent to the chat"""
+    sender_name: str
+    """Name of the player that sent this message"""

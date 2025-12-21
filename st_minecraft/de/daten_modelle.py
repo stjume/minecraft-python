@@ -13,6 +13,7 @@ from st_minecraft.en import Inventory as _InventoryEN
 from st_minecraft.en import InventoryField as _InventoryFieldEN
 from st_minecraft.en import Item as _ItemEN
 from st_minecraft.en import Material as _MaterialEN
+from st_minecraft.en import Message as _MessageEN
 from st_minecraft.en import Player as _PlayerEN
 
 
@@ -259,3 +260,21 @@ class Inventar(dict[int, InventarFeld]):
 
     def zu_englisch(self) -> _InventoryEN:
         return _InventoryEN({index: field.zu_englisch() for index, field in self.items()})
+
+
+class Nachricht(BaseModel):
+    """
+    Repräsentiert eine Nachricht, die vom Nutzer an den Chat gesendet wurde
+    """
+
+    text: str
+    """Der in den Chat gesendete Text"""
+    sender_name: str
+    """Name des Spielers, der diese Nachricht gesendet hat"""
+
+    @staticmethod
+    def von_englisch(m: _MessageEN):
+        return Nachricht(text=m.text, absender_name=m.sender_name)
+
+    def zu_englisch(self) -> _MessageEN:
+        return _MessageEN(text=self.text, sender_name=self.absender_name)
