@@ -16,8 +16,10 @@ connection: Optional[socket.socket] = None
 
 ARG_SEPARATOR = "𝇉"
 
+DEFAULT_PORT = 25595
 
-def connect(ip: str, port: int) -> None:
+
+def connect(ip: str, port: int = DEFAULT_PORT) -> None:
     """
     Establishes a connection to the Minecraft server.
 

@@ -1,6 +1,6 @@
 import st_minecraft.de as st_minecraft
 
-st_minecraft.verbinden("localhost", 12345)
+st_minecraft.verbinden("localhost")
 
 spieler = st_minecraft.hole_spieler()
 
