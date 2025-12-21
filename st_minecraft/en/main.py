@@ -19,7 +19,7 @@ from st_minecraft.en.entity import EntityCollection
 from st_minecraft.en.material import MaterialCollection
 
 
-def set_block(x: int, y: int, z: int, block_type: MaterialSammlung) -> None:
+def set_block(x: int, y: int, z: int, block_type: MaterialCollection) -> None:
     """
     Places a block in the Minecraft game.
     You can also use this to replace already existing blocks.
@@ -54,7 +54,7 @@ def get_block(x: int, y: int, z: int) -> Material:
     command = _build_command("getBlock", x, y, z)
     _send_command(command)
     data = _receive()
-    block = Material.from_string(x=x, y=y, z=z, typ=_bytes_to_text(data).upper())
+    block = Material.from_string(x=x, y=y, z=z, type=_bytes_to_text(data).upper())
     return block
 
 
