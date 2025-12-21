@@ -102,6 +102,41 @@ def sende_befehl(befehl: str) -> None:
         befehl: Der Befehl, der an den Server gesendet werden soll (ohne / am Anfang)
     """
     return __st_minecraft_en.send_command(befehl)
+
+
+def zeige_titel(
+    text: str,
+    *,
+    untertitel: str = "",
+    spieler_index: int = -1,
+    einblende_zeit: float = 1,
+    anzeige_zeit: float = 5,
+    ausblende_zeit: float = 1,
+):
+    """
+    Zeigt eine Titel-Nachricht für eine Auswahl an Spielern an.
+    Alle Argumente außer `text` sind verpflichtende Keyword-Argumente, z.B. zeige_titel("Hallo", spieler_index=0, anzeige_zeit=5)
+
+    Args:
+        text: Der zu zeigende Titel (erforderlich)
+        untertitel: Der zu zeigende Untertitel
+        spieler_index: Index eines Spielers, bei einem Index kleiner als 0 wird der Titel allen Spielern angezeigt
+        einblende_zeit: Zeit (in Sekunden), die benötigt wird, um den Titel einzublenden
+        anzeige_zeit: Zeit (in Sekunden), die der Titel angezeigt wird
+        ausblende_zeit: Zeit (in Sekunden), die benötigt wird, um den Titel auszublenden
+    """
+
+    # Es gibt 20 Ticks pro Sekunde
+    return __st_minecraft_en.show_title(
+        text,
+        subtitle=untertitel,
+        player_index=spieler_index,
+        fade_in_time=einblende_zeit,
+        display_time=anzeige_zeit,
+        fade_out_time=ausblende_zeit,
+    )
+
+
 def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung) -> Entity:
     """
     Erzeuge eine entity an einer bestimmten Position

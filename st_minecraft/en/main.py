@@ -128,6 +128,46 @@ def get_chat() -> list[Message]:
     return messages
 
 
+def seconds_to_ticks(seconds: float) -> int:
+    """Converts seconds to ticks (rounding mode: floor)"""
+    # there are 20 ticks per second
+    return int(seconds * 20)
+
+
+def show_title(
+    text: str,
+    *,
+    subtitle: str = "",
+    player_index: int = -1,
+    fade_in_time: float = 1,
+    display_time: float = 5,
+    fade_out_time: float = 1,
+):
+    """
+    Show a title message to a set of players.
+    All arguments beside `text` are mandatory keyword-arguments e.g. show_title("hello", player_index=0, display_time=5)
+
+    Args:
+        text: The title to show (required)
+        subtitle: The subtitle to show
+        player_index: Index of a player, if the index is smaller then 0 the title is shown to all players
+        fade_in_time: Time (in seconds) it takes for the title to fade in
+        display_time: Time (in seconds) the title is displayed
+        fade_out_time: Time (in seconds) it takes for the title to fade out
+    """
+
+    command = _build_command(
+        "showTitle",
+        player_index,
+        text,
+        subtitle,
+        seconds_to_ticks(fade_in_time),
+        seconds_to_ticks(display_time),
+        seconds_to_ticks(fade_out_time),
+    )
+    _send_command(command)
+
+
 def send_command(command: str):
     """
     Execute a Minecraft command, as if you were entering it on the server.
