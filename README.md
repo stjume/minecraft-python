@@ -132,8 +132,13 @@ Block and entity types come from the German enums `MaterialSammlung` and `Entity
 ### Troubleshooting
 
 - RuntimeError: "No connection to server. Please connect first."
-  - First call `connect(HOST, PORT)`. Check IP/port and whether the server is running.
+  - First call `connect(HOST)`. Check the servers IP and whether the server is running.
 - Timeout/No response from server
   - The server may not be reachable or the backend is not running. Also check IP and port.
 - I don't know my coordinates (x, y, z)
   - Stand at the desired location in the game and press F3 to see your position. Alternatively, start with small test coordinates near the spawn.
+
+#### AI Disclaimer
+- Parts of the README and code have been translated using AI.
+- All content has been reviewed by humans before publication.
+- The logic itself was written by hand.
