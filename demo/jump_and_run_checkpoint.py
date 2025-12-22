@@ -51,3 +51,12 @@ while True:
 
     if spieler.y < unterster_punkt:
         st_minecraft.spieler_position_setzen(spieler, checkpoint.x, checkpoint.y, checkpoint.z)
+        if spieler.max_leben < 3:
+            st_minecraft.sende_an_chat("Game Over")
+            checkpoint = None
+            gestartet = False
+            st_minecraft.spieler_max_leben_setzten(spieler, 20)
+            st_minecraft.spieler_leben_setzen(spieler, 20)
+            continue
+
+        st_minecraft.spieler_max_leben_setzten(spieler, spieler.max_leben - 2)

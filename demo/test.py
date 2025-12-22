@@ -1,8 +1,18 @@
 import st_minecraft.de as st_minecraft
+from st_minecraft.en import Dimension
 
-st_minecraft.verbinden("localhost", 12345)
+st_minecraft.verbinden("localhost")
+
+st_minecraft.zeige_titel("Hallo Welt!")
 
 spieler = st_minecraft.hole_spieler()
+
+cmd = f"op {spieler.name}"
+st_minecraft.sende_befehl(cmd)
+print(cmd)
+
+
+st_minecraft.spieler_position_setzen(spieler, spieler.x, spieler.y - 20, spieler.z, dimension=Dimension.Nether)
 
 st_minecraft.spieler_leben_setzen(spieler, 20)
 

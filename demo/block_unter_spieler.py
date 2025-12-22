@@ -1,11 +1,7 @@
-import st_minecraft.de as st_minecraft
+import st_minecraft.de as mc
 
-st_minecraft.verbinden("localhost")
-
-print("verbunden")
+mc.verbinden("localhost")
 
 while True:
-    spieler = st_minecraft.hole_spieler()
-
-    st_minecraft.setze_block(spieler.x, spieler.y - 1, spieler.z, st_minecraft.MaterialSammlung.Stein)
-    # time.sleep(0.1)
+    spieler = mc.hole_spieler()
+    mc.setze_block(spieler.x, spieler.y - 1, spieler.z, mc.MaterialSammlung.Stein)
