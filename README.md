@@ -1,7 +1,7 @@
 > [!CAUTION]
 > This library is in early development. We currently only permit private use. Any sort of commertial use is prohibited. This might change with future versions, when a final license is chosen.
 
-## st_minecraft
+# st_minecraft
 
 (Eine deutsche Version dieser README ist in der Datei [README_DE.md](README_DE.md) verfügbar. Beachten Sie, dass die englische Version die _Hauptversion_ ist. Die deutsche Version _könnte_ veraltet sein.)
 
@@ -13,16 +13,50 @@ It is *not* intended for production use!
 
 We provide an english and a german version of the library.
 
+### Quick Example
+
+```python
+import st_minecraft.en as mc
+from st_minecraft.en.material import MaterialCollection
+
+mc.connect("localhost")
+
+while True:
+  player = mc.get_player()
+  mc.set_block(player.x, player.y - 1, player.z, MaterialCollection.Diamond_Block)
+```
+
+
+```python
+import st_minecraft.de as mc
+
+mc.verbinden("localhost")
+
+while True:
+  spieler = mc.hole_spieler()
+  mc.setze_block(spieler.x, spieler.y - 1, spieler.z, mc.MaterialSammlung.Stein)
+```
+
+If you're completely new to Python and programming: don't worry.
+Just follow the steps below and copy the example.
+You should see first results in a few minutes.
+
+
 ### Available Interactions
-- Set and read blocks
-- Query and move players
+- Interact with players
+  - fetch information about player (position, stats, inventory)
+  - modify player position (incl. dimension and rotation)
+  - modify player stats (xp, health, hunger)
+  - give items
+- Interact with Blocks
+  - Set Blocks
+  - Fetch Blocks
 - Send and receive chat messages and execute commands
 - Spawn and edit entities (mobs, items, etc.)
-- Manage player inventory
-- Work with boss bars
+- Create and edit boss bars
+- Display titles
 
-If you're completely new to Python and programming: don't worry. Just follow the steps below and copy the example. You should see first results in a few minutes.
-
+## How to install
 ### What You Need
 
 - A Minecraft Java Edition server with the appropriate server plugin running.
@@ -34,16 +68,38 @@ If you're completely new to Python and programming: don't worry. Just follow the
 
 ### Installation with pip
 
-Open your terminal (macOS/Linux) or command prompt/PowerShell (Windows) and install the package:
+#### (Optional) Using a virtual eenvironment
+We recommend to us a [venv](https://docs.python.org/3/library/venv.html):
+Windows:
+```
+py -m venv venv
+venv\Scripts\Activate.ps1
+```
 
+Linux/MacOS:
+```
+python3 -m venv venv
+venv/bin/activate
+```
+
+#### Installing the library
+
+> [!CAUTION]
+> We will publish this package via pypi in the near future. For now you need to do a local install.
+
+Download this repository.
+
+Open your terminal (macOS/Linux) or command prompt/PowerShell (Windows) navigate to the folder you downloaded it to.
+
+Install it using:
 #### Windows
 ```bash
-py -m pip install st_minecraft
+py -m pip install .
 ```
 
 #### Linux / MacOS
 ```bash
-python3 -m pip install st_minecraft
+python3 -m pip install .
 ```
 
 ### Quickstart (copy & paste)
@@ -79,52 +135,5 @@ Block and entity types come from the German enums `MaterialSammlung` and `Entity
   - First call `connect(HOST, PORT)`. Check IP/port and whether the server is running.
 - Timeout/No response from server
   - The server may not be reachable or the backend is not running. Also check IP and port.
-- I don't know the coordinates (x, y, z)
-  - Stand at the desired location in the game and press F3 (Java Edition) to see your position. Alternatively, start with small test coordinates near the spawn.
-
----
-
-## Feature Coverage for [Backend](https://github.com/sk-jume/minecraft-python-backend)
-
-Here is a rough checklist of backend commands and what is implemented in this library:
-
-### API Commands Checklist
-
-#### Block Commands
-
-* [x] `setBlock <x> <y> <z> <blockid>` — Sets a block at a specific position
-* [x] `getBlock <x> <y> <z>` — Reads the block type at a position
-
-#### Player Commands
-
-* [x] `getPlayer <index>` — Retrieve player data (name, coordinates, rotation)
-* [x] `setPlayerPos <playerindex> <x> <y> <z> ?rotation:?`
-* [x] `setPlayerStat <type> <playerIndex> <value>`
-* [x] `setPlayerVelocity <type> <playerIndex> <value>`
-
-#### Chat Commands
-
-* [x] `postChat <message>` — Send message to in-game chat
-* [x] `chatCommand <command>` — Execute command via chat (without `/`)
-
-#### Entity Commands
-
-* [x] `spawnEntity <x> <y> <z> <entityid>` — Spawn entity at position
-* [x] `editEntity <target> ?name:String? ?position:x;y;z? ?ai:boolean?`
-* [x] `getEntity <target>`
-
-#### Inventory Commands
-
-* [x] `addInv <playerIndex> <materialId> <amount> ?name:? ?slot:? !unbreakable!` — Place item in player inventory
-* [x] `getInv <playerIndex>` — Retrieve current inventory contents of a player
-
-#### ⚡ Batching
-
-* [ ] `batch ;|;<command>;|;<command>` — Multiple commands in one message
-
-#### Boss Bar Commands
-
-* [x] `spawnBossBar <name> <text>` — Create boss bar with name and text
-* [x] `editBossBar <command> <name> ?text:? ?color:? ?value:? ?style:?` — Edit existing boss bar
-
-(Parts of this README were generated with the help of AI and then manually checked for correctness).
+- I don't know my coordinates (x, y, z)
+  - Stand at the desired location in the game and press F3 to see your position. Alternatively, start with small test coordinates near the spawn.
