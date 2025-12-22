@@ -11,6 +11,8 @@ This is the frontend part, which requires the use of our [Server Plugin](https:/
 The library is designed to teach children the Python programming language playfully through interactions with Minecraft.
 It is *not* intended for production use!
 
+We provide an english and a german version of the library.
+
 ### Available Interactions
 - Set and read blocks
 - Query and move players
