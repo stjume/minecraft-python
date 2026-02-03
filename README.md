@@ -1,6 +1,3 @@
-> [!CAUTION]
-> This library is in early development. We currently only permit private use. Any sort of commercial use is prohibited. This might change with future versions, when a final license is chosen.
-
 # st_minecraft
 
 (Eine deutsche Version dieser README ist in der Datei [README_DE.md](README_DE.md) verfügbar. Beachten Sie, dass die englische Version die _Hauptversion_ ist. Die deutsche Version _könnte_ veraltet sein.)
