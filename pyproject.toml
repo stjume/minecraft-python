@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sk_minecraft"
+name = "st_minecraft"
 version = "1.0.0"
-description = "A Python package for sk_minecraft."
+description = "A Python package for st_minecraft."
 authors = [
     { name = "Your Name", email = "your.email@example.com" }
 ]
@@ -22,7 +22,7 @@ dynamic = ["dependencies", "optional-dependencies"]
 dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools.packages.find]
-include = ["sk_minecraft*"]
+include = ["st_minecraft*"]
 
 [tool.isort]
 profile = "black"
