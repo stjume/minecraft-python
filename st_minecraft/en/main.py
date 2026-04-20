@@ -89,7 +89,8 @@ def get_player_by_name(name: str) -> Player:
     Returns:
         You get a player object back that contains a lot of information about the player
     """
-
+    # ONLY convencience wrapper for the users
+    # please use get_player() directly for library development
     return get_player(name=name)
 
 
@@ -103,6 +104,8 @@ def get_player_by_index(index: int) -> Player:
     Returns:
         You get a player object back that contains a lot of information about the player
     """
+    # ONLY convencience wrapper for the users
+    # please use get_player() directly for library development
     return get_player(index=index)
 
 

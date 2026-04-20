@@ -70,7 +70,8 @@ def hole_spieler_durch_name(name: str) -> Spieler:
     Returns:
         Du bekommst ein Spieler Objekt zurück, welches eine Menge Infos über den Spieler enthält
     """
-
+    # ONLY convencience wrapper for the users
+    # please use hole_spieler() directly for library development
     return hole_spieler(name=name)
 
 
@@ -84,7 +85,8 @@ def hole_spiler_durch_index(index: int) -> Spieler:
     Returns:
         Du bekommst ein Spieler Objekt zurück, welches eine Menge Infos über den Spieler enthält
     """
-
+    # ONLY convencience wrapper for the users
+    # please use hole_spieler() directly for library development
     return hole_spieler(index=index)
 
 
