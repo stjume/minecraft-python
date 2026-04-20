@@ -1,7 +1,7 @@
 import st_minecraft.de as st_minecraft
 from st_minecraft.en import Dimension
 
-st_minecraft.verbinden("localhost")
+st_minecraft.verbinden()
 
 st_minecraft.zeige_titel("Hallo Welt!")
 

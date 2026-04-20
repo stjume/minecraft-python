@@ -19,12 +19,12 @@ ARG_SEPARATOR = "𝇉"
 DEFAULT_PORT = 25595
 
 
-def connect(ip: str, port: int = DEFAULT_PORT) -> None:
+def connect(ip: str = "0.0.0.0", port: int = DEFAULT_PORT) -> None:
     """
     Establishes a connection to the Minecraft server.
 
     Args:
-        ip (str): The IP address of the server.
+        ip (str): The IP address of the server (default is "0.0.0.0" - equivalent to "localhost")
         port (int): The port of the server.
     """
     # needed internally
