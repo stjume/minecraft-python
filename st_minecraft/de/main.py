@@ -80,6 +80,7 @@ def hole_spiler_durch_index(index: int) -> Spieler:
     Frage den Zustand eines Spielers durch Angabe eines index ab.
     Die Spieler sind durchnummeriert in der Reihenfolge in der sie dem Server beigetreten sind.
     Startend bei 0 für die erste Spieler:in
+
     Args:
         index: Index der abzufragenden Spieler:in
     Returns:
@@ -95,6 +96,10 @@ def hole_spieler(*, index: int | None = None, name: str | None = None) -> Spiele
     Frage den Zustand eines Spielers durch index oder name ab.
     Die Spieler sind durchnummeriert in der Reihenfolge in der sie dem Server beigetreten sind.
     Startend bei 0 für die erste Spieler:in
+
+    Hinweis.: Du MUSST explizit angeben, ob du name oder index meinst.
+    Beispiel: `hole_spieler(name="jumebonn1")` oder `hole_spieler(index="5")`
+
     Args:
         index: Index der abzufragenden Spieler:in ist optional (wenn du keinen Index angibst, wird index=0 verwendet)
         name: Name der abzufragenden Spieler:in ist optional (wenn du keinen Index angibst, wird index=0 verwendet)

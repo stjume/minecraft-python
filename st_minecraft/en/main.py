@@ -99,6 +99,10 @@ def get_player_by_index(index: int) -> Player:
     Query the state of a player by providing their id
     Players are numbered in the order in which they joined the server.
     Starting at 0 for the first player.
+
+    Note: You MUST explicitly specify whether you mean name or index.
+    Example: get_player(name="jumebonn1") or get_player(index="5")
+
     Args:
         index: Index of the player to query is optional (if you don't specify an id, id=0 is used)
     Returns:
