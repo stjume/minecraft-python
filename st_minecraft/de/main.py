@@ -62,17 +62,51 @@ def hole_entity(entity: Entity) -> Entity:
     return Entity.von_englisch(e)
 
 
-def hole_spieler(index: int = 0) -> Spieler:
+def hole_spieler_durch_name(name: str) -> Spieler:
     """
-    Frage den Zustand eines Spielers ab.
-    Die Spieler sind durchnummeriert in der Reihenfolge in der sie dem Server beigetreten sind.
-    Startend bei 0 für die erste Spieler:in
+    Frage den Zustand eines Spielers Angabe eines namens ab.
     Args:
-        index: Index der abzufragenden Spieler:in ist optional (wenn du keinen Index angibst, wird Index 0 verwendet)
+        name: Name der abzufragenden Spieler:in
     Returns:
         Du bekommst ein Spieler Objekt zurück, welches eine Menge Infos über den Spieler enthält
     """
-    p = __st_minecraft_en.get_player(index)
+    # ONLY convencience wrapper for the users
+    # please use hole_spieler() directly for library development
+    return hole_spieler(name=name)
+
+
+def hole_spiler_durch_index(index: int) -> Spieler:
+    """
+    Frage den Zustand eines Spielers durch Angabe eines index ab.
+    Die Spieler sind durchnummeriert in der Reihenfolge in der sie dem Server beigetreten sind.
+    Startend bei 0 für die erste Spieler:in
+
+    Args:
+        index: Index der abzufragenden Spieler:in
+    Returns:
+        Du bekommst ein Spieler Objekt zurück, welches eine Menge Infos über den Spieler enthält
+    """
+    # ONLY convencience wrapper for the users
+    # please use hole_spieler() directly for library development
+    return hole_spieler(index=index)
+
+
+def hole_spieler(*, index: int | None = None, name: str | None = None) -> Spieler:
+    """
+    Frage den Zustand eines Spielers durch index oder name ab.
+    Die Spieler sind durchnummeriert in der Reihenfolge in der sie dem Server beigetreten sind.
+    Startend bei 0 für die erste Spieler:in
+
+    Hinweis.: Du MUSST explizit angeben, ob du name oder index meinst.
+    Beispiel: `hole_spieler(name="jumebonn1")` oder `hole_spieler(index="5")`
+
+    Args:
+        index: Index der abzufragenden Spieler:in ist optional (wenn du keinen Index angibst, wird index=0 verwendet)
+        name: Name der abzufragenden Spieler:in ist optional (wenn du keinen Index angibst, wird index=0 verwendet)
+    Returns:
+        Du bekommst ein Spieler Objekt zurück, welches eine Menge Infos über den Spieler enthält
+    """
+    p = __st_minecraft_en.get_player(index=index, name=name)
     return Spieler.von_englisch(p)
 
 

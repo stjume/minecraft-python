@@ -56,6 +56,8 @@ def _receive(timeout: float = 2.0) -> bytes | None:
     if _timeout is not None:
         if _timeout == "None":
             _timeout = None
+        else:
+            _timeout = float(_timeout)
 
         spacer = "#" * 100
         print(

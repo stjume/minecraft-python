@@ -7,12 +7,21 @@ st_minecraft.zeige_titel("Hallo Welt!")
 
 spieler = st_minecraft.hole_spieler()
 
+spieler_durch_name = st_minecraft.hole_spieler_durch_name(spieler.name)
+
+spieler_durch_index = st_minecraft.hole_spiler_durch_index(spieler.id)
+
+assert spieler == spieler_durch_name
+
+assert spieler == spieler_durch_index
+
 cmd = f"op {spieler.name}"
 st_minecraft.sende_befehl(cmd)
 print(cmd)
 
 
 st_minecraft.spieler_position_setzen(spieler, spieler.x, spieler.y - 20, spieler.z, dimension=Dimension.Nether)
+st_minecraft.spieler_position_setzen(spieler, spieler.x, spieler.y + 20, spieler.z, dimension=Dimension.World)
 
 st_minecraft.spieler_leben_setzen(spieler, 20)
 

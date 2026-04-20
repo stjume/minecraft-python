@@ -81,17 +81,68 @@ def get_entity(entity: Entity) -> Entity:
     return entity
 
 
-def get_player(index: int = 0) -> Player:
+def get_player_by_name(name: str) -> Player:
     """
-    Query the state of a player.
-    Players are numbered in the order in which they joined the server.
-    Starting at 0 for the first player
+    Query the state of a player by providing their username
     Args:
-        index: Index of the player to query is optional (if you don't specify an index, index 0 is used)
+        name: Name of the player to query
     Returns:
         You get a player object back that contains a lot of information about the player
     """
-    command = _build_command("getPlayer", index)
+    # ONLY convencience wrapper for the users
+    # please use get_player() directly for library development
+    return get_player(name=name)
+
+
+def get_player_by_index(index: int) -> Player:
+    """
+    Query the state of a player by providing their id
+    Players are numbered in the order in which they joined the server.
+    Starting at 0 for the first player.
+
+    Note: You MUST explicitly specify whether you mean name or index.
+    Example: get_player(name="jumebonn1") or get_player(index="5")
+
+    Args:
+        index: Index of the player to query is optional (if you don't specify an id, id=0 is used)
+    Returns:
+        You get a player object back that contains a lot of information about the player
+    """
+    # ONLY convencience wrapper for the users
+    # please use get_player() directly for library development
+    return get_player(index=index)
+
+
+def get_player(*, index: int | None = None, name: str | None = None) -> Player:
+    """
+    Query the state of a player by index or name.
+    Players are numbered in the order in which they joined the server.
+    Starting at 0 for the first player.
+    Args:
+        index: Index of the player to query is optional (if you don't specify an index, index=0 is used)
+        name: Name of the player to query is optional (if you don't specify a name, index=0 is used)
+    Returns:
+        You get a player object back that contains a lot of information about the player
+    """
+
+    if index is not None and name is not None:
+        raise ValueError(
+            f"You can't provide name and index at the same time to get_player(), please choose what to set"
+        )
+
+    # if both is None, the default is get by index=0)
+    if index is None and name is None:
+        index = 0
+
+    # now that we got both edge cases out of the way
+    # and index is definitely set, we can decide what actually to do
+    if name is not None:
+        command = _build_command("getPlayerByName", name)
+
+    # okay, we go by index
+    else:
+        command = _build_command("getPlayer", index)
+
     _send_command(command)
     data = _receive()
     player = Player.from_raw_data(data)
@@ -317,7 +368,7 @@ def set_player_position(
     command = _build_command(*args)
     _send_command(command)
 
-    return get_player(player.id)
+    return get_player(index=player.id)
 
 
 def set_player_velocity(player: Player, direction: DirectionCollection, value: float) -> Player:
@@ -335,13 +386,13 @@ def set_player_velocity(player: Player, direction: DirectionCollection, value: f
     """
     command = _build_command("setPlayerVelocity", direction.value, player.id, value)
     _send_command(command)
-    return get_player(player.id)
+    return get_player(index=player.id)
 
 
 def set_player_max_health(player: Player, value: float) -> Player:
     """Set the maximum health of a player"""
     _set_player_property("MAX_HEALTH", player, value)
-    return get_player(player.id)
+    return get_player(index=player.id)
 
 
 def set_player_health(player: Player, value: float) -> Player:
@@ -355,7 +406,7 @@ def set_player_health(player: Player, value: float) -> Player:
         You get an updated version of the player back (state after the health was changed)
     """
     _set_player_property("HEALTH", player, value)
-    return get_player(player.id)
+    return get_player(index=player.id)
 
 
 def set_player_hunger(player: Player, value: float, saturation: float | None = None) -> Player:
@@ -374,7 +425,7 @@ def set_player_hunger(player: Player, value: float, saturation: float | None = N
     if saturation is not None:
         _set_player_property("SATURATION", player, saturation)
 
-    return get_player(player.id)
+    return get_player(index=player.id)
 
 
 def set_player_xp_level(player: Player, value: float) -> Player:
@@ -388,7 +439,7 @@ def set_player_xp_level(player: Player, value: float) -> Player:
         You get an updated version of the player back (state after the level was changed)
     """
     _set_player_property("XP_LEVEL", player, value)
-    return get_player(player.id)
+    return get_player(index=player.id)
 
 
 def set_player_xp_progress(player: Player, value: float) -> Player:
@@ -401,7 +452,7 @@ def set_player_xp_progress(player: Player, value: float) -> Player:
         You get an updated version of the player back (state after the progress was changed)
     """
     _set_player_property("XP_PROGRESS", player, value)
-    return get_player(player.id)
+    return get_player(index=player.id)
 
 
 def _set_player_property(type: str, player: Player, value: float):
