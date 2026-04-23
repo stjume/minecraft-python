@@ -1,25 +1,34 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "st_minecraft"
-version = "1.1.0"
-description = "A Python package for st_minecraft."
+description = "A simple (educational) python library to interact with a minecraft server, offered in english and german. ."
 authors = [
-    { name = "Your Name", email = "your.email@example.com" }
+    { name = "Chris Geron", email = "git@chris-ge.de" },
+    { name = "Adrian Oeyen", email= "oeyenadrian@gmail.com" }
 ]
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent"
 ]
 
-dynamic = ["dependencies", "optional-dependencies"]
+dynamic = ["dependencies", "version"]
+
+license-files = ["LICENSE*"]
+license = "AGPL-3.0-or-later"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
+version = { attr = "st_minecraft.__about__.__version__" }
 
 [tool.setuptools.packages.find]
 include = ["st_minecraft*"]
