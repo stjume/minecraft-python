@@ -1,1 +1,4 @@
+include README.md
+include README_de.md
+include LICENSE.txt
 exclude demo/*
