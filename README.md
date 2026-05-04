@@ -19,7 +19,7 @@ from st_minecraft.en.material import MaterialCollection
 mc.connect("localhost")
 
 while True:
-  player = mc.get_player()
+  player = mc.get_player_by_name("YourPlayerName")
   mc.set_block(player.x, player.y - 1, player.z, MaterialCollection.Diamond_Block)
 ```
 
@@ -30,7 +30,7 @@ import st_minecraft.de as mc
 mc.verbinden("localhost")
 
 while True:
-  spieler = mc.hole_spieler()
+  spieler = mc.hole_spieler_durch_name("DeinSpielerName")
   mc.setze_block(spieler.x, spieler.y - 1, spieler.z, mc.MaterialSammlung.Stein)
 ```
 
