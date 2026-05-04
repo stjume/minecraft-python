@@ -75,18 +75,20 @@ def hole_spieler_durch_name(name: str) -> Spieler:
     return hole_spieler(name=name)
 
 
-def hole_spieler_durch_index(index: int) -> Spieler:
+def hole_spieler_durch_index(index: int = 0) -> Spieler:
     """
     Frage den Zustand eines Spielers durch Angabe eines index ab.
     Die Spieler sind durchnummeriert in der Reihenfolge in der sie dem Server beigetreten sind.
-    Startend bei 0 für die erste Spieler:in
+    Startend bei 0 für die erste Spieler:in.
+
+    Wenn du keinen index angibst, wird der index auf 0 gesetzt (erster Spieler, der nach Server start beigetreten ist)
 
     Args:
         index: Index der abzufragenden Spieler:in
     Returns:
         Du bekommst ein Spieler Objekt zurück, welches eine Menge Infos über den Spieler enthält
     """
-    # ONLY convencience wrapper for the users
+    # ONLY convenience wrapper for the users
     # please use hole_spieler() directly for library development
     return hole_spieler(index=index)
 

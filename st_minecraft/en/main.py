@@ -94,14 +94,13 @@ def get_player_by_name(name: str) -> Player:
     return get_player(name=name)
 
 
-def get_player_by_index(index: int) -> Player:
+def get_player_by_index(index: int = 0) -> Player:
     """
     Query the state of a player by providing their id
     Players are numbered in the order in which they joined the server.
     Starting at 0 for the first player.
 
-    Note: You MUST explicitly specify whether you mean name or index.
-    Example: get_player(name="jumebonn1") or get_player(index="5")
+    If you don't provide an index, the index is set to 0 (first player that joined after server start)
 
     Args:
         index: Index of the player to query is optional (if you don't specify an id, id=0 is used)
@@ -118,6 +117,10 @@ def get_player(*, index: int | None = None, name: str | None = None) -> Player:
     Query the state of a player by index or name.
     Players are numbered in the order in which they joined the server.
     Starting at 0 for the first player.
+
+    Note: You MUST explicitly specify whether you mean name or index.
+    Example: get_player(name="jumebonn1") or get_player(index="5")
+
     Args:
         index: Index of the player to query is optional (if you don't specify an index, index=0 is used)
         name: Name of the player to query is optional (if you don't specify a name, index=0 is used)
