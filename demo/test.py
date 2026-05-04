@@ -9,7 +9,7 @@ spieler = st_minecraft.hole_spieler()
 
 spieler_durch_name = st_minecraft.hole_spieler_durch_name(spieler.name)
 
-spieler_durch_index = st_minecraft.hole_spiler_durch_index(spieler.id)
+spieler_durch_index = st_minecraft.hole_spieler_durch_index(spieler.id)
 
 assert spieler == spieler_durch_name
 

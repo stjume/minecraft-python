@@ -75,7 +75,7 @@ def hole_spieler_durch_name(name: str) -> Spieler:
     return hole_spieler(name=name)
 
 
-def hole_spiler_durch_index(index: int) -> Spieler:
+def hole_spieler_durch_index(index: int) -> Spieler:
     """
     Frage den Zustand eines Spielers durch Angabe eines index ab.
     Die Spieler sind durchnummeriert in der Reihenfolge in der sie dem Server beigetreten sind.
