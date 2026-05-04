@@ -354,9 +354,7 @@ def entity_name_setzen(entity: Entity, name: str) -> Entity:
     return Entity.von_englisch(e)
 
 
-def entity_position_setzen(
-    entity: Entity, x: float, y: float, z: float, dimension: Dimension = Dimension.World
-) -> Entity:
+def entity_position_setzen(entity: Entity, x: int, y: int, z: int, dimension: Dimension = Dimension.World) -> Entity:
     """
     Setzen die Position eines Entities
 

@@ -478,7 +478,7 @@ def set_entity_name(entity: Entity, name: str) -> Entity:
     return get_entity(entity)
 
 
-def set_entity_position(entity: Entity, x: float, y: float, z: float, dimension: Dimension = Dimension.World) -> Entity:
+def set_entity_position(entity: Entity, x: int, y: int, z: int, dimension: Dimension = Dimension.World) -> Entity:
     """
     Set the position of an entity
 
