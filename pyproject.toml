@@ -7,7 +7,8 @@ name = "st_minecraft"
 description = "A simple (educational) python library to interact with a minecraft server, offered in english and german. ."
 authors = [
     { name = "Chris Geron", email = "git@chris-ge.de" },
-    { name = "Adrian Oeyen", email= "oeyenadrian@gmail.com" }
+    { name = "Adrian Oeyen", email= "oeyenadrian@gmail.com" },
+    { name = "sk stiftung jugend und medien der Sparkasse KölnBonn", email= "info@sk-jugend.de" }
 ]
 readme = "README.md"
 requires-python = ">=3.10"
@@ -28,7 +29,7 @@ license = "AGPL-3.0-or-later"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
-version = { attr = "st_minecraft.__about__.__version__" }
+version = { attr = "st_minecraft.__version__" }
 
 [tool.setuptools.packages.find]
 include = ["st_minecraft*"]
