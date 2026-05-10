@@ -40,3 +40,5 @@ entity = st_minecraft.entity_ai_setzen(entity, False)
 
 st_minecraft.gebe_item(spieler, st_minecraft.MaterialSammlung.Holzspitzhacke, 1, name="Test")
 print(st_minecraft.hole_inventar(spieler))
+
+print(f"SUCCESS")
