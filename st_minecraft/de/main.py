@@ -250,8 +250,17 @@ def spieler_position_setzen(
         x: neue x-koordinate
         y: neue y-koordinate
         z: neue z-koordinate
-        rotation: rotation: (optional) rotation des spielers (von -180 bis 180), wenn du sie nicht angibst, wird sie nicht verändert.
-        dimension (Dimension): Dimension in die der Spieler gesetzt werden soll (Standard: Dimension.World)
+        rotation: (optional, keyword-Argument) rotation des spielers (von -180 bis 180), wenn du sie nicht angibst, wird sie nicht verändert.
+        dimension: (optional, keyword-Argument) Dimension in die der Spieler gesetzt werden soll (Standard: Dimension.World)
+
+    Wenn du die Rotation oder Dimension verändern willst, musst du das als Keyword-Argument tun.
+
+    Examples:
+        `spieler_position_setzen(spieler, 0, 100, 0, dimension=Dimension.Nether)`
+
+        `spieler_position_setzen(spieler, 0, 100, 0, rotation=90)`
+
+        `spieler_position_setzen(spieler, 0, 100, 0, rotation=30, dimension=Dimension.End)`
 
     Returns:
         Du bekommst eine aktualisierte Version des Spielers zurück (Zustand, nachdem er bewegt wurde)

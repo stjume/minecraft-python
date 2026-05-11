@@ -354,9 +354,17 @@ def set_player_position(
         x: new x coordinate
         y: new y coordinate
         z: new z coordinate
-        rotation: (optional) rotation of the player (from -180 to 180), if you don't specify it, it won't be changed.
-        dimension (Dimension): dimension to put the player in (default.: Dimension.World)
+        rotation: (optional, keyword argument) rotation of the player (from -180 to 180), if you don't specify it, it won't be changed.
+        dimension: (optional, keyword argument) dimension to put the player in (default.: Dimension.World)
 
+    If you want to modify the rotation or dimension you have to do so as keyword argument.
+
+    Examples:
+        `set_player_position(player, 0, 100, 0, dimension=Dimension.Nether)`
+
+        `set_player_position(player, 0, 100, 0, rotation=90)`
+
+        `set_player_position(player, 0, 100, 0, rotation=30, dimension=Dimension.End)`
 
     Returns:
         You get an updated version of the player back (state after being moved)
