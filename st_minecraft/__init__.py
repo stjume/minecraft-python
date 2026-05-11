@@ -15,7 +15,7 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
-__version__ = "1.1.1"
-version = VersionInfo(major=1, minor=1, micro=1, releaselevel="final", serial=0)
+__version__ = "1.1.2"
+version = VersionInfo(major=1, minor=1, micro=2, releaselevel="final", serial=0)
 
 del NamedTuple, Literal
