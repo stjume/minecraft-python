@@ -7,6 +7,7 @@ import os
 import socket
 from enum import Enum
 from typing import Any
+from typing import Literal
 from typing import Optional
 from typing import Type
 from typing import TypeVar
@@ -18,14 +19,27 @@ ARG_SEPARATOR = "𝇉"
 
 DEFAULT_PORT = 25595
 
+_default_ip_options = ("0.0.0.0", "127.0.0.1", "localhost")
+"""Options we try, to find a running server (with plugin) on the local device"""
 
-def connect(ip: str = "0.0.0.0", port: int = DEFAULT_PORT) -> None:
+_default_ip: Literal["0.0.0.0", "127.0.0.1", "localhost"] | None = None
+"""
+default IP the library tries to connect to
+it is determined when connect() is called the first time without passing an IP
+"""
+# reason: we had issues on Windows to connect via 0.0.0.0
+# 127.0.0.1 and localhost worked tho
+# -> we try all  options stored in _default_ip_options (below) and see if one sticks before potentially raising
+# the default_ip variable exists to save a successful find (so we don't try each time)
+
+
+def connect(ip: str | None = None, port: int = DEFAULT_PORT) -> None:
     """
     Establishes a connection to the Minecraft server.
 
     Args:
-        ip (str): The IP address of the server (default is "0.0.0.0" - equivalent to "localhost")
-        port (int): The port of the server.
+        ip (str): IP address of the minecraft server, attempts to connect to localhost if left empty (or None is passed)
+        port (int): The port the plugin is listening on
     """
     # needed internally
     global connection
@@ -45,7 +59,60 @@ def connect(ip: str = "0.0.0.0", port: int = DEFAULT_PORT) -> None:
         ip = _ip
 
     connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    connection.connect((ip, port))
+    # this should not happen. but pycharm said this was an issue, so we add this case.
+    if connection is None:
+        raise ConnectionError(
+            f"Can't open a socket. Please find out why `socket.socket(socket.AF_INET, socket.SOCK_STREAM)` failed"
+        )
+
+    # we got an explicit IP passed (or the env overwrite was set)
+    if ip:
+        connection.connect((ip, port))
+        return
+
+    # we previously found a successful connection in our defaults
+    # -> this case can only happen when connect() was already called once
+    global _default_ip
+    if _default_ip is not None:
+        connection.connect((ip, port))
+        return
+
+    # we're here for the first time.
+    # we don't know where the server is so we try out a few options
+    # if one sticks we save the result (globally)
+    # if none sticks, we raise
+    for option in _default_ip_options:
+
+        # attempt connection
+        try:
+            connection.connect((option, port))
+
+            # save globally
+            _default_ip = option
+            # we can exit the loop
+            break
+
+        # socket errors come in so many names and shapes, depending on OS and what exactly failed
+        # so we deliberately use the broad 'catch all' here (:
+        except Exception as e:
+            pass  # silently eat it
+
+    # break wasn't hit. we now fail. and give the user helpful information.
+    else:
+        ips = ", ".join(f"'{i}:{port}'" for i in _default_ip_options)
+        msg = (
+            f"Can't connect to server!\n"
+            f"**Please check if the server is running and the plugin is located in the plugins folder**.\n"
+            f"Tried to connect to {ips}.\n"
+            f"If you're trying to connect to a server on another device, "
+            f"please pass the IP of it to the connect() function (e.g. `connect(ip='192.168.1.10')`.\n"
+            f"If the port the plugin listens to was changed, "
+            f"you have to pass the port to the function (e.g. `connect(port='31415')`. "
+            f"IP and port changes can be passed at the same time.\n"
+            f"If you're unsure how to run a server with the (matching) plugin, please refer to our backend repository: "
+            f"https://github.com/stjume/minecraft-python-backend"
+        )
+        raise ConnectionError(msg)
 
 
 def _receive(timeout: float = 2.0) -> bytes | None:
