@@ -3,8 +3,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from st_minecraft.core.core import InventoryFieldEmptyError
 from st_minecraft.core.core import _to_enum
+from st_minecraft.de._exceptions import InventarFeldLeerFehler
 from st_minecraft.de.entity import EntitySammlung
 from st_minecraft.de.material import MaterialSammlung
 from st_minecraft.en import Dimension
@@ -281,7 +281,7 @@ class Inventar(dict[int, InventarFeld]):
             super().__getitem__(item)
         # ich glaube, hier ist der peak der library. ein nicht-generischer wrapper um den KeyError.
         except KeyError:
-            raise InventoryFieldEmptyError(f"Das Feld {item} ist leer. Daher kannst du hier nicht drauf zugreifen.")
+            raise InventarFeldLeerFehler(f"Das Feld {item} ist leer. Daher kannst du hier nicht drauf zugreifen.")
 
     @staticmethod
     def von_englisch(i: _InventoryEN):

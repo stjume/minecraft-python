@@ -5,8 +5,8 @@ from typing import Optional
 from pydantic import BaseModel
 from pydantic import ValidationError
 
+from st_minecraft.core import InventoryFieldEmptyError
 from st_minecraft.core.core import ARG_SEPARATOR
-from st_minecraft.core.core import InventoryFieldEmptyError
 from st_minecraft.core.core import _bytes_to_text
 from st_minecraft.core.core import _to_enum
 from st_minecraft.en.entity import EntityCollection

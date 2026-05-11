@@ -7,3 +7,7 @@ Sind teils auch mit den library-eigenen englischen Exceptions aus core-package v
 
 class WertFehler(ValueError):
     """ValueError aber deutsch :clown face:"""
+
+
+class InventarFeldLeerFehler(KeyError):
+    """Repräsentiert core.InventoryFieldEmptyError"""
