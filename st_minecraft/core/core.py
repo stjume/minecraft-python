@@ -185,9 +185,5 @@ class NoDataError(ValueError):
     """Raised when we receive nothing from the API"""
 
 
-class WertFehler(ValueError):
-    """ValueError aber deutsch :clown face:"""
-
-
 class InventoryFieldEmptyError(KeyError):
     """Raised when trying to access an inventory field that is empty."""

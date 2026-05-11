@@ -4,7 +4,6 @@ from typing import Literal
 from typing import cast
 
 from st_minecraft.core.core import ARG_SEPARATOR
-from st_minecraft.core.core import WertFehler
 from st_minecraft.core.core import _build_command
 from st_minecraft.core.core import _bytes_to_text
 from st_minecraft.core.core import _receive
@@ -372,7 +371,7 @@ def set_player_position(
     args = ["setPlayerPos", player.id, x, y, z, dimension.value]
     if rotation is not None:
         if not -180 <= rotation <= 180:
-            raise WertFehler(f"A player's rotation must be between -180 and 180. You said '{rotation}'.")
+            raise ValueError(f"A player's rotation must be between -180 and 180. You said '{rotation}'.")
 
         args.append(f"rotation:{rotation}")
 

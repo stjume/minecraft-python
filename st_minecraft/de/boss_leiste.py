@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 import st_minecraft.en as __st_minecraft_en
 import st_minecraft.en.boss_bar as _st_minecraft_en_boss_bar
-from st_minecraft.core.core import WertFehler
+from st_minecraft.de._exceptions import WertFehler
 
 
 class BossLeisteStil(Enum):

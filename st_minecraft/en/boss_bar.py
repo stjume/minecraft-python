@@ -5,7 +5,6 @@ from enum import Enum
 from pydantic import BaseModel
 
 from st_minecraft.core.core import ARG_SEPARATOR
-from st_minecraft.core.core import WertFehler
 from st_minecraft.core.core import _build_command
 from st_minecraft.core.core import _send_command
 
@@ -104,7 +103,7 @@ def set_color(boss_bar: BossBar, color: BossBarColor) -> BossBar:
 def set_value(boss_bar: BossBar, value: float) -> BossBar:
     """Set to what proportion the bar should be filled (between 0 and 1)"""
     if not 0 <= value <= 1:
-        raise WertFehler(f"The value of the boss bar must be between 0 and 1. You specified '{value}'.")
+        raise ValueError(f"The value of the boss bar must be between 0 and 1. You specified '{value}'.")
 
     sub_command = _build_command("value", boss_bar.name, f"value:{value}")
     _send_boss_bar_command(sub_command)
