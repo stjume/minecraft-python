@@ -5,6 +5,8 @@
 Library for interacting with a Minecraft server through Python programs.
 This is the frontend part, which requires the use of our [Server Plugin](https://github.com/sk-jume/minecraft-python-backend) on the server side.
 
+(You need to ensure that major and minor tag of plugin and library release must match! e.g. both must be `v1.1.x`)
+
 The library is designed to teach children the Python programming language playfully through interactions with Minecraft.
 It is *not* intended for production use!
 
