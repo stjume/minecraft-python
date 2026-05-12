@@ -81,28 +81,15 @@ venv/bin/activate
 
 #### Installing the library
 
-> [!CAUTION]
-> We will publish this package via pypi in the near future. For now you need to do a local install.
+You can install the library using pip:
 
-Download this repository.
+`pip install st-minecraft`
 
-Open your terminal (macOS/Linux) or command prompt/PowerShell (Windows) navigate to the folder you downloaded it to.
-
-Install it using:
-#### Windows
-```bash
-py -m pip install .
-```
-
-#### Linux / MacOS
-```bash
-python3 -m pip install .
-```
+You can find available versions here: https://pypi.org/project/st-minecraft/
 
 ### Quickstart (copy & paste)
 
 Examples of how to use the library can be found in [demo/](demo/).
-
 
 ### How the Library is Structured
 
