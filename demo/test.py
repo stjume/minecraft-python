@@ -1,11 +1,23 @@
+"""
+this file aims to call nearly all functions at least once
+there are not many assertions. it's more a "do we pass all signatures correctly" test
+"""
+
+# TODO: von chat auslesen is untested
+
 import time
 
 import st_minecraft.de as st_minecraft
+import st_minecraft.de.boss_leiste as boss_bar
 from st_minecraft.en import Dimension
 
 st_minecraft.verbinden()
 
+""" test title"""
+
 st_minecraft.zeige_titel("Hallo Welt!")
+
+"""test player getters"""
 
 spieler = st_minecraft.hole_spieler()
 
@@ -17,13 +29,13 @@ assert spieler == spieler_durch_name
 
 assert spieler == spieler_durch_index
 
-cmd = f"op {spieler.name}"
-st_minecraft.sende_befehl(cmd)
-print(cmd)
+""" test player positioning"""
 
 
 st_minecraft.spieler_position_setzen(spieler, spieler.x, spieler.y - 20, spieler.z, dimension=Dimension.Nether)
 st_minecraft.spieler_position_setzen(spieler, spieler.x, spieler.y + 20, spieler.z, dimension=Dimension.World)
+
+""" test player attributes"""
 
 st_minecraft.spieler_leben_setzen(spieler, 20)
 
@@ -35,14 +47,27 @@ st_minecraft.spieler_xp_level_setzen(spieler, 10)
 
 st_minecraft.spieler_xp_fortschritt_setzen(spieler, 0.5)
 
+st_minecraft.spieler_geschwindigkeit_setzen(spieler, st_minecraft.RichtungSammlung.Hoch, 10)
+
+"""
+entity tests
+"""
+
 entity = st_minecraft.erzeuge_entity(spieler.x, spieler.y, spieler.z, st_minecraft.EntitySammlung.Kuh)
 entity = st_minecraft.entity_name_setzen(entity, "Test")
+entity = st_minecraft.entity_position_setzen(entity, entity.x, entity.y, entity.z)
 print(entity.name)
 entity = st_minecraft.entity_ai_setzen(entity, False)
+entity = st_minecraft.entity_leben_setzen(entity, 1)
 
-st_minecraft.gebe_item(spieler, st_minecraft.MaterialSammlung.Holzspitzhacke, 1, name="Test")
-print(st_minecraft.hole_inventar(spieler))
+e2 = st_minecraft.hole_entity(entity)
 
+assert entity.id == e2.id
+
+
+"""
+block tests
+"""
 
 for i in range(1, 10, 2):
     p = st_minecraft.hole_spieler()
@@ -52,6 +77,9 @@ for i in range(1, 10, 2):
     time.sleep(0.2)
 print(p.x)
 
+"""
+float test
+"""
 
 b = st_minecraft.hole_block(0, 100.34, 0)
 if b.typ == st_minecraft.MaterialSammlung.Goldblock:
@@ -68,5 +96,34 @@ if b.typ == zu_setzen:
 
 else:
     raise AssertionError("Set block doesnt match")
+
+"""
+command test
+"""
+
+st_minecraft.sende_befehl("time set day")
+
+"""
+chat test
+"""
+st_minecraft.sende_an_chat("Test!")
+
+"""inventory tests"""
+
+st_minecraft.gebe_item(spieler, st_minecraft.MaterialSammlung.Holzspitzhacke, 1, name="Test")
+inv = st_minecraft.hole_inventar(spieler)
+
+print(inv)
+
+"""
+boss bar tests
+"""
+
+bb = boss_bar.erzeuge_leiste("test", "test")
+
+boss_bar.setze_farbe(bb, boss_bar.BossLeisteFarben.PINK)
+
+boss_bar.loesche_leiste(bb)
+
 
 print(f"SUCCESS")
