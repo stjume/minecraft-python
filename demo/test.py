@@ -1,3 +1,5 @@
+import time
+
 import st_minecraft.de as st_minecraft
 from st_minecraft.en import Dimension
 
@@ -40,5 +42,31 @@ entity = st_minecraft.entity_ai_setzen(entity, False)
 
 st_minecraft.gebe_item(spieler, st_minecraft.MaterialSammlung.Holzspitzhacke, 1, name="Test")
 print(st_minecraft.hole_inventar(spieler))
+
+
+for i in range(1, 10, 2):
+    p = st_minecraft.hole_spieler()
+    offset = i * 0.01
+    st_minecraft.spieler_position_setzen(p, p.x + offset, p.y + offset, p.z + offset)
+    st_minecraft.entity_position_setzen(entity, entity.x, entity.y + offset, entity.z)
+    time.sleep(0.2)
+print(p.x)
+
+
+b = st_minecraft.hole_block(0, 100.34, 0)
+if b.typ == st_minecraft.MaterialSammlung.Goldblock:
+    zu_setzen = st_minecraft.MaterialSammlung.Diamantblock
+    alt = st_minecraft.MaterialSammlung.Goldblock
+else:
+    alt = st_minecraft.MaterialSammlung.Diamantblock
+    zu_setzen = st_minecraft.MaterialSammlung.Goldblock
+
+st_minecraft.setze_block(0, 100.5, 0, zu_setzen)
+b = st_minecraft.hole_block(0, 100.9, 0)
+if b.typ == zu_setzen:
+    st_minecraft.setze_block(0, 100, 0, alt)
+
+else:
+    raise AssertionError("Set block doesnt match")
 
 print(f"SUCCESS")
