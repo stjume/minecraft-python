@@ -51,7 +51,7 @@ def set_block(
 def get_block(x: float, y: float, z: float, dimension: Dimension = Dimension.World) -> Material:
     """
     Query what type of block is at the coordinate
-    You get a block object back that contains the type under .typ
+    You get a block object back that contains the type under .type
     Note: An "empty" block is treated as an air block.
 
     Args:
