@@ -291,7 +291,7 @@ def give_item(
 
     """
     if isinstance(item, Item):
-        item = item.typ
+        item = item.type
 
     args = ["addInv", player.id, item.value, amount]
 
