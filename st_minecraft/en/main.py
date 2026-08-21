@@ -51,7 +51,7 @@ def set_block(
 def get_block(x: float, y: float, z: float, dimension: Dimension = Dimension.World) -> Material:
     """
     Query what type of block is at the coordinate
-    You get a block object back that contains the type under .typ
+    You get a block object back that contains the type under .type
     Note: An "empty" block is treated as an air block.
 
     Args:
@@ -171,7 +171,7 @@ def send_to_chat(message: str):
         message: The message you want to send
     """
     command = _build_command("postChat", message)
-    _send_command(command)
+    _send_command(command, validate=True)
 
 
 def get_chat() -> list[Message]:
@@ -236,7 +236,7 @@ def show_title(
         seconds_to_ticks(display_time),
         seconds_to_ticks(fade_out_time),
     )
-    _send_command(command)
+    _send_command(command, validate=True)
 
 
 def send_command(command: str):
@@ -249,7 +249,7 @@ def send_command(command: str):
     if command.startswith("/"):
         print("Warning: You entered a '/' at the beginning of the command. This is probably not necessary!")
     command = _build_command("chatCommand", command)
-    _send_command(command)
+    _send_command(command, validate=True)
 
 
 def spawn_entity(
@@ -272,7 +272,7 @@ def spawn_entity(
     """
     command = _build_command("spawnEntity", x, y, z, dimension.value, entity.value)
     print(command)
-    _send_command(command)
+    _send_command(command, validate=True)
     data = _receive()
     entity = Entity.from_api_format(_bytes_to_text(data))
     return entity
@@ -318,7 +318,7 @@ def give_item(
         args.append("unbreakable")
 
     command = _build_command(*args)
-    _send_command(command)
+    _send_command(command, validate=True)
 
     return get_inventory(player)
 
@@ -408,7 +408,7 @@ def set_player_velocity(player: Player, direction: DirectionCollection, value: f
 
     """
     command = _build_command("setPlayerVelocity", direction.value, player.id, value)
-    _send_command(command)
+    _send_command(command, validate=True)
     return get_player(index=player.id)
 
 
@@ -484,6 +484,12 @@ def _set_player_property(type: str, player: Player, value: float):
     _send_command(command)
 
 
+def _edit_entity_command(entity: Entity, *args) -> None:
+    """internal edit entity function"""
+    command = _build_command("editEntity", entity.id, *args)
+    _send_command(command, validate=True)
+
+
 def set_entity_name(entity: Entity, name: str) -> Entity:
     """
     Set the name of an entity
@@ -493,8 +499,7 @@ def set_entity_name(entity: Entity, name: str) -> Entity:
     Returns:
         An updated version of the entity (state after the change)
     """
-    command = _build_command("editEntity", entity.id, f"name:{name}")
-    _send_command(command)
+    _edit_entity_command(entity, f"name:{name}")
     return get_entity(entity)
 
 
@@ -511,8 +516,7 @@ def set_entity_position(entity: Entity, x: float, y: float, z: float, dimension:
     Returns:
         An updated version of the entity (state after the change)
     """
-    command = _build_command("editEntity", entity.id, f"position:{x};{y};{z};{dimension.value}")
-    _send_command(command)
+    _edit_entity_command(entity, f"position:{x};{y};{z};{dimension.value}")
     return get_entity(entity)
 
 
@@ -527,8 +531,7 @@ def set_entity_ai(entity: Entity, status: bool) -> Entity:
     Returns:
         An updated version of the entity (state after the change)
     """
-    command = _build_command("editEntity", entity.id, f"ai:{status}")
-    _send_command(command)
+    _edit_entity_command(entity, f"ai:{status}")
     return get_entity(entity)
 
 
@@ -540,8 +543,7 @@ def set_entity_health(entity: Entity, health: float) -> Entity:
         entity: The entity to be edited, not EntitySammlung!
         health: How many health points the entity should have (0=dead).
     """
-    command = _build_command("editEntity", entity.id, f"health:{health}")
-    _send_command(command)
+    _edit_entity_command(entity, f"health:{health}")
     return get_entity(entity)
 
 
