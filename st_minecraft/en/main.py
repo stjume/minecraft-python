@@ -484,6 +484,12 @@ def _set_player_property(type: str, player: Player, value: float):
     _send_command(command)
 
 
+def _edit_entity_command(entity: Entity, *args) -> None:
+    """internal edit entity function"""
+    command = _build_command("editEntity", entity.id, *args)
+    _send_command(command, validate=True)
+
+
 def set_entity_name(entity: Entity, name: str) -> Entity:
     """
     Set the name of an entity
@@ -493,8 +499,7 @@ def set_entity_name(entity: Entity, name: str) -> Entity:
     Returns:
         An updated version of the entity (state after the change)
     """
-    command = _build_command("editEntity", entity.id, f"name:{name}")
-    _send_command(command)
+    _edit_entity_command(entity, f"name:{name}")
     return get_entity(entity)
 
 
@@ -511,8 +516,7 @@ def set_entity_position(entity: Entity, x: float, y: float, z: float, dimension:
     Returns:
         An updated version of the entity (state after the change)
     """
-    command = _build_command("editEntity", entity.id, f"position:{x};{y};{z};{dimension.value}")
-    _send_command(command)
+    _edit_entity_command(entity, f"position:{x};{y};{z};{dimension.value}")
     return get_entity(entity)
 
 
@@ -527,8 +531,7 @@ def set_entity_ai(entity: Entity, status: bool) -> Entity:
     Returns:
         An updated version of the entity (state after the change)
     """
-    command = _build_command("editEntity", entity.id, f"ai:{status}")
-    _send_command(command)
+    _edit_entity_command(entity, f"ai:{status}")
     return get_entity(entity)
 
 
@@ -540,8 +543,7 @@ def set_entity_health(entity: Entity, health: float) -> Entity:
         entity: The entity to be edited, not EntitySammlung!
         health: How many health points the entity should have (0=dead).
     """
-    command = _build_command("editEntity", entity.id, f"health:{health}")
-    _send_command(command)
+    _edit_entity_command(entity, f"health:{health}")
     return get_entity(entity)
 
 
