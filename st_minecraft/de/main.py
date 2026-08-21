@@ -12,7 +12,9 @@ from st_minecraft.de.material import MaterialSammlung
 from st_minecraft.en import Dimension
 
 
-def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung, dimension: Dimension = Dimension.World) -> None:
+def setze_block(
+    x: float, y: float, z: float, block_typ: MaterialSammlung, dimension: Dimension = Dimension.World
+) -> None:
     """
     Setzt einen Block im Minecraft-Spiel.
     Du kannst damit auch bereits existierende Blöcke ersetzen.
@@ -21,26 +23,29 @@ def setze_block(x: int, y: int, z: int, block_typ: MaterialSammlung, dimension: 
     https://minecraft.fandom.com/wiki/Java_Edition_data_values#Blocks
 
     Args:
-        x (int): X-Koordinate für den Block
-        y (int): Y-Koordinate für den Block
-        z (int): Z-Koordinate für den Block
+        x (float): X-Koordinate für den Block
+        y (float): Y-Koordinate für den Block
+        z (float): Z-Koordinate für den Block
         block_typ (MaterialSammlung): Block als Element aus der MaterialSammlung, z.B. MaterialSammlung.Melone
         dimension (Dimension): Dimension in der nach dem Block gesucht werden soll (Standard: Dimension.World)
+
+    Hinweis:
+        floats (kommazahlen) werden am Komma abgeschnitten
     """
     # TODO: Das genaue Befehlsformat für das Protokoll festlegen
     return __st_minecraft_en.set_block(x, y, z, block_typ.zu_englisch(), dimension)
 
 
-def hole_block(x: int, y: int, z: int, dimension: Dimension = Dimension.World) -> Material:
+def hole_block(x: float, y: float, z: float, dimension: Dimension = Dimension.World) -> Material:
     """
     Frag ab was für ein Block sich an der Koordinate befindet
     Du bekommst ein Block-Objekt zurück, dass unter .typ den typ enthält
     Hinweis: Ein "leerer" Block wird als Luft-Block behandelt.
 
     Args:
-        x (int): X-Koordinate des Blocks
-        y (int): Y-Koordinate des Blocks
-        z (int): Z-Koordinate des Blocks
+        x (float): X-Koordinate des Blocks
+        y (float): Y-Koordinate des Blocks
+        z (float): Z-Koordinate des Blocks
         dimension (Dimension): Dimension in der nach dem Block gesucht werden soll (Standard: Dimension.World)
     Returns:
         Den Block an der Koordinate als Datentyp `Material`
@@ -176,16 +181,18 @@ def zeige_titel(
     )
 
 
-def erzeuge_entity(x: int, y: int, z: int, entity: EntitySammlung, dimension: Dimension = Dimension.World) -> Entity:
+def erzeuge_entity(
+    x: float, y: float, z: float, entity: EntitySammlung, dimension: Dimension = Dimension.World
+) -> Entity:
     """
     Erzeuge eine entity an einer bestimmten Position
     Eine Liste aller Entities findest du hier:
     Auf Deutsch: https://minecraft.fandom.com/de/wiki/Objekt#ID-Namen
     Auf Englisch (dafür ausführlicher): https://minecraft.fandom.com/wiki/Java_Edition_data_values#Entities
     Args:
-        x (int): X-Koordinate an der das Entity gespawnt werden soll
-        y (int): Y-Koordinate an der das Entity gespawnt werden soll
-        z (int): Z-Koordinate an der das Entity gespawnt werden soll
+        x (float): X-Koordinate an der das Entity gespawnt werden soll
+        y (float): Y-Koordinate an der das Entity gespawnt werden soll
+        z (float): Z-Koordinate an der das Entity gespawnt werden soll
         entity: Ein Element aus der EntitySammlung z.B. EntitySammlung.Schaf
         dimension (Dimension): Dimension in der das Entity gespawnt werden soll (Standard: Dimension.World)
 
@@ -239,7 +246,7 @@ def hole_inventar(spieler: Spieler) -> Inventar:
 
 
 def spieler_position_setzen(
-    spieler: Spieler, x: int, y: int, z: int, *, rotation: int = None, dimension: Dimension = Dimension.World
+    spieler: Spieler, x: float, y: float, z: float, *, rotation: int = None, dimension: Dimension = Dimension.World
 ) -> Spieler:
     """
     Verändere die position in x-, y-, z-Richtung, Dimension und Rotation
@@ -363,16 +370,22 @@ def entity_name_setzen(entity: Entity, name: str) -> Entity:
     return Entity.von_englisch(e)
 
 
-def entity_position_setzen(entity: Entity, x: int, y: int, z: int, dimension: Dimension = Dimension.World) -> Entity:
+def entity_position_setzen(
+    entity: Entity, x: float, y: float, z: float, dimension: Dimension = Dimension.World
+) -> Entity:
     """
     Setzen die Position eines Entities
 
     Args:
         entity: Das zu bearbeitende Entity, nicht EntitySammlung!
-        x (int): neue X-Koordinate
-        y (int): neue Y-Koordinate
-        z (int): neue Z-Koordinate
+        x (float): neue X-Koordinate
+        y (float): neue Y-Koordinate
+        z (float): neue Z-Koordinate
         dimension (Dimension): Dimension in die das Entity gesetzt werden soll (Standard: Dimension.World)
+
+    Hinweis:
+        floats (kommazahlen) werden am Komma abgeschnitten
+
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)
     """

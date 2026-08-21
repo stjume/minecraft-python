@@ -8,6 +8,7 @@ from st_minecraft.core.core import _build_command
 from st_minecraft.core.core import _bytes_to_text
 from st_minecraft.core.core import _receive
 from st_minecraft.core.core import _send_command
+from st_minecraft.core.core import _to_int
 from st_minecraft.en.data_models import Dimension
 from st_minecraft.en.data_models import DirectionCollection
 from st_minecraft.en.data_models import Entity
@@ -22,7 +23,9 @@ from st_minecraft.en.entity import EntityCollection
 from st_minecraft.en.material import MaterialCollection
 
 
-def set_block(x: int, y: int, z: int, block_type: MaterialCollection, dimension: Dimension = Dimension.World) -> None:
+def set_block(
+    x: float, y: float, z: float, block_type: MaterialCollection, dimension: Dimension = Dimension.World
+) -> None:
     """
     Places a block in the Minecraft game.
     You can also use this to replace already existing blocks.
@@ -31,31 +34,39 @@ def set_block(x: int, y: int, z: int, block_type: MaterialCollection, dimension:
     https://minecraft.fandom.com/wiki/Java_Edition_data_values#Blocks
 
     Args:
-        x (int): X coordinate for the block
-        y (int): Y coordinate for the block
-        z (int): Z coordinate for the block
+        x (float): X coordinate for the block
+        y (float): Y coordinate for the block
+        z (float): Z coordinate for the block
         block_type (MaterialCollection): Block as an element from MaterialCollection, e.g. MaterialCollection.Melone
         dimension (Dimension): dimension to look for the block (default.: Dimension.World)
+
+    Note:
+        float-coordinates will be cut at the decimal point
     """
-    # TODO: Determine the exact command format for the protocol
+    x, y, z = _to_int(x, y, z)
     command = _build_command("setBlock", x, y, z, dimension.value, block_type.value)
     _send_command(command)
 
 
-def get_block(x: int, y: int, z: int, dimension: Dimension = Dimension.World) -> Material:
+def get_block(x: float, y: float, z: float, dimension: Dimension = Dimension.World) -> Material:
     """
     Query what type of block is at the coordinate
     You get a block object back that contains the type under .typ
     Note: An "empty" block is treated as an air block.
 
     Args:
-        x (int): X coordinate of the block
-        y (int): Y coordinate of the block
-        z (int): Z coordinate of the block
+        x (float): X coordinate of the block
+        y (float): Y coordinate of the block
+        z (float): Z coordinate of the block
         dimension (Dimension): dimension to look for the block (default.: Dimension.World)
+
+    Note:
+        float-coordinates will be cut at the decimal point
+
     Returns:
         The block at the coordinate as data type `Material`
     """
+    x, y, z = _to_int(x, y, z)
     command = _build_command("getBlock", x, y, z, dimension.value)
     _send_command(command)
     data = _receive()
@@ -241,16 +252,18 @@ def send_command(command: str):
     _send_command(command)
 
 
-def spawn_entity(x: int, y: int, z: int, entity: EntityCollection, dimension: Dimension = Dimension.World) -> Entity:
+def spawn_entity(
+    x: float, y: float, z: float, entity: EntityCollection, dimension: Dimension = Dimension.World
+) -> Entity:
     """
     Spawn an entity at a specific position
     A list of all entities can be found here:
     In German: https://minecraft.fandom.com/de/wiki/Objekt#ID-Namen
     In English (more detailed): https://minecraft.fandom.com/wiki/Java_Edition_data_values#Entities
     Args:
-        x (int): X coordinate where the entity should be spawned
-        y (int): Y coordinate where the entity should be spawned
-        z (int): Z coordinate where the entity should be spawned
+        x (float): X coordinate where the entity should be spawned
+        y (float): Y coordinate where the entity should be spawned
+        z (float): Z coordinate where the entity should be spawned
         entity: An element from EntitySammlung e.g. EntitySammlung.Schaf
         dimension (Dimension): dimension to look for the block (default.: Dimension.World)
 
@@ -344,7 +357,7 @@ def get_inventory(player: Player) -> Inventory:
 
 
 def set_player_position(
-    player: Player, x: int, y: int, z: int, *, rotation: int = None, dimension: Dimension = Dimension.World
+    player: Player, x: float, y: float, z: float, *, rotation: int = None, dimension: Dimension = Dimension.World
 ) -> Player:
     """
     Change the position in x-, y-, z-direction and rotation
@@ -485,15 +498,15 @@ def set_entity_name(entity: Entity, name: str) -> Entity:
     return get_entity(entity)
 
 
-def set_entity_position(entity: Entity, x: int, y: int, z: int, dimension: Dimension = Dimension.World) -> Entity:
+def set_entity_position(entity: Entity, x: float, y: float, z: float, dimension: Dimension = Dimension.World) -> Entity:
     """
     Set the position of an entity
 
     Args:
         entity: The entity to be edited, not EntitySammlung!
-        x (int): new X coordinate
-        y (int): new Y coordinate
-        z (int): new Z coordinate
+        x (float): new X coordinate
+        y (float): new Y coordinate
+        z (float): new Z coordinate
         dimension (Dimension): dimension to look for the block (default.: Dimension.World)
     Returns:
         An updated version of the entity (state after the change)
