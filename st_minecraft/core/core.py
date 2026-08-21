@@ -146,11 +146,25 @@ def _receive(timeout: float = 2.0) -> bytes | None:
     return data
 
 
+def _to_int(*args) -> tuple[int, ...]:
+    """args to int"""
+    return tuple(map(int, args))
+
+
+def to_str_round_floats(o: Any, /, *, decimals=3) -> str:
+    """
+    Convert anything to str, like str() but rounding floats to `decimals`-many decimals
+    """
+    return f"{o:.{decimals}f}" if isinstance(o, float) else str(o)
+
+
 def _build_command(*args: Any) -> str:
     """
-    Takes all arguments, converts them to strings and builds the finished command from them
+    Takes all arguments, converts them to compliant strings and builds the finished command from them
+    Note: floats are automatically rounded to 3 decimal points
     """
-    return ARG_SEPARATOR.join(map(str, args))
+
+    return ARG_SEPARATOR.join(map(to_str_round_floats, args))
 
 
 def _bytes_to_text(b: bytes) -> str:

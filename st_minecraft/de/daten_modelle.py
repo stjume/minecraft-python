@@ -85,9 +85,9 @@ class Spieler(BaseModel):
     """ Eindeutige ID des Spielers """
     name: str
     """ Name des Spielers """
-    x: int
-    y: int
-    z: int
+    x: float
+    y: float
+    z: float
     dimension: Dimension
     rotation: int
     """ Rotation des Spielers von -180 bis 180 """

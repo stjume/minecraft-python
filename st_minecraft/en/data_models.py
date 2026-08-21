@@ -72,9 +72,9 @@ class Player(BaseModel):
     """ Unique ID of the player """
     name: str
     """ Name of the player """
-    x: int
-    y: int
-    z: int
+    x: float
+    y: float
+    z: float
     dimension: Dimension
     rotation: int
     """ Rotation of the player from -180 to 180 """
@@ -115,9 +115,9 @@ class Player(BaseModel):
         return Player(
             id=int(_id),
             name=name,
-            x=int(x),
-            y=int(y),
-            z=int(z),
+            x=float(x),
+            y=float(y),
+            z=float(z),
             dimension=_to_enum(Dimension, dimension),
             rotation=int(rot),
             looking_at=Material.from_string(looking_at),
