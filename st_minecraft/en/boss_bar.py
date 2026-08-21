@@ -8,6 +8,8 @@ from st_minecraft.core.core import ARG_SEPARATOR
 from st_minecraft.core.core import _build_command
 from st_minecraft.core.core import _send_command
 
+# TODO: there is a GetBossBar command in the backend that seems to be unused in the frontend
+
 
 class BossBarStyle(Enum):
     """Ways in which the style of a boss bar can be displayed"""
@@ -58,7 +60,7 @@ class BossBar(BaseModel):
 def _send_boss_bar_command(sub_command: str):
     # needed internally
     command = f"editBossBar{ARG_SEPARATOR}{sub_command}"
-    _send_command(command)
+    _send_command(command, validate=True)
 
 
 def create_bar(name: str, display_text: str) -> BossBar:
@@ -72,7 +74,7 @@ def create_bar(name: str, display_text: str) -> BossBar:
         A BossBar object with which you can further configure the bar
     """
     command = _build_command("spawnBossBar", name, display_text)
-    _send_command(command)
+    _send_command(command, validate=True)
 
     # some of the values are set when creating.
     return BossBar(
@@ -126,4 +128,4 @@ def delete_bar(boss_bar: BossBar):
 
 def _delete_bar_str(boss_bar_name: str):
     command = _build_command("deleteBossBar", boss_bar_name)
-    _send_command(command)
+    _send_command(command, validate=True)

@@ -171,7 +171,7 @@ def send_to_chat(message: str):
         message: The message you want to send
     """
     command = _build_command("postChat", message)
-    _send_command(command)
+    _send_command(command, validate=True)
 
 
 def get_chat() -> list[Message]:
@@ -236,7 +236,7 @@ def show_title(
         seconds_to_ticks(display_time),
         seconds_to_ticks(fade_out_time),
     )
-    _send_command(command)
+    _send_command(command, validate=True)
 
 
 def send_command(command: str):
@@ -249,7 +249,7 @@ def send_command(command: str):
     if command.startswith("/"):
         print("Warning: You entered a '/' at the beginning of the command. This is probably not necessary!")
     command = _build_command("chatCommand", command)
-    _send_command(command)
+    _send_command(command, validate=True)
 
 
 def spawn_entity(
@@ -272,7 +272,7 @@ def spawn_entity(
     """
     command = _build_command("spawnEntity", x, y, z, dimension.value, entity.value)
     print(command)
-    _send_command(command)
+    _send_command(command, validate=True)
     data = _receive()
     entity = Entity.from_api_format(_bytes_to_text(data))
     return entity
@@ -318,7 +318,7 @@ def give_item(
         args.append("unbreakable")
 
     command = _build_command(*args)
-    _send_command(command)
+    _send_command(command, validate=True)
 
     return get_inventory(player)
 
@@ -408,7 +408,7 @@ def set_player_velocity(player: Player, direction: DirectionCollection, value: f
 
     """
     command = _build_command("setPlayerVelocity", direction.value, player.id, value)
-    _send_command(command)
+    _send_command(command, validate=True)
     return get_player(index=player.id)
 
 

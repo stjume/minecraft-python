@@ -16,6 +16,8 @@ from typing import TypeVar
 connection: Optional[socket.socket] = None
 
 ARG_SEPARATOR = "𝇉"
+_SUCCESS_MESSAGE = f"{ARG_SEPARATOR}success{ARG_SEPARATOR}"
+"""used to signal that a command was successful (when no other data response is expected)"""
 
 DEFAULT_PORT = 25595
 
@@ -146,6 +148,28 @@ def _receive(timeout: float = 2.0) -> bytes | None:
     return data
 
 
+def _receive_raise_if_command_error() -> None:
+    """
+    all commands that expect no value in return, instead receive a success/failure message
+    this is "success" for success and else a failure message.
+
+    this function is meant to be called after a command is sent that doesn't expect a return value
+
+    Returns:
+        nothing on success
+
+    Raises:
+        ConnectionError or ValueError on failure
+    """
+    data = _receive()
+    if data is None:
+        raise ConnectionError(f"Did not receive any data in time, as response to command")
+
+    response = _bytes_to_text(data)
+    if response != _SUCCESS_MESSAGE:
+        raise ValueError(f"Server received command but responded with error: {response}")
+
+
 def _to_int(*args) -> tuple[int, ...]:
     """args to int"""
     return tuple(map(int, args))
@@ -173,12 +197,13 @@ def _bytes_to_text(b: bytes) -> str:
     return b.decode("utf-8").strip()
 
 
-def _send_command(command: str) -> None:
+def _send_command(command: str, validate: bool = False) -> None:
     """
     Sends a command over the global connection.
 
     Args:
         command (str): The command to send.
+        validate: if True _receive_raise_if_command_error() is called, a function to validate a success response
     """
     # needed internally
     if connection is None:
@@ -186,6 +211,8 @@ def _send_command(command: str) -> None:
 
     command = f"{command}\n"
     connection.sendall(command.encode("utf-8"))
+    if validate:
+        _receive_raise_if_command_error()
 
 
 E = TypeVar("E", bound=Enum)
