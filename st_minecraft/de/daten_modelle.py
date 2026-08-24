@@ -276,9 +276,9 @@ class Inventar(dict[int, InventarFeld]):
                 return True
         return False
 
-    def __getitem__(self, item: int):
+    def __getitem__(self, item: int) -> InventarFeld:
         try:
-            super().__getitem__(item)
+            return super().__getitem__(item)
         # ich glaube, hier ist der peak der library. ein nicht-generischer wrapper um den KeyError.
         except KeyError:
             raise InventarFeldLeerFehler(f"Das Feld {item} ist leer. Daher kannst du hier nicht drauf zugreifen.")

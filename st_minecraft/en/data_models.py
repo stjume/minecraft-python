@@ -259,7 +259,7 @@ class Inventory(dict[int, InventoryField]):
                 return True
         return False
 
-    def __getitem__(self, item: int):
+    def __getitem__(self, item: int) -> InventoryField:
         try:
             return super().__getitem__(item)
         # I think this is the peak of the library. A non-generic wrapper around KeyError.
