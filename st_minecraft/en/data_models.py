@@ -15,6 +15,16 @@ from st_minecraft.en.material import MaterialCollection
 dimensionT = Literal["world", "world_nether", "world_the_end"]
 
 
+def _to_float(f: str) -> float:
+    """
+    handler that can handle dot- and comma-separated strings
+    why? - because paper-mc returns comma-separated coordinates :D
+    """
+    if "," in f:
+        f = f.replace(",", ".")
+    return float(f)
+
+
 class Dimension(Enum):
     World = "world"
     Nether = "world_nether"
@@ -112,22 +122,23 @@ class Player(BaseModel):
             xp_level,
             xp_progress,
         ) = _bytes_to_text(data).split(ARG_SEPARATOR)
+
         return Player(
             id=int(_id),
             name=name,
-            x=float(x),
-            y=float(y),
-            z=float(z),
+            x=_to_float(x),
+            y=_to_float(y),
+            z=_to_float(z),
             dimension=_to_enum(Dimension, dimension),
             rotation=int(rot),
             looking_at=Material.from_string(looking_at),
             sneaked=sneaked.lower() == "true",
-            max_health=float(max_health),
-            hunger=float(hunger),
-            saturation=float(saturation),
-            xp_level=float(xp_level),
-            xp_progress=float(xp_progress),
-            health=float(health),
+            max_health=_to_float(max_health),
+            hunger=_to_float(hunger),
+            saturation=_to_float(saturation),
+            xp_level=_to_float(xp_level),
+            xp_progress=_to_float(xp_progress),
+            health=_to_float(health),
         )
 
     def __repr__(self):
@@ -195,11 +206,11 @@ class Entity(BaseModel):
             id=_id,
             type=_type,
             name=name if name != "null" else None,
-            x=float(x),
-            y=float(y),
-            z=float(z),
+            x=_to_float(x),
+            y=_to_float(y),
+            z=_to_float(z),
             dimension=_to_enum(Dimension, dimension),
-            health=float(health),
+            health=_to_float(health),
             ai=ai == "true",
         )
 
