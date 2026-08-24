@@ -49,6 +49,11 @@ class Material(BaseModel):
     z: int | None = None
     dimension: Dimension | None = None
 
+    @property
+    def coords(self) -> tuple[int | None, int | None, int | None]:
+        """Abkürzung um alle Koordinaten als Tuple zu bekommen (x, y, z)"""
+        return self.x, self.y, self.z
+
     def __repr__(self):
         return f"Block(typ={self.typ}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
 
@@ -101,6 +106,11 @@ class Spieler(BaseModel):
     sättigung: float
     xp_level: float
     xp_fortschritt: float
+
+    @property
+    def coords(self) -> tuple[float, float, float]:
+        """Abkürzung um alle Koordinaten als Tuple zu bekommen (x, y, z)"""
+        return self.x, self.y, self.z
 
     @staticmethod
     def von_englisch(p: _PlayerEN):
@@ -177,6 +187,11 @@ class Entity(BaseModel):
     dimension: Dimension | None = None
     leben: float | None = None
     ai: bool | None = None
+
+    @property
+    def coords(self) -> tuple[float | None, float | None, float | None]:
+        """Abkürzung um alle Koordinaten als Tuple zu bekommen (x, y, z)"""
+        return self.x, self.y, self.z
 
     def __repr__(self):
         return (

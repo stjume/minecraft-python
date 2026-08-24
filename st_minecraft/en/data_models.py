@@ -55,6 +55,11 @@ class Material(BaseModel):
     z: int | None = None
     dimension: Dimension | None = None
 
+    @property
+    def coords(self) -> tuple[int | None, int | None, int | None]:
+        """Shorthand to get all coords as tuple (x, y, z)"""
+        return self.x, self.y, self.z
+
     def __repr__(self):
         return f"Block(type={self.type}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
 
@@ -98,6 +103,11 @@ class Player(BaseModel):
     saturation: float
     xp_level: float
     xp_progress: float
+
+    @property
+    def coords(self) -> tuple[float, float, float]:
+        """Shorthand to get all coords as tuple (x, y, z)"""
+        return self.x, self.y, self.z
 
     @staticmethod
     def from_raw_data(data: bytes) -> "Player":
@@ -177,6 +187,11 @@ class Entity(BaseModel):
     dimension: Dimension | None = None
     health: float | None = None
     ai: bool | None = None
+
+    @property
+    def coords(self) -> tuple[float | None, float | None, float | None]:
+        """Shorthand to get all coords as tuple (x, y, z)"""
+        return self.x, self.y, self.z
 
     def __repr__(self):
         return (
