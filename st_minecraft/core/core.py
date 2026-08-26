@@ -7,6 +7,7 @@ import os
 import socket
 from enum import Enum
 from typing import Any
+from typing import Iterable
 from typing import Literal
 from typing import Optional
 from typing import Type
@@ -181,6 +182,15 @@ def _send_command(command: str) -> None:
 
     command = f"{command}\n"
     connection.sendall(command.encode("utf-8"))
+
+
+def _coords_to_int(iterable: Iterable):
+    """
+    warning: this should only be used to compare coordinates of things that operate on discrete block levels e.g. blocks
+    do not use it to convert player coordinates or other float-based values, this function will not round 'correctly'
+    for negative values
+    """
+    return tuple(map(lambda x: int(x) if x is not None else x, iterable))
 
 
 E = TypeVar("E", bound=Enum)

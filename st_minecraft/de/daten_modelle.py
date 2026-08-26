@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from st_minecraft.core.core import _coords_to_int
 from st_minecraft.core.core import _to_enum
 from st_minecraft.de._exceptions import InventarFeldLeerFehler
 from st_minecraft.de.entity import EntitySammlung
@@ -56,6 +57,23 @@ class Material(BaseModel):
 
     def __repr__(self):
         return f"Block(typ={self.typ}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
+
+    def __eq__(self, other):
+        # allow easy compares with type
+        if isinstance(other, MaterialSammlung):
+            return self.typ == other
+
+        if not isinstance(other, type(self)):
+            return False
+
+        return (
+            self.typ == other.typ
+            and _coords_to_int(self.coords) == _coords_to_int(other.coords)
+            and self.dimension == other.dimension
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     @staticmethod
     def von_englisch(m: _MaterialEN | None) -> Optional["Material"]:
@@ -192,6 +210,18 @@ class Entity(BaseModel):
     def coords(self) -> tuple[float | None, float | None, float | None]:
         """Abkürzung um alle Koordinaten als Tuple zu bekommen (x, y, z)"""
         return self.x, self.y, self.z
+
+    def __eq__(self, other):
+        if isinstance(other, EntitySammlung):
+            return self.typ == other
+
+        if not isinstance(other, type(self)):
+            raise False
+
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not self == other
 
     def __repr__(self):
         return (

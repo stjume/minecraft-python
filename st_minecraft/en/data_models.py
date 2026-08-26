@@ -8,6 +8,7 @@ from pydantic import ValidationError
 from st_minecraft.core import InventoryFieldEmptyError
 from st_minecraft.core.core import ARG_SEPARATOR
 from st_minecraft.core.core import _bytes_to_text
+from st_minecraft.core.core import _coords_to_int
 from st_minecraft.core.core import _to_enum
 from st_minecraft.en.entity import EntityCollection
 from st_minecraft.en.material import MaterialCollection
@@ -62,6 +63,23 @@ class Material(BaseModel):
 
     def __repr__(self):
         return f"Block(type={self.type}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
+
+    def __eq__(self, other):
+        # einfachen vergleich mit typ erlauben
+        if isinstance(other, MaterialCollection):
+            return self.type == other
+
+        if not isinstance(other, type(self)):
+            return False
+
+        return (
+            self.type == other.type
+            and _coords_to_int(self.coords) == _coords_to_int(other.coords)
+            and self.dimension == other.dimension
+        )
+
+    def __ne__(self, other):
+        return not self == other
 
     @staticmethod
     def from_string(
@@ -192,6 +210,18 @@ class Entity(BaseModel):
     def coords(self) -> tuple[float | None, float | None, float | None]:
         """Shorthand to get all coords as tuple (x, y, z)"""
         return self.x, self.y, self.z
+
+    def __eq__(self, other):
+        if isinstance(other, EntityCollection):
+            return self.type == other
+
+        if not isinstance(other, type(self)):
+            return False
+
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not self == other
 
     def __repr__(self):
         return (
