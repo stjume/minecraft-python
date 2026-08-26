@@ -1,5 +1,7 @@
 """haupt-funktionalitäten der bibliothek"""
 
+import time
+
 import st_minecraft.en as __st_minecraft_en
 from st_minecraft.de.daten_modelle import Entity
 from st_minecraft.de.daten_modelle import Inventar
@@ -412,3 +414,19 @@ def entity_leben_setzen(entity: Entity, leben: float) -> Entity:
     """
     e = __st_minecraft_en.set_entity_health(entity.zu_englisch(), leben)
     return Entity.von_englisch(e)
+
+
+def warte(sekunden: float) -> None:
+    """
+    Warte für 'sekunden' viele sekunden bevor die nächste Zeile ausgeführt wird.
+    Du kannst auch Kommazahlen eingeben.
+
+    1 = Eine Sekunde
+    2.5 = 2,5 Sekunden
+    0.5 = 0,5 Sekunen
+
+    Args:
+        sekunden: Zeit in Sekunden für die gewartet werden soll
+    """
+    # jep. this is simply a wrapper, to not make them have to import time and understand sleep()
+    time.sleep(sekunden)

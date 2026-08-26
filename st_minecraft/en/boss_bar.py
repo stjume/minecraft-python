@@ -1,5 +1,6 @@
 """Enables creating and configuring boss bars"""
 
+import time
 from enum import Enum
 
 from pydantic import BaseModel
@@ -127,3 +128,19 @@ def delete_bar(boss_bar: BossBar):
 def _delete_bar_str(boss_bar_name: str):
     command = _build_command("deleteBossBar", boss_bar_name)
     _send_command(command)
+
+
+def wait(seconds: float) -> None:
+    """
+    Wait for 'seconds' many seconds before the next line is executed.
+    You may enter comma-values
+
+    1 = One second
+    2.5 = 2.5 seconds
+    0.5 = 0.5 Sekunsecondsen
+
+    Args:
+        seconds: the time in seconds how long the program shall wait
+    """
+    # jep. this is simply a wrapper, to not make them have to import time and understand sleep()
+    time.sleep(seconds)
