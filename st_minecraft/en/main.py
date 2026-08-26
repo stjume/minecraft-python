@@ -183,9 +183,7 @@ def get_chat() -> list[Message]:
 
     messages_str = messages_str.split(ARG_SEPARATOR)
 
-    messages = [
-        Message(text=text, sender_name=player_name) for player_name, text in map(lambda s: s.split(":"), messages_str)
-    ]
+    messages = [Message.from_unformatted_string(data) for data in messages_str]
 
     return messages
 

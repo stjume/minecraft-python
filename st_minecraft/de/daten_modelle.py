@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 from typing import Optional
 
@@ -343,12 +344,19 @@ class Nachricht(BaseModel):
 
     text: str
     """Der in den Chat gesendete Text"""
-    sender_name: str
+    absender_name: str
     """Name des Spielers, der diese Nachricht gesendet hat"""
+    absender_id: int
+    """ID des spielers, der die Nachricht gesendet hat"""
+    versandzeit: datetime
 
     @staticmethod
     def von_englisch(m: _MessageEN):
-        return Nachricht(text=m.text, absender_name=m.sender_name)
+        return Nachricht(
+            text=m.text, absender_name=m.sender_name, absender_id=m.sender_id, versandzeit=m.time_when_sent
+        )
 
     def zu_englisch(self) -> _MessageEN:
-        return _MessageEN(text=self.text, sender_name=self.absender_name)
+        return _MessageEN(
+            text=self.text, sender_name=self.absender_name, sender_id=self.absender_id, time_when_sent=self.versandzeit
+        )
