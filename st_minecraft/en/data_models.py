@@ -338,6 +338,24 @@ class Message(BaseModel):
     time_when_sent: datetime
     """Time when message was sent to chat"""
 
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.text == other
+
+        if not isinstance(other, type(self)):
+            return False
+
+        # we can skip check for sender name
+        #  they're just different identifier for the same player
+        return (
+            self.text == other.text
+            and self.sender_id == other.sender_id
+            and self.time_when_sent == other.time_when_sent
+        )
+
+    def __ne__(self, other):
+        return not self == other
+
     @staticmethod
     def from_unformatted_string(data: str):
         """from a value e.g. 'jumebonn1:2026|08|26|20|42|46:0:aaaa'"""

@@ -350,6 +350,22 @@ class Nachricht(BaseModel):
     """ID des spielers, der die Nachricht gesendet hat"""
     versandzeit: datetime
 
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.text == other
+
+        if not isinstance(other, type(self)):
+            return False
+
+        # we can skip check for sender name
+        #  they're just different identifier for the same player
+        return (
+            self.text == other.text and self.absender_id == other.absender_id and self.versandzeit == other.versandzeit
+        )
+
+    def __ne__(self, other):
+        return not self == other
+
     @staticmethod
     def von_englisch(m: _MessageEN):
         return Nachricht(
