@@ -8,7 +8,6 @@ from st_minecraft.core.core import _build_command
 from st_minecraft.core.core import _bytes_to_text
 from st_minecraft.core.core import _receive
 from st_minecraft.core.core import _send_command
-from st_minecraft.core.core import _to_int
 from st_minecraft.en.data_models import Dimension
 from st_minecraft.en.data_models import DirectionCollection
 from st_minecraft.en.data_models import Entity
@@ -39,11 +38,7 @@ def set_block(
         z (float): Z coordinate for the block
         block_type (MaterialCollection): Block as an element from MaterialCollection, e.g. MaterialCollection.Melone
         dimension (Dimension): dimension to look for the block (default.: Dimension.World)
-
-    Note:
-        float-coordinates will be cut at the decimal point
     """
-    x, y, z = _to_int(x, y, z)
     command = _build_command("setBlock", x, y, z, dimension.value, block_type.value)
     _send_command(command)
 
@@ -60,13 +55,9 @@ def get_block(x: float, y: float, z: float, dimension: Dimension = Dimension.Wor
         z (float): Z coordinate of the block
         dimension (Dimension): dimension to look for the block (default.: Dimension.World)
 
-    Note:
-        float-coordinates will be cut at the decimal point
-
     Returns:
         The block at the coordinate as data type `Material`
     """
-    x, y, z = _to_int(x, y, z)
     command = _build_command("getBlock", x, y, z, dimension.value)
     _send_command(command)
     data = _receive()

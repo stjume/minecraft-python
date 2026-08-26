@@ -28,9 +28,6 @@ def setze_block(
         z (float): Z-Koordinate für den Block
         block_typ (MaterialSammlung): Block als Element aus der MaterialSammlung, z.B. MaterialSammlung.Melone
         dimension (Dimension): Dimension in der nach dem Block gesucht werden soll (Standard: Dimension.World)
-
-    Hinweis:
-        floats (kommazahlen) werden am Komma abgeschnitten
     """
     # TODO: Das genaue Befehlsformat für das Protokoll festlegen
     return __st_minecraft_en.set_block(x, y, z, block_typ.zu_englisch(), dimension)
@@ -382,9 +379,6 @@ def entity_position_setzen(
         y (float): neue Y-Koordinate
         z (float): neue Z-Koordinate
         dimension (Dimension): Dimension in die das Entity gesetzt werden soll (Standard: Dimension.World)
-
-    Hinweis:
-        floats (kommazahlen) werden am Komma abgeschnitten
 
     Returns:
         Eine aktualisierte Version des Entities (Zustand nach der Veränderung)

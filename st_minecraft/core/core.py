@@ -146,11 +146,6 @@ def _receive(timeout: float = 2.0) -> bytes | None:
     return data
 
 
-def _to_int(*args) -> tuple[int, ...]:
-    """args to int"""
-    return tuple(map(int, args))
-
-
 def to_str_round_floats(o: Any, /, *, decimals=3) -> str:
     """
     Convert anything to str, like str() but rounding floats to `decimals`-many decimals
