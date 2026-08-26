@@ -50,13 +50,13 @@ class Material(BaseModel):
 
     type: MaterialCollection | None
     """ Block type """
-    x: int | None = None
-    y: int | None = None
-    z: int | None = None
+    x: float | None = None
+    y: float | None = None
+    z: float | None = None
     dimension: Dimension | None = None
 
     @property
-    def coords(self) -> tuple[int | None, int | None, int | None]:
+    def coords(self) -> tuple[float | None, float | None, float | None]:
         """Shorthand to get all coords as tuple (x, y, z)"""
         return self.x, self.y, self.z
 
@@ -66,9 +66,9 @@ class Material(BaseModel):
     @staticmethod
     def from_string(
         type: str,
-        x: int | None = None,
-        y: int | None = None,
-        z: int | None = None,
+        x: float | None = None,
+        y: float | None = None,
+        z: float | None = None,
         dimension: dimensionT | None = None,
     ) -> Optional["Material"]:
         try:

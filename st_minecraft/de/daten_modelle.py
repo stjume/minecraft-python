@@ -44,13 +44,13 @@ class Material(BaseModel):
 
     typ: MaterialSammlung | None
     """ Block Typ """
-    x: int | None = None
-    y: int | None = None
-    z: int | None = None
+    x: float | None = None
+    y: float | None = None
+    z: float | None = None
     dimension: Dimension | None = None
 
     @property
-    def coords(self) -> tuple[int | None, int | None, int | None]:
+    def coords(self) -> tuple[float | None, float | None, float | None]:
         """Abkürzung um alle Koordinaten als Tuple zu bekommen (x, y, z)"""
         return self.x, self.y, self.z
 
