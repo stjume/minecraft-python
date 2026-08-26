@@ -149,7 +149,10 @@ def get_player(*, index: int | None = None, name: str | None = None) -> Player:
 
     _send_command(command)
     data = _receive()
-    player = Player.from_raw_data(data)
+    try:
+        player = Player.from_raw_data(data)
+    except ValueError as e:
+        raise ValueError(f"Received player data incomplete: {data}") from e
     return player
 
 
