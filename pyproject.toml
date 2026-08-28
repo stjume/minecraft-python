@@ -27,6 +27,10 @@ dynamic = ["dependencies", "version"]
 license-files = ["LICENSE*"]
 license = "AGPL-3.0-or-later"
 
+[project.urls]
+"Homepage" = "https://github.com/stjume/minecraft-python"
+"Issues" = "https://github.com/stjume/minecraft-python/issues"
+
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
 version = { attr = "st_minecraft.__version__" }
