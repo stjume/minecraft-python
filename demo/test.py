@@ -4,6 +4,7 @@ there are not many assertions. it's more a "do we pass all signatures correctly"
 """
 
 # TODO: read chat is untested
+#  can be tested via test_chat.py
 
 import time
 
