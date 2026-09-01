@@ -10,7 +10,7 @@ from typing import Callable
 from typing import Literal
 
 from st_minecraft.core import connect
-from st_minecraft.de import Material
+from st_minecraft.en import Material
 from st_minecraft.en import MaterialCollection
 from st_minecraft.en import Player
 from st_minecraft.en import boss_bar
