@@ -42,6 +42,8 @@ boss.loesche_leiste(
     )
 )
 
+spiel = 1
+
 gewonnen = False  # wird auf True gesetzt, wenn Sieg kriterium erfüllt
 while True:
 
@@ -51,6 +53,7 @@ while True:
 
     if s.schaut_auf == MaterialSammlung.Redstone_Block:
         print("REDSTONE")
+        spiel = 1
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Hoch, 20)
         st.warte(0.1)
 
@@ -64,6 +67,26 @@ while True:
     if s.schaut_auf == MaterialSammlung.Goldblock:
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Vorwärts, 5)
         st.warte(0.1)
+
+    # SPIEL 2
+
+    if s.schaut_auf == MaterialSammlung.Orange_Wolle:
+        spiel = 2
+        print("ORANGE WOLLE")
+        st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Hoch, 0.5)
+        st.warte(0.1)
+
+    # SPIEL 3
+
+    if s.schaut_auf == MaterialSammlung.Hellblaue_Wolle:
+        spiel = 3
+        print("HELLBLAU")
+        countdown_boss_bar(0.6)
+        st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Vorwärts, 3)
+
+    # SPIEL 4
+    if s.schaut_auf == MaterialSammlung.Packeis:
+        spiel = 4
 
     block = st.hole_block(s.x, s.y - 1, s.z)
     # schauen ob spieler:in auf zielhöhe ist
@@ -95,6 +118,12 @@ while True:
             except Exception:
                 continue
         st.warte(1)
+        if spiel == 2:
+            st.spieler_position_setzen(s, 54, -60, -53, rotation=-180)
+        if spiel == 3:
+            st.spieler_position_setzen(s, 28, -60, -53, rotation=-180)
+        if spiel == 4:
+            st.spieler_position_setzen(s, -42, -60, -17, rotation=-90)
         st.zeige_titel("Start!", einblende_zeit=0.1, anzeige_zeit=2, ausblende_zeit=0.5)
         print("START")
     st.warte(0.03)
