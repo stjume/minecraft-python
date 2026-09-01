@@ -70,8 +70,12 @@ assert entity == entity
 assert entity == st_minecraft.EntitySammlung.Kuh
 
 entity2 = st_minecraft.erzeuge_entity(spieler.x, spieler.y, spieler.z, st_minecraft.EntitySammlung.Schaf)
+# test placing via entity as entity.type
+entity3 = st_minecraft.erzeuge_entity(spieler.x, spieler.y, spieler.z, entity2)
 
 assert entity != entity2
+
+assert entity2.typ == entity3.typ
 
 """
 block tests
@@ -93,15 +97,15 @@ b = st_minecraft.hole_block(0, 100.34, 0)
 # test compare against type
 if b == st_minecraft.MaterialSammlung.Goldblock:
     zu_setzen = st_minecraft.MaterialSammlung.Diamantblock
-    alt = st_minecraft.MaterialSammlung.Goldblock
 else:
-    alt = st_minecraft.MaterialSammlung.Diamantblock
     zu_setzen = st_minecraft.MaterialSammlung.Goldblock
+
 
 st_minecraft.setze_block(0, 100.5, 0, zu_setzen)
 b2 = st_minecraft.hole_block(0, 100.9, 0)
 if b2.typ == zu_setzen:
-    st_minecraft.setze_block(0, 100, 0, alt)
+    # reset by using type from old block, also tests if blocks can be used as block type
+    st_minecraft.setze_block(0, 100, 0, b)
 
 # test block against block comparison
 if b2 != b2:
