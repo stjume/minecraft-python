@@ -23,7 +23,7 @@ from st_minecraft.en.material import MaterialCollection
 
 
 def set_block(
-    x: float, y: float, z: float, block_type: MaterialCollection, dimension: Dimension = Dimension.World
+    x: float, y: float, z: float, block_type: MaterialCollection | Material, dimension: Dimension = Dimension.World
 ) -> None:
     """
     Places a block in the Minecraft game.
@@ -36,9 +36,13 @@ def set_block(
         x (float): X coordinate for the block
         y (float): Y coordinate for the block
         z (float): Z coordinate for the block
-        block_type (MaterialCollection): Block as an element from MaterialCollection, e.g. MaterialCollection.Melone
+        block_type (MaterialCollection or Material): Block as an element from MaterialCollection, e.g. MaterialCollection.Melone
         dimension (Dimension): dimension to look for the block (default.: Dimension.World)
     """
+    if isinstance(block_type, Material):
+        block_type = block_type.type
+        assert block_type is not None
+
     command = _build_command("setBlock", x, y, z, dimension.value, block_type.value)
     _send_command(command)
 
@@ -245,7 +249,7 @@ def send_command(command: str):
 
 
 def spawn_entity(
-    x: float, y: float, z: float, entity: EntityCollection, dimension: Dimension = Dimension.World
+    x: float, y: float, z: float, entity: EntityCollection | Entity, dimension: Dimension = Dimension.World
 ) -> Entity:
     """
     Spawn an entity at a specific position
@@ -256,12 +260,15 @@ def spawn_entity(
         x (float): X coordinate where the entity should be spawned
         y (float): Y coordinate where the entity should be spawned
         z (float): Z coordinate where the entity should be spawned
-        entity: An element from EntitySammlung e.g. EntitySammlung.Schaf
+        entity: An element from EntitySammlung e.g. EntitySammlung.Schaf or an Entity instance
         dimension (Dimension): dimension to look for the block (default.: Dimension.World)
 
     Returns:
         You get an Entity object back. With this you can later access the entity again.
     """
+    if isinstance(entity, Entity):
+        entity = entity.type
+
     command = _build_command("spawnEntity", x, y, z, dimension.value, entity.value)
     print(command)
     _send_command(command)

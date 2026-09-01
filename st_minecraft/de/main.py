@@ -15,7 +15,7 @@ from st_minecraft.en import Dimension
 
 
 def setze_block(
-    x: float, y: float, z: float, block_typ: MaterialSammlung, dimension: Dimension = Dimension.World
+    x: float, y: float, z: float, block_typ: MaterialSammlung | Material, dimension: Dimension = Dimension.World
 ) -> None:
     """
     Setzt einen Block im Minecraft-Spiel.
@@ -28,7 +28,7 @@ def setze_block(
         x (float): X-Koordinate für den Block
         y (float): Y-Koordinate für den Block
         z (float): Z-Koordinate für den Block
-        block_typ (MaterialSammlung): Block als Element aus der MaterialSammlung, z.B. MaterialSammlung.Melone
+        block_typ (MaterialSammlung oder Material): Block als Element aus der MaterialSammlung, z.B. MaterialSammlung.Melone
         dimension (Dimension): Dimension in der nach dem Block gesucht werden soll (Standard: Dimension.World)
     """
     # TODO: Das genaue Befehlsformat für das Protokoll festlegen
@@ -181,7 +181,7 @@ def zeige_titel(
 
 
 def erzeuge_entity(
-    x: float, y: float, z: float, entity: EntitySammlung, dimension: Dimension = Dimension.World
+    x: float, y: float, z: float, entity: EntitySammlung | Entity, dimension: Dimension = Dimension.World
 ) -> Entity:
     """
     Erzeuge eine entity an einer bestimmten Position
@@ -192,7 +192,7 @@ def erzeuge_entity(
         x (float): X-Koordinate an der das Entity gespawnt werden soll
         y (float): Y-Koordinate an der das Entity gespawnt werden soll
         z (float): Z-Koordinate an der das Entity gespawnt werden soll
-        entity: Ein Element aus der EntitySammlung z.B. EntitySammlung.Schaf
+        entity: Ein Element aus der EntitySammlung z.B. EntitySammlung.Schaf or eine Instanz von Entity
         dimension (Dimension): Dimension in der das Entity gespawnt werden soll (Standard: Dimension.World)
 
     Returns:
