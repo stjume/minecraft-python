@@ -41,7 +41,7 @@ def fangen(p_name: str):
         if höhe < -63:
             st.gebe_item(s, st.MaterialSammlung.Wassereimer, 1, inventar_feld=0)
             print("FERTIG!")
-            countdown(-8)
+            countdown(8)
             try:
                 s = st.hole_spieler(name=p_name)
                 setze_ebene(s.x, s.y, s.z)
