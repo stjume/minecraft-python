@@ -3,6 +3,7 @@ Core of the library, here communication with the server happens
 this file also provides some helper functions
 """
 
+import math
 import os
 import socket
 from enum import Enum
@@ -186,11 +187,10 @@ def _send_command(command: str) -> None:
 
 def _coords_to_int(iterable: Iterable):
     """
-    warning: this should only be used to compare coordinates of things that operate on discrete block levels e.g. blocks
-    do not use it to convert player coordinates or other float-based values, this function will not round 'correctly'
-    for negative values
+    rounds as minecraft also rounds. (math.floor).
+    this means that negative numbers are rounded up and positives are rounded down
     """
-    return tuple(map(lambda x: int(x) if x is not None else x, iterable))
+    return tuple(map(lambda x: math.floor(x) if x is not None else x, iterable))
 
 
 E = TypeVar("E", bound=Enum)

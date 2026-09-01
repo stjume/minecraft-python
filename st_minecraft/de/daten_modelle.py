@@ -56,6 +56,17 @@ class Material(BaseModel):
         """Abkürzung um alle Koordinaten als Tuple zu bekommen (x, y, z)"""
         return self.x, self.y, self.z
 
+    @property
+    def coords_int(self) -> tuple[int, int, int]:
+        """
+        Abkürzung um alle Koordinaten als Tuple aus Ganzzahlen zu bekommen (x, y, z)
+
+        Warnung: Die die Koordinaten werden gerundet, wie minecraft es intern tut (math.floor).
+        Bedeutet, dass negative Zahlen aufgerundet werden und positive abgerundet.
+
+        """
+        return _coords_to_int(self.coords)
+
     def __repr__(self):
         return f"Block(typ={self.typ}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
 
@@ -130,6 +141,17 @@ class Spieler(BaseModel):
     def coords(self) -> tuple[float, float, float]:
         """Abkürzung um alle Koordinaten als Tuple zu bekommen (x, y, z)"""
         return self.x, self.y, self.z
+
+    @property
+    def coords_int(self) -> tuple[int, int, int]:
+        """
+        Abkürzung um alle Koordinaten als Tuple aus Ganzzahlen zu bekommen (x, y, z)
+
+        Warnung: Die die Koordinaten werden gerundet, wie minecraft es intern tut (math.floor).
+        Bedeutet, dass negative Zahlen aufgerundet werden und positive abgerundet.
+
+        """
+        return _coords_to_int(self.coords)
 
     @staticmethod
     def von_englisch(p: _PlayerEN):
@@ -211,6 +233,16 @@ class Entity(BaseModel):
     def coords(self) -> tuple[float | None, float | None, float | None]:
         """Abkürzung um alle Koordinaten als Tuple zu bekommen (x, y, z)"""
         return self.x, self.y, self.z
+
+    @property
+    def coords_int(self) -> tuple[int, int, int]:
+        """
+        Abkürzung um alle Koordinaten als Tuple aus Ganzzahlen zu bekommen (x, y, z)
+
+        Warnung: Die die Koordinaten werden gerundet, wie minecraft es intern tut (math.floor).
+        Bedeutet, dass negative Zahlen aufgerundet werden und positive abgerundet.
+        """
+        return _coords_to_int(self.coords)
 
     def __eq__(self, other):
         if isinstance(other, EntitySammlung):

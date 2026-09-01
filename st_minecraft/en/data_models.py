@@ -62,6 +62,17 @@ class Material(BaseModel):
         """Shorthand to get all coords as tuple (x, y, z)"""
         return self.x, self.y, self.z
 
+    @property
+    def coords_int(self) -> tuple[int, int, int]:
+        """
+        Shorthand to get all coords as tuple (x, y, z) as integers
+
+        warning: coordinates are rounded like Minecraft does it internally.
+        this means that negative numbers are rounded up and positives are rounded down
+
+        """
+        return _coords_to_int(self.coords)
+
     def __repr__(self):
         return f"Block(type={self.type}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
 
@@ -73,11 +84,7 @@ class Material(BaseModel):
         if not isinstance(other, type(self)):
             return False
 
-        return (
-            self.type == other.type
-            and _coords_to_int(self.coords) == _coords_to_int(other.coords)
-            and self.dimension == other.dimension
-        )
+        return self.type == other.type and self.coords_int == other.coords_int and self.dimension == other.dimension
 
     def __ne__(self, other):
         return not self == other
@@ -127,6 +134,16 @@ class Player(BaseModel):
     def coords(self) -> tuple[float, float, float]:
         """Shorthand to get all coords as tuple (x, y, z)"""
         return self.x, self.y, self.z
+
+    @property
+    def coords_int(self) -> tuple[int, int, int]:
+        """
+        Shorthand to get all coords as tuple (x, y, z) as integers
+
+        warning: coordinates are rounded like Minecraft does it internally (math.floor).
+        this means that negative numbers are rounded up and positives are rounded down
+        """
+        return _coords_to_int(self.coords)
 
     @staticmethod
     def from_raw_data(data: bytes) -> "Player":
@@ -211,6 +228,17 @@ class Entity(BaseModel):
     def coords(self) -> tuple[float | None, float | None, float | None]:
         """Shorthand to get all coords as tuple (x, y, z)"""
         return self.x, self.y, self.z
+
+    @property
+    def coords_int(self) -> tuple[int, int, int]:
+        """
+        Shorthand to get all coords as tuple (x, y, z) as integers
+
+        warning: coordinates are rounded like Minecraft does it internally.
+        this means that negative numbers are rounded up and positives are rounded down
+
+        """
+        return _coords_to_int(self.coords)
 
     def __eq__(self, other):
         if isinstance(other, EntityCollection):
