@@ -1,6 +1,11 @@
+
 # st_minecraft
 
 (Eine deutsche Version dieser README ist in der Datei [README_DE.md](README_DE.md) verfügbar. Beachten Sie, dass die englische Version die _Hauptversion_ ist. Die deutsche Version _könnte_ veraltet sein.)
+
+<img width="720" height="480" alt="2026-09-12_22-04-55_3" src="https://github.com/user-attachments/assets/50bd8ea1-d7ba-4417-b71f-a8f1a01e6f4d" />
+
+(Python Code that modifies player speed based on what block player looks at, part of `demo/spiderman.py`)
 
 Library for interacting with a Minecraft server through Python programs.
 This is the frontend part, which requires the use of our [Server Plugin](https://github.com/sk-jume/minecraft-python-backend) on the server side.
