@@ -67,10 +67,6 @@ while True:
         utils.countdown_boss_leiste(0.6, b, löschen_am_ende=True)
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Vorwärts, 3)
 
-    # SPIEL 4
-    if s.schaut_auf == MaterialSammlung.Packeis:
-        spiel = 4
-
     block = st.hole_block(s.x, s.y - 1, s.z)
     # schauen ob spieler:in auf zielhöhe ist
     if s.y > 80:
