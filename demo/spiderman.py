@@ -8,9 +8,10 @@ from st_minecraft.de import boss_leiste as boss
 
 st.verbinden()
 
-
+# definiert den namen der bossleiste, der unten überall genutzt wird für countdowns
 COUNTDOWN_LEISTE = "countdown"
 
+# zur sicherheit einmal löschen, bevor wir die wiederverwenden.
 boss.loesche_leiste(
     boss.BossLeiste(
         name=COUNTDOWN_LEISTE,
@@ -21,14 +22,13 @@ boss.loesche_leiste(
     )
 )
 
+# spiel mit dem wir starten...
 spiel = 1
 
 gewonnen = False  # wird auf True gesetzt, wenn Sieg kriterium erfüllt
 while True:
 
     s = st.hole_spieler()
-    # setze_ebene2(s.x, s.y-1, s.z, MaterialSammlung.Obsidian)
-    # continue
 
     if s.schaut_auf == MaterialSammlung.Redstone_Block:
         print("REDSTONE")
@@ -46,6 +46,7 @@ while True:
         st.warte(0.1)
 
     if s.schaut_auf == MaterialSammlung.Goldblock:
+        print("GOLD")
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Vorwärts, 5)
         st.warte(0.1)
 
