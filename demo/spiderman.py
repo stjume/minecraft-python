@@ -1,33 +1,12 @@
+"""This is basically three minigames in one, designed for our little demo-world"""
+
 import st_minecraft.de as st
+import st_minecraft.de.utils as utils
 from st_minecraft.de import MaterialSammlung
 from st_minecraft.de import RichtungSammlung
 from st_minecraft.de import boss_leiste as boss
 
 st.verbinden()
-
-
-def block_unter_spieler(s):
-    return st.hole_block(s.x, s.y - 1, s.z)
-
-
-def countdown_boss_bar(sekunden: float, leise: bool = False):
-    t = round(sekunden, 1)
-
-    b = boss.erzeuge_leiste(COUNTDOWN_LEISTE, "Vorwärts Boost in...")
-    b = boss.setze_wert(b, 1)
-    b = boss.setze_farbe(b, boss.BossLeisteFarben.GELB)
-
-    t_count = t
-    schritt_größe = 1 / (t * 10)
-    while t_count > 0:
-        wert = b.wert - schritt_größe
-        if wert < 0:
-            wert = 0
-        b = boss.setze_wert(b, wert)
-        st.warte(0.1)
-        t_count = t_count - 0.1
-
-    boss.loesche_leiste(b)
 
 
 COUNTDOWN_LEISTE = "countdown"
@@ -60,7 +39,9 @@ while True:
     if s.schaut_auf == MaterialSammlung.Diamantblock:
         print("DIAMANT")
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Hoch, 6)
-        countdown_boss_bar(1.2)
+        b = boss.erzeuge_leiste(COUNTDOWN_LEISTE, "Vorwärts Boost in...")
+        b = boss.setze_farbe(b, boss.BossLeisteFarben.GELB)
+        utils.countdown_boss_leiste(1.2, b, löschen_am_ende=True)
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Vorwärts, 4)
         st.warte(0.1)
 
@@ -81,7 +62,9 @@ while True:
     if s.schaut_auf == MaterialSammlung.Hellblaue_Wolle:
         spiel = 3
         print("HELLBLAU")
-        countdown_boss_bar(0.6)
+        b = boss.erzeuge_leiste(COUNTDOWN_LEISTE, "Vorwärts Boost in...")
+        b = boss.setze_farbe(b, boss.BossLeisteFarben.GELB)
+        utils.countdown_boss_leiste(0.6, b, löschen_am_ende=True)
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Vorwärts, 3)
 
     # SPIEL 4
@@ -110,7 +93,7 @@ while True:
         while True:
             try:
                 s = st.hole_spieler()
-                b = block_unter_spieler(s)
+                b = utils.hole_block_unter_spieler(s)
                 if b == MaterialSammlung.Grasblock:
                     st.warte(0.1)
                     continue
