@@ -388,9 +388,7 @@ class Message(BaseModel):
     def from_unformatted_string(data: str):
         """from a value e.g. 'jumebonn1:2026|08|26|20|42|46:0:aaaa'"""
         sender_name, _date, sender_id, text = data.split(":")
-        year, month, day, hour, minute, second = _coords_to_int(
-            _date.split("|")
-        )  # not a coord, but the function also works here (:
+        year, month, day, hour, minute, second = map(int, _date.split("|"))
         time_of_receival = datetime(year=year, month=month, day=day, hour=hour, minute=minute, second=second)
 
         return Message(text=text, sender_name=sender_name, sender_id=int(sender_id), time_when_sent=time_of_receival)
