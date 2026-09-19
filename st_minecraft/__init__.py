@@ -1,4 +1,4 @@
-""" st_minecraft package """
+"""st_minecraft package"""
 
 __author__ = "Chris Geron, Adrian Oeyen & sk stiftung jugend und medien der Sparkasse KölnBonn"
 __email__ = "git@chris-ge.de"
@@ -15,7 +15,7 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
-__version__ = "1.2.4"
-version = VersionInfo(major=1, minor=2, micro=4, releaselevel="final", serial=0)
+__version__ = "1.2.5"
+version = VersionInfo(major=1, minor=2, micro=5, releaselevel="final", serial=0)
 
 del NamedTuple, Literal
