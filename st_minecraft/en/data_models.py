@@ -95,7 +95,7 @@ class Material(BaseModel):
         x: float | None = None,
         y: float | None = None,
         z: float | None = None,
-        dimension: dimensionT | None = None,
+        dimension: str | None = None,
     ) -> Optional["Material"]:
         try:
             _type = _to_enum(MaterialCollection, type)
@@ -177,7 +177,7 @@ class Player(BaseModel):
             z=_to_float(z),
             dimension=_to_enum(Dimension, dimension),
             rotation=int(rot),
-            looking_at=Material.from_string(looking_at),
+            looking_at=Material.from_string(looking_at, dimension=dimension),
             sneaked=sneaked.lower() == "true",
             max_health=_to_float(max_health),
             hunger=_to_float(hunger),
