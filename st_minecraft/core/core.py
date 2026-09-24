@@ -221,6 +221,7 @@ def _to_enum(enum: Type[E], value: Any) -> Optional[E]:
         print(
             f"WARNING: Can't resolve '{value}'  for collection '{enum}', "
             f"this is most likely because the element was recently added and is not yet in the collection.\n"
+            f"Defaulting to value 'None'\n"
             f"You can supress such warnings using 'st_minecraft.show_warnings(False)'"
         )
     return None
