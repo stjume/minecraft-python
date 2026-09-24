@@ -249,7 +249,7 @@ class Entity(BaseModel):
             return self.typ == other
 
         if not isinstance(other, type(self)):
-            raise False
+            return False
 
         return self.id == other.id
 
