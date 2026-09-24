@@ -213,7 +213,17 @@ E = TypeVar("E", bound=Enum)
 
 
 def _to_enum(enum: Type[E], value: Any) -> Optional[E]:
-    return enum._value2member_map_.get(value)
+    v = enum._value2member_map_.get(value)
+    if v is not None:
+        return v
+
+    if SHOW_WARNINGS:
+        print(
+            f"WARNING: Can't resolve '{value}'  for collection '{enum}', "
+            f"this is most likely because the element was recently added and is not yet in the collection.\n"
+            f"You can supress such warnings using 'st_minecraft.show_warnings(False)'"
+        )
+    return None
 
 
 class NoDataError(ValueError):
