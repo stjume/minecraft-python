@@ -17,6 +17,9 @@ from typing import TypeVar
 # Global variable for the connection
 connection: Optional[socket.socket] = None
 
+# Global variable to know if warnings shall be shown
+SHOW_WARNINGS: bool = True
+
 ARG_SEPARATOR = "𝇉"
 
 DEFAULT_PORT = 25595
@@ -117,6 +120,17 @@ def connect(ip: str | None = None, port: int = DEFAULT_PORT) -> None:
         raise ConnectionError(msg)
 
 
+def show_warnings(do_it: bool = True):
+    """
+    Decide whether you want to show warnings when something unexpected happens
+
+    Args:
+        do_it: True: shows warnings, False: shows no warnings
+    """
+    global SHOW_WARNINGS
+    SHOW_WARNINGS = do_it
+
+
 def _receive(timeout: float = 2.0) -> bytes | None:
     # needed internally
 
@@ -129,12 +143,14 @@ def _receive(timeout: float = 2.0) -> bytes | None:
             _timeout = float(_timeout)
 
         spacer = "#" * 100
-        print(
-            f"{spacer}\n"
-            f"Timeout was overwritten by environment variable from '{timeout}' to '{_timeout}', "
-            f"(env var name: 'SK_TIMEOUT_OVERWRITE')\n"
-            f"{spacer}"
-        )
+        if SHOW_WARNINGS:
+            print(
+                f"{spacer}\n"
+                f"Timeout was overwritten by environment variable from '{timeout}' to '{_timeout}', "
+                f"(env var name: 'SK_TIMEOUT_OVERWRITE')\n"
+                f"You can supress such warnings using 'st_minecraft.show_warnings(False)'\n"
+                f"{spacer}"
+            )
         timeout = _timeout
 
     if timeout:

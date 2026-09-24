@@ -1,4 +1,5 @@
 from st_minecraft.core import connect  # noqa: unused-import
+from st_minecraft.core import show_warnings  # noqa: unused-import
 from st_minecraft.en.boss_bar import *  # noqa: unused-import
 from st_minecraft.en.data_models import *  # noqa: unused-import
 from st_minecraft.en.main import *  # noqa: unused-import
