@@ -200,7 +200,7 @@ def get_player(*, index: int | None = None, name: str | None = None) -> Player:
     try:
         player = Player.from_raw_data(data)
     except ValueError as e:
-        raise ValueError(f"Received player data incomplete: {data}") from e
+        raise ValueError(f"Received player data incomplete: {_bytes_to_text(data)}") from e
     return player
 
 
