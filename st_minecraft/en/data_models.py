@@ -129,6 +129,8 @@ class Player(BaseModel):
     saturation: float
     xp_level: float
     xp_progress: float
+    current_hotbar_slot: int
+    holds_item: HotbarItem | None
 
     @property
     def coords(self) -> tuple[float, float, float]:
@@ -167,7 +169,10 @@ class Player(BaseModel):
             saturation,
             xp_level,
             xp_progress,
+            held_item_data,
         ) = _bytes_to_text(data).split(ARG_SEPARATOR)
+
+        current_hotbar_slot, held_item_data = held_item_data.split(":", 1)
 
         return Player(
             id=int(_id),
@@ -185,6 +190,8 @@ class Player(BaseModel):
             xp_level=_to_float(xp_level),
             xp_progress=_to_float(xp_progress),
             health=_to_float(health),
+            current_hotbar_slot=current_hotbar_slot,
+            holds_item=HotbarItem.from_api_format(held_item_data),
         )
 
     def __repr__(self):
@@ -204,7 +211,8 @@ class Player(BaseModel):
             f"xp_level={self.xp_level}, "
             f"xp_progress={self.xp_progress}, "
             f"sneaked={self.sneaked}, "
-            f"looking_at={self.looking_at}, "
+            f"looking_at=<{self.looking_at}>, "
+            f"holds_item=<{self.holds_item}>"
             ")"
         )
 
@@ -308,6 +316,27 @@ class Item(BaseModel):
         return f"Item(type={self.type}, display_name={self.display_name})"
 
 
+class HotbarItem(Item):
+    """Like Item but also contains information about the amount"""
+
+    amount: int
+
+    @staticmethod
+    def from_api_format(s: str) -> HotbarItem | None:
+
+        item_str, amount = s.rsplit(":", 1)
+
+        if not amount:
+            return None
+
+        itm = Item.from_api_format(item_str)
+
+        return HotbarItem(type=itm.type, display_name=itm.display_name, amount=int(amount))
+
+    def __repr__(self):
+        return f"Item(type={self.type}, display_name={self.display_name}, amount={self.amount})"
+
+
 class InventoryField(BaseModel):
     """A field in a player's inventory"""
 
@@ -320,9 +349,11 @@ class InventoryField(BaseModel):
 
     @staticmethod
     def from_api_format(s: str):
-        idx, itm, amt = s.split(":")
+        split = s.split(":")
 
+        idx, itm, amt = split
         itm = Item.from_api_format(itm)
+
         return InventoryField(index=int(idx), item=itm, amount=int(amt))
 
     def __repr__(self):
