@@ -40,6 +40,14 @@ spieler_liste_namen = hole_alle_spieler_namen()
 
 assert spieler_liste_namen[0] == spieler.name
 
+spieler_liste = hole_alle_spieler()
+
+assert spieler_liste[0] == spieler
+
+spieler_liste_namen = hole_alle_spieler_namen()
+
+assert spieler_liste_namen[0] == spieler.name
+
 """ test player positioning"""
 
 
@@ -48,9 +56,10 @@ st_minecraft.spieler_position_setzen(spieler, spieler.x, spieler.y + 20, spieler
 
 """ test player attributes"""
 
-st_minecraft.spieler_leben_setzen(spieler, 20)
+st_minecraft.spieler_max_leben_setzten(spieler, 60)
 
-st_minecraft.spieler_max_leben_setzten(spieler, 40)
+st_minecraft.spieler_leben_setzen(spieler, 65)
+
 
 st_minecraft.spieler_hunger_setzen(spieler, 20)
 
