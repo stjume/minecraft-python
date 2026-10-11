@@ -10,6 +10,8 @@ import time
 
 import st_minecraft.de as st_minecraft
 import st_minecraft.de.boss_leiste as boss_bar
+from st_minecraft.de import hole_alle_spieler
+from st_minecraft.de import hole_alle_spieler_namen
 from st_minecraft.en import Dimension
 
 st_minecraft.verbinden()
@@ -29,6 +31,14 @@ spieler_durch_index = st_minecraft.hole_spieler_durch_index(spieler.id)
 assert spieler == spieler_durch_name
 
 assert spieler == spieler_durch_index
+
+spieler_liste = hole_alle_spieler()
+
+assert spieler_liste[0] == spieler
+
+spieler_liste_namen = hole_alle_spieler_namen()
+
+assert spieler_liste_namen[0] == spieler.name
 
 """ test player positioning"""
 
