@@ -148,6 +148,27 @@ st_minecraft.sende_an_chat("Test!")
 
 st_minecraft.gebe_item(spieler, st_minecraft.MaterialSammlung.Holzspitzhacke, 1, name="Test")
 inv = st_minecraft.hole_inventar(spieler)
+feld = spieler.aktuelles_hotbar_feld
+st_minecraft.gebe_item(
+    spieler,
+    st_minecraft.MaterialSammlung.Diamantaxt,
+    2,
+    name="test2",
+    inventar_feld=feld,
+)
+
+spieler_neu = st_minecraft.hole_spieler_durch_name(spieler.name)
+
+assert spieler_neu.hält_item.typ == st_minecraft.MaterialSammlung.Diamantaxt
+
+assert spieler.aktuelles_hotbar_feld == feld
+
+assert spieler_neu.hält_item.anzeige_name == "test2"
+
+assert spieler_neu.hält_item.anzahl == 2
+
+st_minecraft.gebe_item(spieler_neu, st_minecraft.MaterialSammlung.Luft, 1, inventar_feld=feld)
+
 
 print(inv)
 
