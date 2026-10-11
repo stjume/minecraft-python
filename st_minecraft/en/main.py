@@ -117,6 +117,50 @@ def get_player_by_index(index: int = 0) -> Player:
     return get_player(index=index)
 
 
+def get_all_player_names() -> list[str]:
+    """
+    Get all player names currently on the server in a list
+    The players are ordered by their index, the index is tied to the join order
+
+    This function is good if you just want to know which players are online.
+    It doesn't provide you with information about the players like coordinates.
+
+    You need to either fetch this individually using `get_player()` or call `get_all_players()` instead
+
+    Returns: List of all players currently on the server
+    """
+    command = _build_command("getAllPlayers")
+    _send_command(command)
+
+    data = _receive()
+    assert data is not None, "Didn't get any data from getAllPlayers"
+
+    data_str = _bytes_to_text(data)
+
+    return data_str.split(ARG_SEPARATOR)
+
+
+def get_all_players() -> list[Player]:
+    """
+    Get information about all players currently online in a list
+    The players are ordered by their index, the index is tied to the join order
+
+    The list contains the players with all their information like coordinates and health
+
+    Returns: List of all players currently on the server
+    """
+
+    players_with_data = []
+    player_names = get_all_player_names()
+
+    for player_name in player_names:
+        player_data = get_player_by_name(player_name)
+
+        players_with_data.append(player_data)
+
+    return players_with_data
+
+
 def get_player(*, index: int | None = None, name: str | None = None) -> Player:
     """
     Query the state of a player by index or name.
