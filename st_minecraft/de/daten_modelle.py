@@ -12,6 +12,7 @@ from st_minecraft.de.material import MaterialSammlung
 from st_minecraft.en import Dimension
 from st_minecraft.en import DirectionCollection as _DirectionCollection
 from st_minecraft.en import Entity as _EntityEN
+from st_minecraft.en import HotbarItem as _HotbarItemEN
 from st_minecraft.en import Inventory as _InventoryEN
 from st_minecraft.en import InventoryField as _InventoryFieldEN
 from st_minecraft.en import Item as _ItemEN
@@ -136,6 +137,10 @@ class Spieler(BaseModel):
     sättigung: float
     xp_level: float
     xp_fortschritt: float
+    aktueller_hotbar_platz: int
+    """ Platz in der Hotbar (Schnellzugriffsleiste), der aktuell ausgewählt ist """
+    hält_item: Optional["HotbarItem"]
+    """ Item, das der Spieler aktuell in der Hand hält - None, wenn die Hand leer ist """
 
     @property
     def coords(self) -> tuple[float, float, float]:
@@ -171,6 +176,8 @@ class Spieler(BaseModel):
             sättigung=p.saturation,
             xp_level=p.xp_level,
             xp_fortschritt=p.xp_progress,
+            aktueller_hotbar_platz=p.current_hotbar_slot,
+            hält_item=HotbarItem.von_englisch(p.holds_item),
         )
 
     def zu_englisch(self) -> _PlayerEN:
@@ -190,6 +197,8 @@ class Spieler(BaseModel):
             saturation=self.sättigung,
             xp_level=self.xp_level,
             xp_progress=self.xp_fortschritt,
+            current_hotbar_slot=self.aktueller_hotbar_platz,
+            holds_item=self.hält_item.zu_englisch() if self.hält_item is not None else None,
         )
 
     def __repr__(self):
@@ -209,7 +218,9 @@ class Spieler(BaseModel):
             f"xp_level={self.xp_level}, "
             f"xp_fortschritt={self.xp_fortschritt}, "
             f"sneaked={self.sneaked}, "
-            f"schaut_auf={self.schaut_auf}, "
+            f"aktueller_hotbar_platz={self.aktueller_hotbar_platz}, "
+            f"schaut_auf=<{self.schaut_auf}>, "
+            f"hält_item=<{self.hält_item}>"
             ")"
         )
 
@@ -319,6 +330,30 @@ class Item(BaseModel):
 
     def zu_englisch(self) -> _ItemEN:
         return _ItemEN(type=self.typ.zu_englisch(), display_name=self.anzeige_name)
+
+
+class HotbarItem(Item):
+    """Wie Item, enthält zusätzlich die Information, wie viele Items gehalten werden"""
+
+    anzahl: int
+    """ Wie viele von dem Item gehalten werden """
+
+    def __repr__(self):
+        return f"HotbarItem(typ={self.typ}, anzeige_name={self.anzeige_name}, anzahl={self.anzahl})"
+
+    @staticmethod
+    def von_englisch(i: _HotbarItemEN | None) -> Optional["HotbarItem"]:
+        if i is None:
+            return None
+
+        return HotbarItem(
+            typ=MaterialSammlung.von_englisch(i.type),
+            anzeige_name=i.display_name,
+            anzahl=i.amount,
+        )
+
+    def zu_englisch(self) -> _HotbarItemEN:
+        return _HotbarItemEN(type=self.typ.zu_englisch(), display_name=self.anzeige_name, amount=self.anzahl)
 
 
 class InventarFeld(BaseModel):
