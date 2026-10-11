@@ -127,7 +127,7 @@ class Spieler(BaseModel):
     dimension: Dimension
     rotation: int
     """ Rotation des Spielers von -180 bis 180 """
-    schaut_auf: Material | None
+    schaut_auf: Material
     """ Der nächste Block auf den Spieler schaut (maximal 100 Blöcke weit entfernt) """
     sneaked: bool
     """ True wenn Player sneaked """

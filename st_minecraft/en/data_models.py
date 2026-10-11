@@ -96,7 +96,7 @@ class Material(BaseModel):
         y: float | None = None,
         z: float | None = None,
         dimension: str | None = None,
-    ) -> Optional["Material"]:
+    ) -> "Material":
         try:
             _type = _to_enum(MaterialCollection, type)
         except ValidationError:
@@ -119,7 +119,7 @@ class Player(BaseModel):
     dimension: Dimension
     rotation: int
     """ Rotation of the player from -180 to 180 """
-    looking_at: Material | None
+    looking_at: Material
     """ The next block the player is looking at (maximum 100 blocks away) """
     sneaked: bool
     """ True if player is sneaking """
