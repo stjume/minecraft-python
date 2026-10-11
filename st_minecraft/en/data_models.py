@@ -130,7 +130,7 @@ class Player(BaseModel):
     xp_level: float
     xp_progress: float
     current_hotbar_slot: int
-    holds_item: HotbarItem | None
+    holds_item: Optional["HotbarItem"]
 
     @property
     def coords(self) -> tuple[float, float, float]:
@@ -322,7 +322,7 @@ class HotbarItem(Item):
     amount: int
 
     @staticmethod
-    def from_api_format(s: str) -> HotbarItem | None:
+    def from_api_format(s: str) -> Optional["HotbarItem"]:
 
         item_str, amount = s.rsplit(":", 1)
 

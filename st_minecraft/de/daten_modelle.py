@@ -317,6 +317,9 @@ class Item(BaseModel):
     def von_englisch(i: _ItemEN):
         return Item(typ=MaterialSammlung.von_englisch(i.type), anzeige_name=i.display_name)
 
+    def zu_englisch(self) -> _ItemEN:
+        return _ItemEN(type=self.typ.zu_englisch(), display_name=self.anzeige_name)
+
 
 class InventarFeld(BaseModel):
     """Ein Feld im Inventar eine:r Spieler:in"""
