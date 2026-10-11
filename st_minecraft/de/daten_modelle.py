@@ -137,7 +137,7 @@ class Spieler(BaseModel):
     sättigung: float
     xp_level: float
     xp_fortschritt: float
-    aktuelles_inventar_leiste_feld: int
+    aktuelles_hotbar_feld: int
     """ Platz in der Hotbar (Schnellzugriffsleiste), der aktuell ausgewählt ist """
     hält_item: Optional["HotbarItem"]
     """ Item, das der Spieler aktuell in der Hand hält - None, wenn die Hand leer ist """
@@ -176,7 +176,7 @@ class Spieler(BaseModel):
             sättigung=p.saturation,
             xp_level=p.xp_level,
             xp_fortschritt=p.xp_progress,
-            aktuelles_inventar_leiste_feld=p.current_hotbar_slot,
+            aktuelles_hotbar_feld=p.current_hotbar_slot,
             hält_item=HotbarItem.von_englisch(p.holds_item),
         )
 
@@ -197,7 +197,7 @@ class Spieler(BaseModel):
             saturation=self.sättigung,
             xp_level=self.xp_level,
             xp_progress=self.xp_fortschritt,
-            current_hotbar_slot=self.aktuelles_inventar_leiste_feld,
+            current_hotbar_slot=self.aktuelles_hotbar_feld,
             holds_item=self.hält_item.zu_englisch() if self.hält_item is not None else None,
         )
 
@@ -218,7 +218,7 @@ class Spieler(BaseModel):
             f"xp_level={self.xp_level}, "
             f"xp_fortschritt={self.xp_fortschritt}, "
             f"sneaked={self.sneaked}, "
-            f"aktueller_hotbar_platz={self.aktuelles_inventar_leiste_feld}, "
+            f"aktueller_hotbar_platz={self.aktuelles_hotbar_feld}, "
             f"schaut_auf=<{self.schaut_auf}>, "
             f"hält_item=<{self.hält_item}>"
             ")"
