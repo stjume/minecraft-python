@@ -129,8 +129,7 @@ class Player(BaseModel):
     saturation: float
     xp_level: float
     xp_progress: float
-    current_hotbar_slot: int
-    holds_item: Optional["HotbarItem"]
+    holds_item: Optional["InventoryField"]
 
     @property
     def coords(self) -> tuple[float, float, float]:
@@ -172,8 +171,6 @@ class Player(BaseModel):
             held_item_data,
         ) = _bytes_to_text(data).split(ARG_SEPARATOR)
 
-        current_hotbar_slot, held_item_data = held_item_data.split(":", 1)
-
         return Player(
             id=int(_id),
             name=name,
@@ -190,8 +187,7 @@ class Player(BaseModel):
             xp_level=_to_float(xp_level),
             xp_progress=_to_float(xp_progress),
             health=_to_float(health),
-            current_hotbar_slot=current_hotbar_slot,
-            holds_item=HotbarItem.from_api_format(held_item_data),
+            holds_item=InventoryField.from_api_format(held_item_data),
         )
 
     def __repr__(self):
@@ -306,44 +302,24 @@ class Item(BaseModel):
     @staticmethod
     def from_api_format(s: str):
         """we expect ; separated contents here"""
-        type, display_name = s.split(";")
+        _type, display_name = s.split(";")
         if not display_name:
             display_name = None
 
-        return Item(type=_to_enum(MaterialCollection, type), display_name=display_name)
+        if not _type:
+            _type = MaterialCollection.Air.value
+
+        return Item(type=_to_enum(MaterialCollection, _type), display_name=display_name)
 
     def __repr__(self):
         return f"Item(type={self.type}, display_name={self.display_name})"
 
 
-class HotbarItem(Item):
-    """Like Item but also contains information about the amount"""
-
-    amount: int
-
-    @staticmethod
-    def from_api_format(s: str) -> Optional["HotbarItem"]:
-
-        item_str, amount = s.rsplit(":", 1)
-
-        if not amount:
-            return None
-
-        itm = Item.from_api_format(item_str)
-
-        return HotbarItem(type=itm.type, display_name=itm.display_name, amount=int(amount))
-
-    def __repr__(self):
-        return f"Item(type={self.type}, display_name={self.display_name}, amount={self.amount})"
-
-
-class InventoryField(BaseModel):
+class InventoryField(Item):
     """A field in a player's inventory"""
 
     index: int
     """ Index where the field is located in the inventory """
-    item: Item
-    """ Item object, which item is in the field """
     amount: int
     """ How many of the item are in this field """
 
@@ -354,10 +330,13 @@ class InventoryField(BaseModel):
         idx, itm, amt = split
         itm = Item.from_api_format(itm)
 
-        return InventoryField(index=int(idx), item=itm, amount=int(amt))
+        if not amt:
+            amt = 0
+
+        return InventoryField(index=int(idx), type=itm.type, display_name=itm.display_name, amount=int(amt))
 
     def __repr__(self):
-        return f"InventarFeld(index={self.index}, item={self.item!r}, amount={self.amount})"
+        return f"InventoryField(index={self.index}, type={self.type}, diplay_name={self.display_name!r}, amount={self.amount})"
 
 
 class Inventory(dict[int, InventoryField]):
