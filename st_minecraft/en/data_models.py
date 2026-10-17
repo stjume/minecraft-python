@@ -6,6 +6,7 @@ from typing import Optional
 from pydantic import BaseModel
 from pydantic import ValidationError
 
+from st_minecraft.core import ARG_SEPARATOR_SECOND_LEVEL
 from st_minecraft.core import InventoryFieldEmptyError
 from st_minecraft.core.core import ARG_SEPARATOR
 from st_minecraft.core.core import _bytes_to_text
@@ -183,8 +184,8 @@ class Entity(BaseModel):
         return Entity(type=_to_enum(EntityCollection, type))
 
     @staticmethod
-    def from_api_format(s: str):
-        _id, type, name, x, y, z, dimension, health, ai = s.split(ARG_SEPARATOR)
+    def from_api_format(s: str, separator=ARG_SEPARATOR):
+        _id, type, name, x, y, z, dimension, health, ai = s.split(separator)
         _type = _to_enum(EntityCollection, type)
         return Entity(
             id=_id,
@@ -276,7 +277,7 @@ class Player(BaseModel):
             dimension=_to_enum(Dimension, dimension),
             rotation=int(rot),
             looking_at_block=Material.from_api_format(looking_at_block),
-            looking_at_entity=Entity.from_api_format(looking_at_entity),
+            looking_at_entity=Entity.from_api_format(looking_at_entity, separator=ARG_SEPARATOR_SECOND_LEVEL),
             sneaked=sneaked.lower() == "true",
             max_health=_to_float(max_health),
             hunger=_to_float(hunger),

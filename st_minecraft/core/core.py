@@ -18,6 +18,7 @@ from typing import TypeVar
 connection: Optional[socket.socket] = None
 
 ARG_SEPARATOR = "𝇉"
+ARG_SEPARATOR_SECOND_LEVEL = "𝇊"
 
 DEFAULT_PORT = 25595
 
