@@ -106,6 +106,86 @@ class Material(BaseModel):
         return Material(type=_type, x=x, y=y, z=z, dimension=_to_enum(Dimension, dimension))
 
 
+class Entity(BaseModel):
+    """Models an entity. Many of the information can be empty (None)"""
+
+    type: EntityCollection
+    """ Type of the entity """
+    id: str | None = None
+    """ Unique ID for this entity """
+    name: str | None = None
+    x: float | None = None
+    y: float | None = None
+    z: float | None = None
+    dimension: Dimension | None = None
+    health: float | None = None
+    ai: bool | None = None
+
+    @property
+    def coords(self) -> tuple[float | None, float | None, float | None]:
+        """Shorthand to get all coords as tuple (x, y, z)"""
+        return self.x, self.y, self.z
+
+    @property
+    def coords_int(self) -> tuple[int, int, int]:
+        """
+        Shorthand to get all coords as tuple (x, y, z) as integers
+
+        warning: coordinates are rounded like Minecraft does it internally.
+        this means that negative numbers are rounded up and positives are rounded down
+
+        """
+        return _coords_to_int(self.coords)
+
+    def __eq__(self, other):
+        if isinstance(other, EntityCollection):
+            return self.type == other
+
+        if not isinstance(other, type(self)):
+            return False
+
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __repr__(self):
+        return (
+            f"Entity("
+            f"type={self.type}, "
+            f"name={self.name}, "
+            f"x={self.x}, "
+            f"y={self.y}, "
+            f"z={self.z}, "
+            f"dimension={self.dimension}, "
+            f"health={self.health}, "
+            f"ai={self.ai}, "
+            f"id={self.id}"
+            f")"
+        )
+
+    @staticmethod
+    def from_string(type: str):
+        # TODO: do we need this? if not we can remove the default Nones
+        return Entity(type=_to_enum(EntityCollection, type))
+
+    @staticmethod
+    def from_api_format(s: str):
+        _id, type, name, x, y, z, dimension, health, ai = s.split(ARG_SEPARATOR)
+        _type = _to_enum(EntityCollection, type)
+        return Entity(
+            id=_id,
+            type=_type,
+            name=name if name != "null" else None,
+            x=_to_float(x),
+            y=_to_float(y),
+            z=_to_float(z),
+            dimension=_to_enum(Dimension, dimension),
+            health=_to_float(health),
+            ai=ai == "true",
+        )
+
+
 class Player(BaseModel):
     """Snapshot at the time of the query, the data is NOT permanently updated!"""
 
@@ -211,87 +291,6 @@ class Player(BaseModel):
             f"holds_item=<{self.holds_item}>"
             ")"
         )
-
-
-class Entity(BaseModel):
-    """Models an entity. Many of the information can be empty (None)"""
-
-    type: EntityCollection
-    """ Type of the entity """
-    id: str | None = None
-    """ Unique ID for this entity """
-    name: str | None = None
-    x: float | None = None
-    y: float | None = None
-    z: float | None = None
-    dimension: Dimension | None = None
-    health: float | None = None
-    ai: bool | None = None
-
-    @property
-    def coords(self) -> tuple[float | None, float | None, float | None]:
-        """Shorthand to get all coords as tuple (x, y, z)"""
-        return self.x, self.y, self.z
-
-    @property
-    def coords_int(self) -> tuple[int, int, int]:
-        """
-        Shorthand to get all coords as tuple (x, y, z) as integers
-
-        warning: coordinates are rounded like Minecraft does it internally.
-        this means that negative numbers are rounded up and positives are rounded down
-
-        """
-        return _coords_to_int(self.coords)
-
-    def __eq__(self, other):
-        if isinstance(other, EntityCollection):
-            return self.type == other
-
-        if not isinstance(other, type(self)):
-            return False
-
-        return self.id == other.id
-
-    def __ne__(self, other):
-        return not self == other
-
-    def __repr__(self):
-        return (
-            f"Entity("
-            f"type={self.type}, "
-            f"name={self.name}, "
-            f"x={self.x}, "
-            f"y={self.y}, "
-            f"z={self.z}, "
-            f"dimension={self.dimension}, "
-            f"health={self.health}, "
-            f"ai={self.ai}, "
-            f"id={self.id}"
-            f")"
-        )
-
-    @staticmethod
-    def from_string(type: str):
-        # TODO: do we need this? if not we can remove the default Nones
-        return Entity(type=_to_enum(EntityCollection, type))
-
-    @staticmethod
-    def from_api_format(s: str):
-        _id, type, name, x, y, z, dimension, health, ai = s.split(ARG_SEPARATOR)
-        _type = _to_enum(EntityCollection, type)
-        return Entity(
-            id=_id,
-            type=_type,
-            name=name if name != "null" else None,
-            x=_to_float(x),
-            y=_to_float(y),
-            z=_to_float(z),
-            dimension=_to_enum(Dimension, dimension),
-            health=_to_float(health),
-            ai=ai == "true",
-        )
-
 
 class Item(BaseModel):
     """Models an item"""
