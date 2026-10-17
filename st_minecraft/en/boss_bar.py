@@ -125,6 +125,11 @@ def delete_bar(boss_bar: BossBar):
     _delete_bar_str(boss_bar.name)
 
 
+def delete_all_bars():
+    """Deletes all boss bars that have a name"""
+    _send_command("deleteAllBossBars")
+
+
 def _delete_bar_str(boss_bar_name: str):
     command = _build_command("deleteBossBar", boss_bar_name)
     _send_command(command)
