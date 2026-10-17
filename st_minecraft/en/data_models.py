@@ -95,8 +95,8 @@ class Material(BaseModel):
         x: float | None = None,
         y: float | None = None,
         z: float | None = None,
-        dimension: dimensionT | None = None,
-    ) -> Optional["Material"]:
+        dimension: str | None = None,
+    ) -> "Material":
         try:
             _type = _to_enum(MaterialCollection, type)
         except ValidationError:
@@ -119,7 +119,7 @@ class Player(BaseModel):
     dimension: Dimension
     rotation: int
     """ Rotation of the player from -180 to 180 """
-    looking_at: Material | None
+    looking_at: Material
     """ The next block the player is looking at (maximum 100 blocks away) """
     sneaked: bool
     """ True if player is sneaking """
@@ -129,6 +129,7 @@ class Player(BaseModel):
     saturation: float
     xp_level: float
     xp_progress: float
+    holds_item: Optional["InventoryField"]
 
     @property
     def coords(self) -> tuple[float, float, float]:
@@ -167,6 +168,7 @@ class Player(BaseModel):
             saturation,
             xp_level,
             xp_progress,
+            held_item_data,
         ) = _bytes_to_text(data).split(ARG_SEPARATOR)
 
         return Player(
@@ -177,7 +179,7 @@ class Player(BaseModel):
             z=_to_float(z),
             dimension=_to_enum(Dimension, dimension),
             rotation=int(rot),
-            looking_at=Material.from_string(looking_at),
+            looking_at=Material.from_string(looking_at, dimension=dimension),
             sneaked=sneaked.lower() == "true",
             max_health=_to_float(max_health),
             hunger=_to_float(hunger),
@@ -185,6 +187,7 @@ class Player(BaseModel):
             xp_level=_to_float(xp_level),
             xp_progress=_to_float(xp_progress),
             health=_to_float(health),
+            holds_item=InventoryField.from_api_format(held_item_data),
         )
 
     def __repr__(self):
@@ -204,7 +207,8 @@ class Player(BaseModel):
             f"xp_level={self.xp_level}, "
             f"xp_progress={self.xp_progress}, "
             f"sneaked={self.sneaked}, "
-            f"looking_at={self.looking_at}, "
+            f"looking_at=<{self.looking_at}>, "
+            f"holds_item=<{self.holds_item}>"
             ")"
         )
 
@@ -298,35 +302,41 @@ class Item(BaseModel):
     @staticmethod
     def from_api_format(s: str):
         """we expect ; separated contents here"""
-        type, display_name = s.split(";")
+        _type, display_name = s.split(";")
         if not display_name:
             display_name = None
 
-        return Item(type=_to_enum(MaterialCollection, type), display_name=display_name)
+        if not _type:
+            _type = MaterialCollection.Air.value
+
+        return Item(type=_to_enum(MaterialCollection, _type), display_name=display_name)
 
     def __repr__(self):
         return f"Item(type={self.type}, display_name={self.display_name})"
 
 
-class InventoryField(BaseModel):
+class InventoryField(Item):
     """A field in a player's inventory"""
 
     index: int
     """ Index where the field is located in the inventory """
-    item: Item
-    """ Item object, which item is in the field """
     amount: int
     """ How many of the item are in this field """
 
     @staticmethod
     def from_api_format(s: str):
-        idx, itm, amt = s.split(":")
+        split = s.split(":")
 
+        idx, itm, amt = split
         itm = Item.from_api_format(itm)
-        return InventoryField(index=int(idx), item=itm, amount=int(amt))
+
+        if not amt:
+            amt = 0
+
+        return InventoryField(index=int(idx), type=itm.type, display_name=itm.display_name, amount=int(amt))
 
     def __repr__(self):
-        return f"InventarFeld(index={self.index}, item={self.item!r}, amount={self.amount})"
+        return f"InventoryField(index={self.index}, type={self.type}, diplay_name={self.display_name!r}, amount={self.amount})"
 
 
 class Inventory(dict[int, InventoryField]):

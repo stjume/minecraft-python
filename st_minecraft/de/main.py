@@ -97,6 +97,36 @@ def hole_spieler_durch_index(index: int = 0) -> Spieler:
     return hole_spieler(index=index)
 
 
+def hole_alle_spieler_namen() -> list[str]:
+    """
+    Gibt die Namen aller aktuell auf dem Server befindlichen Spieler als Liste zurück.
+    Die Spieler sind nach ihrem Index sortiert; der Index entspricht der Beitrittsreihenfolge.
+
+    Diese Funktion eignet sich, wenn du nur wissen willst, welche Spieler online sind.
+    Sie liefert keine Informationen über die Spieler, wie z. B. Koordinaten.
+
+    Diese musst du entweder einzeln mit `get_player()` abrufen oder stattdessen `get_all_players()` aufrufen.
+
+    Returns: Liste aller aktuell auf dem Server befindlichen Spieler
+    """
+    return __st_minecraft_en.get_all_player_names()
+
+
+def hole_alle_spieler() -> list[Spieler]:
+    """
+    Gibt Informationen über alle aktuell online befindlichen Spieler als Liste zurück.
+    Die Spieler sind nach ihrem Index sortiert; der Index entspricht der Beitrittsreihenfolge.
+
+    Die Liste enthält die Spieler mit all ihren Informationen, wie z. B. Koordinaten und Gesundheit.
+
+    Returns: Liste aller aktuell auf dem Server befindlichen Spieler
+    """
+
+    players = __st_minecraft_en.get_all_players()
+
+    return [Spieler.von_englisch(p) for p in players]
+
+
 def hole_spieler(*, index: int | None = None, name: str | None = None) -> Spieler:
     """
     Frage den Zustand eines Spielers durch index oder name ab.

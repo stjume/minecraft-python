@@ -10,6 +10,8 @@ import time
 
 import st_minecraft.de as st_minecraft
 import st_minecraft.de.boss_leiste as boss_bar
+from st_minecraft.de import hole_alle_spieler
+from st_minecraft.de import hole_alle_spieler_namen
 from st_minecraft.en import Dimension
 
 st_minecraft.verbinden()
@@ -30,6 +32,22 @@ assert spieler == spieler_durch_name
 
 assert spieler == spieler_durch_index
 
+spieler_liste = hole_alle_spieler()
+
+assert spieler_liste[0] == spieler
+
+spieler_liste_namen = hole_alle_spieler_namen()
+
+assert spieler_liste_namen[0] == spieler.name
+
+spieler_liste = hole_alle_spieler()
+
+assert spieler_liste[0] == spieler
+
+spieler_liste_namen = hole_alle_spieler_namen()
+
+assert spieler_liste_namen[0] == spieler.name
+
 """ test player positioning"""
 
 
@@ -38,9 +56,10 @@ st_minecraft.spieler_position_setzen(spieler, spieler.x, spieler.y + 20, spieler
 
 """ test player attributes"""
 
-st_minecraft.spieler_leben_setzen(spieler, 20)
+st_minecraft.spieler_max_leben_setzten(spieler, 60)
 
-st_minecraft.spieler_max_leben_setzten(spieler, 40)
+st_minecraft.spieler_leben_setzen(spieler, 65)
+
 
 st_minecraft.spieler_hunger_setzen(spieler, 20)
 
@@ -129,6 +148,27 @@ st_minecraft.sende_an_chat("Test!")
 
 st_minecraft.gebe_item(spieler, st_minecraft.MaterialSammlung.Holzspitzhacke, 1, name="Test")
 inv = st_minecraft.hole_inventar(spieler)
+feld = spieler.hält_item.index
+st_minecraft.gebe_item(
+    spieler,
+    st_minecraft.MaterialSammlung.Diamantaxt,
+    2,
+    name="test2",
+    inventar_feld=feld,
+)
+
+spieler_neu = st_minecraft.hole_spieler_durch_name(spieler.name)
+
+assert spieler_neu.hält_item.typ == st_minecraft.MaterialSammlung.Diamantaxt
+
+assert spieler.hält_item.index == feld
+
+assert spieler_neu.hält_item.anzeige_name == "test2"
+
+assert spieler_neu.hält_item.anzahl == 2
+
+st_minecraft.gebe_item(spieler_neu, st_minecraft.MaterialSammlung.Luft, 1, inventar_feld=feld)
+
 
 print(inv)
 
