@@ -12,7 +12,7 @@ st.verbinden()
 COUNTDOWN_LEISTE = "countdown"
 
 # zur sicherheit einmal löschen, bevor wir die wiederverwenden.
-boss.loesche_leiste(
+boss.lösche_leiste(
     boss.BossLeiste(
         name=COUNTDOWN_LEISTE,
         anzeige_text="",

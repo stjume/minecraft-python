@@ -210,7 +210,7 @@ bb = boss_bar.erzeuge_leiste("test", "test")
 
 boss_bar.setze_farbe(bb, boss_bar.BossLeisteFarben.PINK)
 
-boss_bar.loesche_leiste(bb)
+boss_bar.lösche_leiste(bb)
 
 
 print(f"SUCCESS")

@@ -47,7 +47,7 @@ while True:
             boss.setze_wert(b, i / 100)
             time.sleep(0.05)
 
-        boss.loesche_leiste(b)
+        boss.lösche_leiste(b)
 
     if spieler.y < unterster_punkt:
         st_minecraft.spieler_position_setzen(spieler, checkpoint.x, checkpoint.y, checkpoint.z)
