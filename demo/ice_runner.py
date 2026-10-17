@@ -101,7 +101,7 @@ def ice_game(p: mc.Player, time_until_disappear: float = 2):
             # if enough time elapsed, change block back
             if now - record.time_changed > time_until_disappear:
                 mc.set_block(*record.coords, record.old_type)
-                # delte entry from dict
+                # delete entry from dict
                 del changed_blocks[coords]
                 continue  # we're done with this block, so let's start the next iteration of the loop
 
