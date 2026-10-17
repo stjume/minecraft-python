@@ -132,3 +132,8 @@ def setze_stil(boss_leiste: BossLeiste, stil: BossLeisteStil) -> BossLeiste:
 def loesche_leiste(boss_leiste: BossLeiste):
     """Lösche eine Leiste"""
     __st_minecraft_en.delete_bar(boss_leiste.zu_englisch())
+
+
+def lösche_alle_leisten():
+    """Löscht alle Leisten, die einen Namen haben"""
+    __st_minecraft_en.delete_all_bars()
