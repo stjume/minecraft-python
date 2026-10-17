@@ -73,7 +73,7 @@ def ice_game(p: mc.Player, time_until_disappear: float = 2):
         # case where we want to spawn a block
         # the player must look at the MaterialCollection.Blue_Ice to spawn a block
         # obsidian is safe and will not be replaced, hence we dont trigger a replace in that case
-        if p.looking_at == spawner_block and not b.type in safe_blocks:
+        if p.looking_at_block == spawner_block and not b.type in safe_blocks:
             mc.set_block(*b.coords, replace_with)
 
             # if block is already changed before, only update time
@@ -101,7 +101,7 @@ def ice_game(p: mc.Player, time_until_disappear: float = 2):
             # if enough time elapsed, change block back
             if now - record.time_changed > time_until_disappear:
                 mc.set_block(*record.coords, record.old_type)
-                # delte entry from dict
+                # delete entry from dict
                 del changed_blocks[coords]
                 continue  # we're done with this block, so let's start the next iteration of the loop
 

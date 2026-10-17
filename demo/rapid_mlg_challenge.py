@@ -76,5 +76,5 @@ if __name__ == "__main__":
             s_0 = st.hole_spieler(name=SPIELER_NAME)
         else:
             s_0 = st.hole_spieler()
-        if s_0.schaut_auf == BLOCK:
+        if s_0.schaut_auf_block == BLOCK:
             fangen(s_0.name)

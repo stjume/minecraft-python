@@ -129,7 +129,7 @@ def setze_stil(boss_leiste: BossLeiste, stil: BossLeisteStil) -> BossLeiste:
     return BossLeiste.von_englisch(b)
 
 
-def loesche_leiste(boss_leiste: BossLeiste):
+def lösche_leiste(boss_leiste: BossLeiste):
     """Lösche eine Leiste"""
     __st_minecraft_en.delete_bar(boss_leiste.zu_englisch())
 

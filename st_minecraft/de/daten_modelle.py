@@ -113,114 +113,6 @@ class Material(BaseModel):
         )
 
 
-class Spieler(BaseModel):
-    """Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft aktualisiert!"""
-
-    id: int
-    """ Eindeutige ID des Spielers """
-    name: str
-    """ Name des Spielers """
-    x: float
-    y: float
-    z: float
-    dimension: Dimension
-    rotation: int
-    """ Rotation des Spielers von -180 bis 180 """
-    schaut_auf: Material
-    """ Der nächste Block auf den Spieler schaut (maximal 100 Blöcke weit entfernt) """
-    sneaked: bool
-    """ True wenn Player sneaked """
-    max_leben: float
-    leben: float
-    hunger: float
-    sättigung: float
-    xp_level: float
-    xp_fortschritt: float
-    """ Platz in der Hotbar (Schnellzugriffsleiste), der aktuell ausgewählt ist """
-    hält_item: Optional["InventarFeld"]
-    """ Item, das der Spieler aktuell in der Hand hält - None, wenn die Hand leer ist """
-
-    @property
-    def coords(self) -> tuple[float, float, float]:
-        """Abkürzung um alle Koordinaten als Tuple zu bekommen (x, y, z)"""
-        return self.x, self.y, self.z
-
-    @property
-    def coords_int(self) -> tuple[int, int, int]:
-        """
-        Abkürzung um alle Koordinaten als Tuple aus Ganzzahlen zu bekommen (x, y, z)
-
-        Warnung: Die die Koordinaten werden gerundet, wie minecraft es intern tut (math.floor).
-        Bedeutet, dass negative Zahlen aufgerundet werden und positive abgerundet.
-
-        """
-        return _coords_to_int(self.coords)
-
-    @staticmethod
-    def von_englisch(p: _PlayerEN):
-        return Spieler(
-            id=p.id,
-            name=p.name,
-            x=p.x,
-            y=p.y,
-            z=p.z,
-            dimension=p.dimension,
-            rotation=p.rotation,
-            schaut_auf=Material.von_englisch(p.looking_at),
-            sneaked=p.sneaked,
-            max_leben=p.max_health,
-            leben=p.health,
-            hunger=p.hunger,
-            sättigung=p.saturation,
-            xp_level=p.xp_level,
-            xp_fortschritt=p.xp_progress,
-            hält_item=InventarFeld.von_englisch(p.holds_item),
-        )
-
-    def zu_englisch(self) -> _PlayerEN:
-        return _PlayerEN(
-            id=self.id,
-            name=self.name,
-            x=self.x,
-            y=self.y,
-            z=self.z,
-            dimension=self.dimension,
-            rotation=self.rotation,
-            looking_at=self.schaut_auf.zu_englisch(),
-            sneaked=self.sneaked,
-            max_health=self.max_leben,
-            health=self.leben,
-            hunger=self.hunger,
-            saturation=self.sättigung,
-            xp_level=self.xp_level,
-            xp_progress=self.xp_fortschritt,
-            holds_item=self.hält_item.zu_englisch() if self.hält_item is not None else None,
-        )
-
-    def __repr__(self):
-        return (
-            f"Spieler("
-            f"id={self.id}, "
-            f"name={self.name}, "
-            f"x={self.x}, "
-            f"y={self.y}, "
-            f"z={self.z}, "
-            f"dimension={self.dimension}, "
-            f"rotation={self.rotation}, "
-            f"leben={self.leben}, "
-            f"max_leben={self.max_leben}, "
-            f"hunger={self.hunger}, "
-            f"sättigung={self.sättigung}, "
-            f"xp_level={self.xp_level}, "
-            f"xp_fortschritt={self.xp_fortschritt}, "
-            f"sneaked={self.sneaked}, "
-            f"aktueller_hotbar_platz={self.aktuelles_hotbar_feld}, "
-            f"schaut_auf=<{self.schaut_auf}>, "
-            f"hält_item=<{self.hält_item}>"
-            ")"
-        )
-
-
 class Entity(BaseModel):
     """Modelliert ein Entity. Viele der Informationen können leer (None) sein"""
 
@@ -284,7 +176,10 @@ class Entity(BaseModel):
         return Entity(typ=_to_enum(EntitySammlung, typ))
 
     @staticmethod
-    def von_englisch(e: _EntityEN):
+    def von_englisch(e: _EntityEN | None) -> Optional["Entity"]:
+        if e is None:
+            return None
+
         return Entity(
             typ=EntitySammlung.von_englisch(e.type),
             id=e.id,
@@ -308,6 +203,118 @@ class Entity(BaseModel):
             dimension=self.dimension,
             health=self.leben,
             ai=self.ai,
+        )
+
+
+class Spieler(BaseModel):
+    """Momentaufnahme zum Zeitpunkt der Abfrage, die Daten werden NICHT dauerhaft aktualisiert!"""
+
+    id: int
+    """ Eindeutige ID des Spielers """
+    name: str
+    """ Name des Spielers """
+    x: float
+    y: float
+    z: float
+    dimension: Dimension
+    rotation: int
+    """ Rotation des Spielers von -180 bis 180 """
+    schaut_auf_block: Material | None
+    """ Der nächste Block auf den Spieler schaut (maximal 200 Blöcke weit entfernt) """
+    schaut_auf_entity: Entity | None
+    """ Das nächste Entity auf das Spieler schaut (maximal 200 Blöcke weit entfernt) """
+    sneaked: bool
+    """ True wenn Player sneaked """
+    max_leben: float
+    leben: float
+    hunger: float
+    sättigung: float
+    xp_level: float
+    xp_fortschritt: float
+    """ Platz in der Hotbar (Schnellzugriffsleiste), der aktuell ausgewählt ist """
+    hält_item: Optional["InventarFeld"]
+    """ Item, das der Spieler aktuell in der Hand hält - None, wenn die Hand leer ist """
+
+    @property
+    def coords(self) -> tuple[float, float, float]:
+        """Abkürzung um alle Koordinaten als Tuple zu bekommen (x, y, z)"""
+        return self.x, self.y, self.z
+
+    @property
+    def coords_int(self) -> tuple[int, int, int]:
+        """
+        Abkürzung um alle Koordinaten als Tuple aus Ganzzahlen zu bekommen (x, y, z)
+
+        Warnung: Die die Koordinaten werden gerundet, wie minecraft es intern tut (math.floor).
+        Bedeutet, dass negative Zahlen aufgerundet werden und positive abgerundet.
+
+        """
+        return _coords_to_int(self.coords)
+
+    @staticmethod
+    def von_englisch(p: _PlayerEN):
+        return Spieler(
+            id=p.id,
+            name=p.name,
+            x=p.x,
+            y=p.y,
+            z=p.z,
+            dimension=p.dimension,
+            rotation=p.rotation,
+            schaut_auf_block=Material.von_englisch(p.looking_at_block),
+            schaut_auf_entity=Entity.von_englisch(p.looking_at_entity),
+            sneaked=p.sneaked,
+            max_leben=p.max_health,
+            leben=p.health,
+            hunger=p.hunger,
+            sättigung=p.saturation,
+            xp_level=p.xp_level,
+            xp_fortschritt=p.xp_progress,
+            hält_item=InventarFeld.von_englisch(p.holds_item),
+        )
+
+    def zu_englisch(self) -> _PlayerEN:
+        return _PlayerEN(
+            id=self.id,
+            name=self.name,
+            x=self.x,
+            y=self.y,
+            z=self.z,
+            dimension=self.dimension,
+            rotation=self.rotation,
+            looking_at_block=self.schaut_auf_block.zu_englisch() if self.schaut_auf_block is not None else None,
+            looking_at_entity=self.schaut_auf_entity.zu_englisch() if self.schaut_auf_entity is not None else None,
+            sneaked=self.sneaked,
+            max_health=self.max_leben,
+            health=self.leben,
+            hunger=self.hunger,
+            saturation=self.sättigung,
+            xp_level=self.xp_level,
+            xp_progress=self.xp_fortschritt,
+            holds_item=self.hält_item.zu_englisch() if self.hält_item is not None else None,
+        )
+
+    def __repr__(self):
+        return (
+            f"Spieler("
+            f"id={self.id}, "
+            f"name={self.name}, "
+            f"x={self.x}, "
+            f"y={self.y}, "
+            f"z={self.z}, "
+            f"dimension={self.dimension}, "
+            f"rotation={self.rotation}, "
+            f"leben={self.leben}, "
+            f"max_leben={self.max_leben}, "
+            f"hunger={self.hunger}, "
+            f"sättigung={self.sättigung}, "
+            f"xp_level={self.xp_level}, "
+            f"xp_fortschritt={self.xp_fortschritt}, "
+            f"sneaked={self.sneaked}, "
+            f"schaut_auf_block=<{self.schaut_auf_block}>, "
+            f"schaut_auf_entity=<{self.schaut_auf_entity}>, "
+            f"hält_item=<{self.hält_item}>"
+            ")"
         )
 
 

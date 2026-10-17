@@ -12,7 +12,7 @@ st.verbinden()
 COUNTDOWN_LEISTE = "countdown"
 
 # zur sicherheit einmal löschen, bevor wir die wiederverwenden.
-boss.loesche_leiste(
+boss.lösche_leiste(
     boss.BossLeiste(
         name=COUNTDOWN_LEISTE,
         anzeige_text="",
@@ -30,13 +30,13 @@ while True:
 
     s = st.hole_spieler()
 
-    if s.schaut_auf == MaterialSammlung.Redstone_Block:
+    if s.schaut_auf_block == MaterialSammlung.Redstone_Block:
         print("REDSTONE")
         spiel = 1
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Hoch, 20)
         st.warte(0.1)
 
-    if s.schaut_auf == MaterialSammlung.Diamantblock:
+    if s.schaut_auf_block == MaterialSammlung.Diamantblock:
         print("DIAMANT")
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Hoch, 6)
         b = boss.erzeuge_leiste(COUNTDOWN_LEISTE, "Vorwärts Boost in...")
@@ -45,14 +45,14 @@ while True:
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Vorwärts, 4)
         st.warte(0.1)
 
-    if s.schaut_auf == MaterialSammlung.Goldblock:
+    if s.schaut_auf_block == MaterialSammlung.Goldblock:
         print("GOLD")
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Vorwärts, 5)
         st.warte(0.1)
 
     # SPIEL 2
 
-    if s.schaut_auf == MaterialSammlung.Orange_Wolle:
+    if s.schaut_auf_block == MaterialSammlung.Orange_Wolle:
         spiel = 2
         print("ORANGE WOLLE")
         st.spieler_geschwindigkeit_setzen(s, RichtungSammlung.Hoch, 0.5)
@@ -60,7 +60,7 @@ while True:
 
     # SPIEL 3
 
-    if s.schaut_auf == MaterialSammlung.Hellblaue_Wolle:
+    if s.schaut_auf_block == MaterialSammlung.Hellblaue_Wolle:
         spiel = 3
         print("HELLBLAU")
         b = boss.erzeuge_leiste(COUNTDOWN_LEISTE, "Vorwärts Boost in...")
