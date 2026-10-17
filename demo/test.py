@@ -9,9 +9,11 @@ there are not many assertions. it's more a "do we pass all signatures correctly"
 import time
 
 import st_minecraft.de as st_minecraft
+import st_minecraft.de as mc
 import st_minecraft.de.boss_leiste as boss_bar
 from st_minecraft.de import hole_alle_spieler
 from st_minecraft.de import hole_alle_spieler_namen
+from st_minecraft.de.material import MaterialSammlung
 from st_minecraft.en import Dimension
 
 st_minecraft.verbinden()
@@ -173,6 +175,32 @@ st_minecraft.gebe_item(spieler_neu, st_minecraft.MaterialSammlung.Luft, 1, inven
 print(inv)
 
 print(inv[0])
+
+spieler = mc.hole_spieler()
+gold_y = spieler.y - 10
+mc.setze_block(spieler.x, gold_y, spieler.z, MaterialSammlung.Goldblock)
+
+mc.warte(3)
+
+spieler = mc.hole_spieler()
+mc.spieler_position_setzen(spieler, *spieler.coords, rotation=0)
+
+e = mc.erzeuge_entity(spieler.x, spieler.y + 1 - 0.5, spieler.z + 1, mc.EntitySammlung.Schaf)
+entity = st_minecraft.entity_ai_setzen(e, False)
+
+schaut_auf_block = MaterialSammlung.Redstone_Block
+mc.setze_block(spieler.x, spieler.y + 1, spieler.z + 3, schaut_auf_block)
+
+
+spieler_looks_at = mc.hole_spieler()
+
+assert spieler_looks_at.schaut_auf_entity == e
+
+assert spieler_looks_at.schaut_auf_block == schaut_auf_block
+
+mc.entity_leben_setzen(e, 0)
+mc.setze_block(spieler.x, spieler.y + 1, spieler.z + 3, MaterialSammlung.Luft)
+mc.setze_block(spieler.x, gold_y, spieler.z, MaterialSammlung.Luft)
 
 """
 boss bar tests
