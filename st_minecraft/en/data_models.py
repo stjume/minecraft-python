@@ -90,20 +90,33 @@ class Material(BaseModel):
         return not self == other
 
     @staticmethod
+    def from_api_format(s: str):
+        _type, x, y, z, dim = s.split(":")
+
+        _type_enum = Material._validate_material(_type)
+
+        return Material(type=_type_enum, x=int(x), y=int(y), z=int(z), dimension=_to_enum(Dimension, dim))
+
+    @staticmethod
     def from_string(
         type: str,
         x: float | None = None,
         y: float | None = None,
         z: float | None = None,
         dimension: str | None = None,
-    ) -> "Material":
+    ) -> Optional["Material"]:
+
+        _type_enum = Material._validate_material(type)
+        return Material(type=_type_enum, x=x, y=y, z=z, dimension=_to_enum(Dimension, dimension))
+
+    @staticmethod
+    def _validate_material(m: str):
         try:
-            _type = _to_enum(MaterialCollection, type)
+            _type = _to_enum(MaterialCollection, m)
         except ValidationError:
             _type = None
-            print(f"Block '{type}' is not supported by the library. The type of the block is set to None.")
-
-        return Material(type=_type, x=x, y=y, z=z, dimension=_to_enum(Dimension, dimension))
+            print(f"Block '{m}' is not supported by the library. The type of the block is set to None.")
+        return _type
 
 
 class Entity(BaseModel):
@@ -199,8 +212,10 @@ class Player(BaseModel):
     dimension: Dimension
     rotation: int
     """ Rotation of the player from -180 to 180 """
-    looking_at: Material
-    """ The next block the player is looking at (maximum 100 blocks away) """
+    looking_at_block: Material | None
+    """ The next block the player is looking at (maximum 200 blocks away) """
+    looking_at_entity: Entity | None
+    """ The next entity the player is looking at (maximum 200 blocks away) """
     sneaked: bool
     """ True if player is sneaking """
     max_health: float
@@ -240,7 +255,8 @@ class Player(BaseModel):
             z,
             dimension,
             rot,
-            looking_at,
+            looking_at_block,
+            looking_at_entity,
             sneaked,
             max_health,
             health,
@@ -259,7 +275,8 @@ class Player(BaseModel):
             z=_to_float(z),
             dimension=_to_enum(Dimension, dimension),
             rotation=int(rot),
-            looking_at=Material.from_string(looking_at, dimension=dimension),
+            looking_at_block=Material.from_api_format(looking_at_block),
+            looking_at_entity=Entity.from_api_format(looking_at_entity),
             sneaked=sneaked.lower() == "true",
             max_health=_to_float(max_health),
             hunger=_to_float(hunger),
@@ -287,10 +304,12 @@ class Player(BaseModel):
             f"xp_level={self.xp_level}, "
             f"xp_progress={self.xp_progress}, "
             f"sneaked={self.sneaked}, "
-            f"looking_at=<{self.looking_at}>, "
+            f"looking_at_block=<{self.looking_at_block}>, "
+            f"looking_at_entity=<{self.looking_at_entity}>, "
             f"holds_item=<{self.holds_item}>"
             ")"
         )
+
 
 class Item(BaseModel):
     """Models an item"""
