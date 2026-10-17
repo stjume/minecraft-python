@@ -25,6 +25,10 @@ def _to_float(f: str) -> float:
     """
     if "," in f:
         f = f.replace(",", ".")
+
+    if not f:
+        return 0.0
+
     return float(f)
 
 
@@ -187,6 +191,8 @@ class Entity(BaseModel):
     def from_api_format(s: str, separator=ARG_SEPARATOR):
         _id, type, name, x, y, z, dimension, health, ai = s.split(separator)
         _type = _to_enum(EntityCollection, type)
+        if _type is None:
+            return None
         return Entity(
             id=_id,
             type=_type,
@@ -248,6 +254,7 @@ class Player(BaseModel):
         if data == b"error invalid_index\n":
             raise ConnectionError(f"Can't fetch player. Are you sure this player is connected?")
 
+        split = _bytes_to_text(data).split(ARG_SEPARATOR)
         (
             _id,
             name,
@@ -266,7 +273,7 @@ class Player(BaseModel):
             xp_level,
             xp_progress,
             held_item_data,
-        ) = _bytes_to_text(data).split(ARG_SEPARATOR)
+        ) = split
 
         return Player(
             id=int(_id),
