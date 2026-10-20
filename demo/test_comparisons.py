@@ -1,4 +1,6 @@
 """
+Note: these tests are AI GENERATED.
+
 Tests the comparison behaviour (__eq__ / __ne__) of the data models.
 
 The english implementation is the baseline, the german one is only a translation layer on top of it.
@@ -201,7 +203,11 @@ class German:
         return de.Inventar({field.index: field for field in fields})
 
 
-@pytest.fixture(params=[English(), German()], ids=lambda variant: variant.name)
+ENGLISH = English()
+GERMAN = German()
+
+
+@pytest.fixture(params=[ENGLISH, GERMAN], ids=lambda variant: variant.name)
 def lang(request: pytest.FixtureRequest) -> Variant:
     """Makes every test using it run once per language variant"""
     return request.param
