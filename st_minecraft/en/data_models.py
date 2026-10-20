@@ -159,6 +159,12 @@ class Entity(BaseModel):
         if not isinstance(other, type(self)):
             return False
 
+        # should not be able to happen, since Entity Objects are only
+        #  created by API responses that always contain an id, but guards
+        #  against weird cases in the future...
+        if self.id is None or other.id is None:
+            return False
+
         return self.id == other.id
 
     def __repr__(self):
