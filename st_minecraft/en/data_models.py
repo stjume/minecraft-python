@@ -82,7 +82,7 @@ class Material(BaseModel):
         return f"Block(type={self.type}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
 
     def __eq__(self, other):
-        # einfachen vergleich mit typ erlauben
+        # allow easy compares with type
         if isinstance(other, MaterialCollection):
             return self.type == other
 
@@ -90,9 +90,6 @@ class Material(BaseModel):
             return False
 
         return self.type == other.type and self.coords_int == other.coords_int and self.dimension == other.dimension
-
-    def __ne__(self, other):
-        return not self == other
 
     @staticmethod
     def from_api_format(s: str):
@@ -162,10 +159,13 @@ class Entity(BaseModel):
         if not isinstance(other, type(self)):
             return False
 
-        return self.id == other.id
+        # should not be able to happen, since Entity Objects are only
+        #  created by API responses that always contain an id, but guards
+        #  against weird cases in the future...
+        if self.id is None or other.id is None:
+            return False
 
-    def __ne__(self, other):
-        return not self == other
+        return self.id == other.id
 
     def __repr__(self):
         return (
@@ -231,7 +231,8 @@ class Player(BaseModel):
     saturation: float
     xp_level: float
     xp_progress: float
-    holds_item: Optional["InventoryField"]
+    holds_item: "InventoryField"
+    """Item the player currently holds in the right hand - Airwhen empty hand"""
 
     @property
     def coords(self) -> tuple[float, float, float]:
@@ -295,6 +296,18 @@ class Player(BaseModel):
             holds_item=InventoryField.from_api_format(held_item_data),
         )
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Compare this player against another player or against a player name.
+
+        Comparing against a string asks whether the player has that name.
+        Everything else is left to the field by field comparison that pydantic generates.
+        """
+        if isinstance(other, str):
+            return self.name == other
+
+        return super().__eq__(other)
+
     def __repr__(self):
         return (
             f"Spieler("
@@ -340,6 +353,20 @@ class Item(BaseModel):
     def __repr__(self):
         return f"Item(type={self.type}, display_name={self.display_name})"
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Compare this item against another Item or a MaterialCollection member.
+        Against an Item the Item fields (type and display name) are compared,
+        against a MaterialCollection member only the type.
+        """
+        if isinstance(other, Item):
+            return self.type == other.type and self.display_name == other.display_name
+
+        if isinstance(other, MaterialCollection):
+            return self.type == other
+
+        return False
+
 
 class InventoryField(Item):
     """A field in a player's inventory"""
@@ -364,6 +391,16 @@ class InventoryField(Item):
     def __repr__(self):
         return f"InventoryField(index={self.index}, type={self.type}, diplay_name={self.display_name!r}, amount={self.amount})"
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Compare this field against another InventoryField, an Item or a MaterialCollection member.
+        Against an InventoryField all fields are compared, every other type is handed to Item.__eq__.
+        """
+        if isinstance(other, InventoryField):
+            return super().__eq__(other) and self.index == other.index and self.amount == other.amount
+
+        return super().__eq__(other)
+
 
 class Inventory(dict[int, InventoryField]):
     """
@@ -373,12 +410,17 @@ class Inventory(dict[int, InventoryField]):
     Note: Fields that are empty are not included in the dict!
     """
 
-    def __contains__(self, item: Item):
-        """Check if an item is in the inventory"""
-        for _, v in self.items():
-            if v.item == item:
-                return True
-        return False
+    def __contains__(self, item: int | Item | MaterialCollection) -> bool:
+        """
+        Check if an inventory index is taken, or if an item lies somewhere in the inventory.
+
+        An int asks for the index, just like on any other dict.
+        Everything else is compared against the fields of the inventory.
+        """
+        if isinstance(item, int):
+            return super().__contains__(item)
+
+        return any(field == item for field in self.values())
 
     def __getitem__(self, item: int) -> InventoryField:
         try:
@@ -416,9 +458,6 @@ class Message(BaseModel):
             and self.sender_id == other.sender_id
             and self.time_when_sent == other.time_when_sent
         )
-
-    def __ne__(self, other):
-        return not self == other
 
     @staticmethod
     def from_unformatted_string(data: str):

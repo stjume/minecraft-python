@@ -161,7 +161,7 @@ st_minecraft.gebe_item(
 
 spieler_neu = st_minecraft.hole_spieler_durch_name(spieler.name)
 
-assert spieler_neu.hält_item.typ == st_minecraft.MaterialSammlung.Diamantaxt
+assert spieler_neu.hält_item == st_minecraft.MaterialSammlung.Diamantaxt
 
 assert spieler.hält_item.index == feld
 

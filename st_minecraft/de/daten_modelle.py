@@ -71,21 +71,13 @@ class Material(BaseModel):
         return f"Block(typ={self.typ}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
 
     def __eq__(self, other):
-        # allow easy compares with type
-        if isinstance(other, MaterialSammlung):
-            return self.typ == other
+        """
+        Vergleiche diesen Block mit einem anderen Block oder einem Mitglied der MaterialSammlung.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, (Material, MaterialSammlung)) else other
 
-        if not isinstance(other, type(self)):
-            return False
-
-        return (
-            self.typ == other.typ
-            and _coords_to_int(self.coords) == _coords_to_int(other.coords)
-            and self.dimension == other.dimension
-        )
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
+        return self.zu_englisch() == anderes
 
     @staticmethod
     def von_englisch(m: _MaterialEN | None) -> Optional["Material"]:
@@ -93,7 +85,7 @@ class Material(BaseModel):
             return None
 
         return Material(
-            typ=MaterialSammlung.von_englisch(m.type),
+            typ=MaterialSammlung.von_englisch(m.type) if m.type is not None else None,
             x=m.x,
             y=m.y,
             z=m.z,
@@ -101,11 +93,8 @@ class Material(BaseModel):
         )
 
     def zu_englisch(self) -> _MaterialEN:
-        if self.typ is None:
-            return None
-
         return _MaterialEN(
-            type=self.typ.zu_englisch(),
+            type=self.typ.zu_englisch() if self.typ is not None else None,
             x=self.x,
             y=self.y,
             z=self.z,
@@ -144,16 +133,13 @@ class Entity(BaseModel):
         return _coords_to_int(self.coords)
 
     def __eq__(self, other):
-        if isinstance(other, EntitySammlung):
-            return self.typ == other
+        """
+        Vergleiche dieses Entity mit einem anderen Entity oder einem Mitglied der EntitySammlung.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, (Entity, EntitySammlung)) else other
 
-        if not isinstance(other, type(self)):
-            return False
-
-        return self.id == other.id
-
-    def __ne__(self, other):
-        return not self == other
+        return self.zu_englisch() == anderes
 
     def __repr__(self):
         return (
@@ -232,8 +218,8 @@ class Spieler(BaseModel):
     xp_level: float
     xp_fortschritt: float
     """ Platz in der Hotbar (Schnellzugriffsleiste), der aktuell ausgewählt ist """
-    hält_item: Optional["InventarFeld"]
-    """ Item, das der Spieler aktuell in der Hand hält - None, wenn die Hand leer ist """
+    hält_item: "InventarFeld"
+    """ Item, das der Spieler aktuell in der rechten Hand hält - Luft, wenn die Hand leer ist """
 
     @property
     def coords(self) -> tuple[float, float, float]:
@@ -294,6 +280,15 @@ class Spieler(BaseModel):
             holds_item=self.hält_item.zu_englisch() if self.hält_item is not None else None,
         )
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Vergleiche diesen Spieler mit einem anderen Spieler oder mit einem Spieler-Namen.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, Spieler) else other
+
+        return self.zu_englisch() == anderes
+
     def __repr__(self):
         return (
             f"Spieler("
@@ -326,6 +321,17 @@ class Item(BaseModel):
 
     def __repr__(self):
         return f"Item(typ={self.typ}, anzeige_name={self.anzeige_name})"
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Vergleiche dieses Item mit einem anderen Item oder einem Mitglied der MaterialSammlung.
+        Gegen ein Item werden die Item-Felder (Typ und Anzeige-Name) verglichen,
+        gegen ein Mitglied der MaterialSammlung nur der Typ.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, (Item, MaterialSammlung)) else other
+
+        return self.zu_englisch() == anderes
 
     @staticmethod
     def von_englisch(i: _ItemEN):
@@ -360,6 +366,8 @@ class InventarFeld(Item):
             amount=self.anzahl,
         )
 
+    # __eq__ is handled by Item and it's translation layer eq method
+
 
 class Inventar(dict[int, InventarFeld]):
     """
@@ -369,12 +377,17 @@ class Inventar(dict[int, InventarFeld]):
     Hinweis: Felder, die Leer sind, sind nicht in dem dict enthalten!
     """
 
-    def __contains__(self, item: Item):
-        """Überprüfe, ob ein Item im Inventar ist"""
-        for _, v in self.items():
-            if v.item == item:
-                return True
-        return False
+    def __contains__(self, item: int | Item | MaterialSammlung) -> bool:
+        """
+        Überprüfe, ob ein Index im Inventar belegt ist, oder ob ein Item irgendwo im Inventar liegt.
+
+        Ein int fragt nach dem Index, so wie bei jedem anderen dict.
+        Alles andere wird mit den Feldern des Inventars verglichen.
+        """
+        if isinstance(item, int):
+            return super().__contains__(item)
+
+        return any(feld == item for feld in self.values())
 
     def __getitem__(self, item: int) -> InventarFeld:
         try:
@@ -405,20 +418,13 @@ class Nachricht(BaseModel):
     versandzeit: datetime
 
     def __eq__(self, other):
-        if isinstance(other, str):
-            return self.text == other
+        """
+        Vergleiche diese Nachricht mit einer anderen Nachricht oder einem String.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, Nachricht) else other
 
-        if not isinstance(other, type(self)):
-            return False
-
-        # we can skip check for sender name
-        #  they're just different identifier for the same player
-        return (
-            self.text == other.text and self.absender_id == other.absender_id and self.versandzeit == other.versandzeit
-        )
-
-    def __ne__(self, other):
-        return not self == other
+        return self.zu_englisch() == anderes
 
     @staticmethod
     def von_englisch(m: _MessageEN):
