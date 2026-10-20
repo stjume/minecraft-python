@@ -232,6 +232,7 @@ class Player(BaseModel):
     xp_level: float
     xp_progress: float
     holds_item: "InventoryField"
+    """Item the player currently holds in the right hand - Airwhen empty hand"""
 
     @property
     def coords(self) -> tuple[float, float, float]:
