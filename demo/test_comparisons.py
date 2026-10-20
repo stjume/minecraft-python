@@ -563,7 +563,7 @@ class TestMessage:
 
 class TestPlayer:
     """
-    A player is compared field by field, it has no comparison of its own yet.
+    A player is compared field by field, except against a string, which asks for the name.
 
     Whether a player should rather be identified by its id is still open.
     """
@@ -577,7 +577,18 @@ class TestPlayer:
     def test_different_name(self, lang: Variant) -> None:
         assert_not_equal(lang.player(name="chris"), lang.player(name="adrian"))
 
-    @pytest.mark.parametrize("other", NOT_COMPARABLE_OR_STRING)
+    def test_different_position(self, lang: Variant) -> None:
+        """The same player having moved is a different snapshot of that player"""
+        assert_not_equal(lang.player(x=0.0), lang.player(x=10.0))
+
+    def test_matching_name_as_string(self, lang: Variant) -> None:
+        """Comparing against a string asks whether the player goes by that name"""
+        assert_equal(lang.player(name="chris"), "chris")
+
+    def test_other_name_as_string(self, lang: Variant) -> None:
+        assert_not_equal(lang.player(name="chris"), "adrian")
+
+    @pytest.mark.parametrize("other", NOT_COMPARABLE)
     def test_not_comparable_values(self, lang: Variant, other: object) -> None:
         assert_not_equal(lang.player(), other)
 

@@ -280,6 +280,15 @@ class Spieler(BaseModel):
             holds_item=self.hält_item.zu_englisch() if self.hält_item is not None else None,
         )
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Vergleiche diesen Spieler mit einem anderen Spieler oder mit einem Spieler-Namen.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, Spieler) else other
+
+        return self.zu_englisch() == anderes
+
     def __repr__(self):
         return (
             f"Spieler("

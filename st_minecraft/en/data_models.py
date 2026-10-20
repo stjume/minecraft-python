@@ -295,6 +295,18 @@ class Player(BaseModel):
             holds_item=InventoryField.from_api_format(held_item_data),
         )
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Compare this player against another player or against a player name.
+
+        Comparing against a string asks whether the player has that name.
+        Everything else is left to the field by field comparison that pydantic generates.
+        """
+        if isinstance(other, str):
+            return self.name == other
+
+        return super().__eq__(other)
+
     def __repr__(self):
         return (
             f"Spieler("
