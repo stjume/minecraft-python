@@ -82,7 +82,7 @@ class Material(BaseModel):
         return f"Block(type={self.type}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
 
     def __eq__(self, other):
-        # einfachen vergleich mit typ erlauben
+        # allow easy compares with type
         if isinstance(other, MaterialCollection):
             return self.type == other
 
@@ -346,9 +346,6 @@ class Item(BaseModel):
         Against an Item the Item fields (type and display name) are compared,
         against a MaterialCollection member only the type.
         """
-        if other is None:
-            return False
-
         if isinstance(other, Item):
             return self.type == other.type and self.display_name == other.display_name
 
@@ -448,9 +445,6 @@ class Message(BaseModel):
             and self.sender_id == other.sender_id
             and self.time_when_sent == other.time_when_sent
         )
-
-    def __ne__(self, other):
-        return not self == other
 
     @staticmethod
     def from_unformatted_string(data: str):
