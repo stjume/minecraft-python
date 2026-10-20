@@ -7,7 +7,6 @@ from pydantic import BaseModel
 from st_minecraft.core.core import _coords_to_int
 from st_minecraft.core.core import _to_enum
 from st_minecraft.de._exceptions import InventarFeldLeerFehler
-from st_minecraft.de._exceptions import NichtVergleichbarFehler
 from st_minecraft.de.entity import EntitySammlung
 from st_minecraft.de.material import MaterialSammlung
 from st_minecraft.en import Dimension
@@ -18,7 +17,6 @@ from st_minecraft.en import InventoryField as _InventoryFieldEN
 from st_minecraft.en import Item as _ItemEN
 from st_minecraft.en import Material as _MaterialEN
 from st_minecraft.en import Message as _MessageEN
-from st_minecraft.en import NotComparableException as _NotComparableExceptionEN
 from st_minecraft.en import Player as _PlayerEN
 
 
@@ -330,12 +328,7 @@ class Item(BaseModel):
         """
         anderes = other.zu_englisch() if isinstance(other, (Item, MaterialSammlung)) else other
 
-        try:
-            return self.zu_englisch() == anderes
-        except _NotComparableExceptionEN:
-            raise NichtVergleichbarFehler(
-                f"Der Typ '{type(other).__name__}' kann nicht mit dem Typ '{type(self).__name__}' verglichen werden"
-            ) from None
+        return self.zu_englisch() == anderes
 
     @staticmethod
     def von_englisch(i: _ItemEN):

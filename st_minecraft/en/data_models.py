@@ -355,7 +355,7 @@ class Item(BaseModel):
         if isinstance(other, MaterialCollection):
             return self.type == other
 
-        raise NotComparableException(f"Can't compare type '{type(other).__name__}' to type '{type(self).__name__}'")
+        return False
 
 
 class InventoryField(Item):
@@ -455,7 +455,3 @@ class Message(BaseModel):
         time_of_receival = datetime(year=year, month=month, day=day, hour=hour, minute=minute, second=second)
 
         return Message(text=text, sender_name=sender_name, sender_id=int(sender_id), time_when_sent=time_of_receival)
-
-
-class NotComparableException(NotImplementedError):
-    """To be called when things can't be compared"""
