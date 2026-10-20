@@ -231,7 +231,7 @@ class Player(BaseModel):
     saturation: float
     xp_level: float
     xp_progress: float
-    holds_item: Optional["InventoryField"]
+    holds_item: "InventoryField"
 
     @property
     def coords(self) -> tuple[float, float, float]:

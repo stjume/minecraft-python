@@ -218,7 +218,7 @@ class Spieler(BaseModel):
     xp_level: float
     xp_fortschritt: float
     """ Platz in der Hotbar (Schnellzugriffsleiste), der aktuell ausgewählt ist """
-    hält_item: Optional["InventarFeld"]
+    hält_item: "InventarFeld"
     """ Item, das der Spieler aktuell in der Hand hält - None, wenn die Hand leer ist """
 
     @property
