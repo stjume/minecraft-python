@@ -364,6 +364,28 @@ class InventoryField(Item):
     def __repr__(self):
         return f"InventoryField(index={self.index}, type={self.type}, diplay_name={self.display_name!r}, amount={self.amount})"
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Compare this field against another InventoryField, an Item or a MaterialCollection member.
+        Against an InventoryField all fields are compared, against an Item only the Item fields
+        (type and display name) and against a MaterialCollection member only the type.
+        """
+        if isinstance(other, InventoryField):
+            return (
+                self.type == other.type
+                and self.display_name == other.display_name
+                and self.index == other.index
+                and self.amount == other.amount
+            )
+
+        if isinstance(other, Item):
+            return self.type == other.type and self.display_name == other.display_name
+
+        if isinstance(other, MaterialCollection):
+            return self.type == other
+
+        raise NotComparableException(f"Can't compare type '{type(other).__name__}' to type 'InventoryField'")
+
 
 class Inventory(dict[int, InventoryField]):
     """
@@ -428,3 +450,7 @@ class Message(BaseModel):
         time_of_receival = datetime(year=year, month=month, day=day, hour=hour, minute=minute, second=second)
 
         return Message(text=text, sender_name=sender_name, sender_id=int(sender_id), time_when_sent=time_of_receival)
+
+
+class NotComparableException(NotImplementedError):
+    """To be called when things can't be compared"""
