@@ -91,9 +91,6 @@ class Material(BaseModel):
 
         return self.type == other.type and self.coords_int == other.coords_int and self.dimension == other.dimension
 
-    def __ne__(self, other):
-        return not self == other
-
     @staticmethod
     def from_api_format(s: str):
         _type, x, y, z, dim = s.split(":")
@@ -163,9 +160,6 @@ class Entity(BaseModel):
             return False
 
         return self.id == other.id
-
-    def __ne__(self, other):
-        return not self == other
 
     def __repr__(self):
         return (

@@ -79,9 +79,6 @@ class Material(BaseModel):
 
         return self.zu_englisch() == anderes
 
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
     @staticmethod
     def von_englisch(m: _MaterialEN | None) -> Optional["Material"]:
         if m is None:
@@ -143,9 +140,6 @@ class Entity(BaseModel):
         anderes = other.zu_englisch() if isinstance(other, (Entity, EntitySammlung)) else other
 
         return self.zu_englisch() == anderes
-
-    def __ne__(self, other):
-        return not self == other
 
     def __repr__(self):
         return (
@@ -417,9 +411,6 @@ class Nachricht(BaseModel):
         anderes = other.zu_englisch() if isinstance(other, Nachricht) else other
 
         return self.zu_englisch() == anderes
-
-    def __ne__(self, other):
-        return not self == other
 
     @staticmethod
     def von_englisch(m: _MessageEN):
