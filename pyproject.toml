@@ -24,6 +24,9 @@ classifiers = [
 
 dynamic = ["dependencies", "version"]
 
+[project.optional-dependencies]
+dev = ["pytest~=8.4"]
+
 license-files = ["LICENSE*"]
 license = "AGPL-3.0-or-later"
 
@@ -44,3 +47,6 @@ force_single_line = "true"
 
 [tool.black]
 line-length = 120
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
