@@ -73,24 +73,21 @@ class Material(BaseModel):
         return f"Block(typ={self.typ}, x={self.x}, y={self.y}, z={self.z}, dimension={self.dimension})"
 
     def __eq__(self, other):
-        # allow easy compares with type
-        if isinstance(other, MaterialSammlung):
-            return self.typ == other
+        """
+        Vergleiche diesen Block mit einem anderen Block oder einem Mitglied der MaterialSammlung.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, (Material, MaterialSammlung)) else other
 
-        if not isinstance(other, type(self)):
-            return False
-
-        return (
-            self.typ == other.typ
-            and _coords_to_int(self.coords) == _coords_to_int(other.coords)
-            and self.dimension == other.dimension
-        )
+        return self.zu_englisch() == anderes
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     @staticmethod
     def von_englisch(m: _MaterialEN | None) -> Optional["Material"]:
+        if m is None:
+            return None
 
         return Material(
             typ=MaterialSammlung.von_englisch(m.type) if m.type is not None else None,
@@ -101,7 +98,6 @@ class Material(BaseModel):
         )
 
     def zu_englisch(self) -> _MaterialEN:
-
         return _MaterialEN(
             type=self.typ.zu_englisch() if self.typ is not None else None,
             x=self.x,
