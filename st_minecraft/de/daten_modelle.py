@@ -91,11 +91,9 @@ class Material(BaseModel):
 
     @staticmethod
     def von_englisch(m: _MaterialEN | None) -> Optional["Material"]:
-        if m is None:
-            return None
 
         return Material(
-            typ=MaterialSammlung.von_englisch(m.type),
+            typ=MaterialSammlung.von_englisch(m.type) if m.type is not None else None,
             x=m.x,
             y=m.y,
             z=m.z,
@@ -103,11 +101,9 @@ class Material(BaseModel):
         )
 
     def zu_englisch(self) -> _MaterialEN:
-        if self.typ is None:
-            return None
 
         return _MaterialEN(
-            type=self.typ.zu_englisch(),
+            type=self.typ.zu_englisch() if self.typ is not None else None,
             x=self.x,
             y=self.y,
             z=self.z,
