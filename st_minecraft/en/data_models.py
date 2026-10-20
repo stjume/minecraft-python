@@ -376,7 +376,7 @@ class Inventory(dict[int, InventoryField]):
     def __contains__(self, item: Item):
         """Check if an item is in the inventory"""
         for _, v in self.items():
-            if v.item == item:
+            if v == item:
                 return True
         return False
 
