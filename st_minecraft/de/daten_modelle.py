@@ -378,6 +378,8 @@ class InventarFeld(Item):
             amount=self.anzahl,
         )
 
+    # __eq__ is handled by Item and it's translation layer eq method
+
 
 class Inventar(dict[int, InventarFeld]):
     """
