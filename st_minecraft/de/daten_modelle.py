@@ -368,12 +368,17 @@ class Inventar(dict[int, InventarFeld]):
     Hinweis: Felder, die Leer sind, sind nicht in dem dict enthalten!
     """
 
-    def __contains__(self, item: Item):
-        """Überprüfe, ob ein Item im Inventar ist"""
-        for _, v in self.items():
-            if v == item:
-                return True
-        return False
+    def __contains__(self, item: int | Item | MaterialSammlung) -> bool:
+        """
+        Überprüfe, ob ein Index im Inventar belegt ist, oder ob ein Item irgendwo im Inventar liegt.
+
+        Ein int fragt nach dem Index, so wie bei jedem anderen dict.
+        Alles andere wird mit den Feldern des Inventars verglichen.
+        """
+        if isinstance(item, int):
+            return super().__contains__(item)
+
+        return any(feld == item for feld in self.values())
 
     def __getitem__(self, item: int) -> InventarFeld:
         try:

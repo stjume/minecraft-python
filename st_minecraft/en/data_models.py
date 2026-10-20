@@ -400,12 +400,17 @@ class Inventory(dict[int, InventoryField]):
     Note: Fields that are empty are not included in the dict!
     """
 
-    def __contains__(self, item: Item):
-        """Check if an item is in the inventory"""
-        for _, v in self.items():
-            if v == item:
-                return True
-        return False
+    def __contains__(self, item: int | Item | MaterialCollection) -> bool:
+        """
+        Check if an inventory index is taken, or if an item lies somewhere in the inventory.
+
+        An int asks for the index, just like on any other dict.
+        Everything else is compared against the fields of the inventory.
+        """
+        if isinstance(item, int):
+            return super().__contains__(item)
+
+        return any(field == item for field in self.values())
 
     def __getitem__(self, item: int) -> InventoryField:
         try:

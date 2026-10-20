@@ -339,6 +339,17 @@ class TestInventoryContains:
     def test_empty_inventory_contains_nothing(self, lang: Variant) -> None:
         assert lang.item(lang.stone) not in lang.inventory()
 
+    def test_contains_taken_index(self, lang: Variant) -> None:
+        """An index asks the inventory the same thing any other dict would be asked"""
+        inventory = lang.inventory(lang.field(lang.stone, index=5))
+
+        assert 5 in inventory
+
+    def test_does_not_contain_free_index(self, lang: Variant) -> None:
+        inventory = lang.inventory(lang.field(lang.stone, index=5))
+
+        assert 7 not in inventory
+
 
 # --------------------------------------------------------------------------------------------------
 # Material
