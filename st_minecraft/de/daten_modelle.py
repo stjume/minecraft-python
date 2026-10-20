@@ -146,13 +146,13 @@ class Entity(BaseModel):
         return _coords_to_int(self.coords)
 
     def __eq__(self, other):
-        if isinstance(other, EntitySammlung):
-            return self.typ == other
+        """
+        Vergleiche dieses Entity mit einem anderen Entity oder einem Mitglied der EntitySammlung.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, (Entity, EntitySammlung)) else other
 
-        if not isinstance(other, type(self)):
-            return False
-
-        return self.id == other.id
+        return self.zu_englisch() == anderes
 
     def __ne__(self, other):
         return not self == other
@@ -425,17 +425,13 @@ class Nachricht(BaseModel):
     versandzeit: datetime
 
     def __eq__(self, other):
-        if isinstance(other, str):
-            return self.text == other
+        """
+        Vergleiche diese Nachricht mit einer anderen Nachricht oder einem String.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, Nachricht) else other
 
-        if not isinstance(other, type(self)):
-            return False
-
-        # we can skip check for sender name
-        #  they're just different identifier for the same player
-        return (
-            self.text == other.text and self.absender_id == other.absender_id and self.versandzeit == other.versandzeit
-        )
+        return self.zu_englisch() == anderes
 
     def __ne__(self, other):
         return not self == other
