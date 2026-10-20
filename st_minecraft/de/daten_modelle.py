@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from st_minecraft.core.core import _coords_to_int
 from st_minecraft.core.core import _to_enum
 from st_minecraft.de._exceptions import InventarFeldLeerFehler
+from st_minecraft.de._exceptions import NichtVergleichbarFehler
 from st_minecraft.de.entity import EntitySammlung
 from st_minecraft.de.material import MaterialSammlung
 from st_minecraft.en import Dimension
@@ -17,6 +18,7 @@ from st_minecraft.en import InventoryField as _InventoryFieldEN
 from st_minecraft.en import Item as _ItemEN
 from st_minecraft.en import Material as _MaterialEN
 from st_minecraft.en import Message as _MessageEN
+from st_minecraft.en import NotComparableException as _NotComparableExceptionEN
 from st_minecraft.en import Player as _PlayerEN
 
 
@@ -346,6 +348,22 @@ class InventarFeld(Item):
     def __repr__(self):
         return f"InventarFeld(index={self.index}, typ={self.typ}, item={self.anzeige_name!r}, anzahl={self.anzahl})"
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Vergleiche dieses Feld mit einem anderen InventarFeld, einem Item oder einem Mitglied der MaterialSammlung.
+        Gegen ein InventarFeld werden alle Felder verglichen, gegen ein Item nur die Item-Felder
+        (Typ und Anzeige-Name) und gegen ein Mitglied der MaterialSammlung nur der Typ.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, (Item, MaterialSammlung)) else other
+
+        try:
+            return self.zu_englisch() == anderes
+        except _NotComparableExceptionEN:
+            raise NichtVergleichbarFehler(
+                f"Der Typ '{type(other).__name__}' kann nicht mit dem Typ 'InventarFeld' verglichen werden"
+            ) from None
+
     @staticmethod
     def von_englisch(i: _InventoryFieldEN):
         return InventarFeld(
@@ -372,7 +390,7 @@ class Inventar(dict[int, InventarFeld]):
     def __contains__(self, item: Item):
         """Überprüfe, ob ein Item im Inventar ist"""
         for _, v in self.items():
-            if v.item == item:
+            if v == item:
                 return True
         return False
 

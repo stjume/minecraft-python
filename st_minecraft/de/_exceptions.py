@@ -11,3 +11,7 @@ class WertFehler(ValueError):
 
 class InventarFeldLeerFehler(KeyError):
     """Repräsentiert core.InventoryFieldEmptyError"""
+
+
+class NichtVergleichbarFehler(NotImplementedError):
+    """Repräsentiert data_models.NotComparableException"""
