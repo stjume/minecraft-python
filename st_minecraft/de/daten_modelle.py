@@ -329,6 +329,22 @@ class Item(BaseModel):
     def __repr__(self):
         return f"Item(typ={self.typ}, anzeige_name={self.anzeige_name})"
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Vergleiche dieses Item mit einem anderen Item oder einem Mitglied der MaterialSammlung.
+        Gegen ein Item werden die Item-Felder (Typ und Anzeige-Name) verglichen,
+        gegen ein Mitglied der MaterialSammlung nur der Typ.
+        Der Vergleich selber passiert in der englischen Implementierung.
+        """
+        anderes = other.zu_englisch() if isinstance(other, (Item, MaterialSammlung)) else other
+
+        try:
+            return self.zu_englisch() == anderes
+        except _NotComparableExceptionEN:
+            raise NichtVergleichbarFehler(
+                f"Der Typ '{type(other).__name__}' kann nicht mit dem Typ '{type(self).__name__}' verglichen werden"
+            ) from None
+
     @staticmethod
     def von_englisch(i: _ItemEN):
         return Item(typ=MaterialSammlung.von_englisch(i.type), anzeige_name=i.display_name)
@@ -347,22 +363,6 @@ class InventarFeld(Item):
 
     def __repr__(self):
         return f"InventarFeld(index={self.index}, typ={self.typ}, item={self.anzeige_name!r}, anzahl={self.anzahl})"
-
-    def __eq__(self, other: object) -> bool:
-        """
-        Vergleiche dieses Feld mit einem anderen InventarFeld, einem Item oder einem Mitglied der MaterialSammlung.
-        Gegen ein InventarFeld werden alle Felder verglichen, gegen ein Item nur die Item-Felder
-        (Typ und Anzeige-Name) und gegen ein Mitglied der MaterialSammlung nur der Typ.
-        Der Vergleich selber passiert in der englischen Implementierung.
-        """
-        anderes = other.zu_englisch() if isinstance(other, (Item, MaterialSammlung)) else other
-
-        try:
-            return self.zu_englisch() == anderes
-        except _NotComparableExceptionEN:
-            raise NichtVergleichbarFehler(
-                f"Der Typ '{type(other).__name__}' kann nicht mit dem Typ 'InventarFeld' verglichen werden"
-            ) from None
 
     @staticmethod
     def von_englisch(i: _InventoryFieldEN):

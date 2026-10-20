@@ -340,6 +340,23 @@ class Item(BaseModel):
     def __repr__(self):
         return f"Item(type={self.type}, display_name={self.display_name})"
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Compare this item against another Item or a MaterialCollection member.
+        Against an Item the Item fields (type and display name) are compared,
+        against a MaterialCollection member only the type.
+        """
+        if other is None:
+            return False
+
+        if isinstance(other, Item):
+            return self.type == other.type and self.display_name == other.display_name
+
+        if isinstance(other, MaterialCollection):
+            return self.type == other
+
+        raise NotComparableException(f"Can't compare type '{type(other).__name__}' to type '{type(self).__name__}'")
+
 
 class InventoryField(Item):
     """A field in a player's inventory"""
@@ -367,24 +384,12 @@ class InventoryField(Item):
     def __eq__(self, other: object) -> bool:
         """
         Compare this field against another InventoryField, an Item or a MaterialCollection member.
-        Against an InventoryField all fields are compared, against an Item only the Item fields
-        (type and display name) and against a MaterialCollection member only the type.
+        Against an InventoryField all fields are compared, every other type is handed to Item.__eq__.
         """
         if isinstance(other, InventoryField):
-            return (
-                self.type == other.type
-                and self.display_name == other.display_name
-                and self.index == other.index
-                and self.amount == other.amount
-            )
+            return super().__eq__(other) and self.index == other.index and self.amount == other.amount
 
-        if isinstance(other, Item):
-            return self.type == other.type and self.display_name == other.display_name
-
-        if isinstance(other, MaterialCollection):
-            return self.type == other
-
-        raise NotComparableException(f"Can't compare type '{type(other).__name__}' to type 'InventoryField'")
+        return super().__eq__(other)
 
 
 class Inventory(dict[int, InventoryField]):
