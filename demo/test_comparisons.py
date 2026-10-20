@@ -401,7 +401,7 @@ class TestEntity:
     """
     An entity is identified by its id, which the server guarantees to be unique.
 
-    Without an id there is nothing to identify it by, so the remaining fields have to match instead.
+    Without an id there is nothing to identify it by, so it is not considered equal to anything.
     """
 
     def test_same_id(self, lang: Variant) -> None:
@@ -421,20 +421,13 @@ class TestEntity:
         assert_not_equal(lang.entity(lang.pig), lang.cow)
 
     def test_without_id_and_otherwise_identical(self, lang: Variant) -> None:
-        assert_equal(lang.entity(lang.pig, entity_id=None), lang.entity(lang.pig, entity_id=None))
+        """Without an id neither entity can be identified, so they must not claim to be the same"""
+        assert_not_equal(lang.entity(lang.pig, entity_id=None), lang.entity(lang.pig, entity_id=None))
 
-    @pytest.mark.xfail(
-        reason="Entity.__eq__ only compares the id, so two entities without an id always match",
-        strict=True,
-    )
     def test_without_id_but_different_species(self, lang: Variant) -> None:
         """A pig is never a cow, no matter how little else is known about either"""
         assert_not_equal(lang.entity(lang.pig, entity_id=None), lang.entity(lang.cow, entity_id=None))
 
-    @pytest.mark.xfail(
-        reason="Entity.__eq__ only compares the id, so two entities without an id always match",
-        strict=True,
-    )
     def test_without_id_but_different_position(self, lang: Variant) -> None:
         """Two unidentified pigs standing apart are two different pigs"""
         assert_not_equal(
