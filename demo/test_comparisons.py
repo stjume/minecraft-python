@@ -17,7 +17,9 @@ from typing import Protocol
 import pytest
 from pydantic import BaseModel
 
+import st_minecraft.de.boss_leiste as bl
 import st_minecraft.de.daten_modelle as de
+import st_minecraft.en.boss_bar as bb
 import st_minecraft.en.data_models as en
 from st_minecraft.de.entity import EntitySammlung
 from st_minecraft.de.material import MaterialSammlung
@@ -94,6 +96,10 @@ class Variant(Protocol):
         sent_at: datetime = SENT_AT,
     ) -> BaseModel: ...
 
+    def player(self, player_id: int = 1, name: str = "chris", x: float = 0.0) -> BaseModel: ...
+
+    def boss_bar(self, name: str = "leiste", display_text: str = "hallo", value: float = 0.5) -> BaseModel: ...
+
     def inventory(self, *fields: BaseModel) -> dict[int, BaseModel]: ...
 
 
@@ -145,6 +151,36 @@ class English:
         sent_at: datetime = SENT_AT,
     ) -> BaseModel:
         return en.Message(text=text, sender_name=sender_name, sender_id=sender_id, time_when_sent=sent_at)
+
+    def player(self, player_id: int = 1, name: str = "chris", x: float = 0.0) -> BaseModel:
+        return en.Player(
+            id=player_id,
+            name=name,
+            x=x,
+            y=64.0,
+            z=0.0,
+            dimension=Dimension.World,
+            rotation=0,
+            looking_at_block=None,
+            looking_at_entity=None,
+            sneaked=False,
+            max_health=20.0,
+            health=20.0,
+            hunger=20.0,
+            saturation=5.0,
+            xp_level=0.0,
+            xp_progress=0.0,
+            holds_item=self.field(self.stone),
+        )
+
+    def boss_bar(self, name: str = "leiste", display_text: str = "hallo", value: float = 0.5) -> BaseModel:
+        return bb.BossBar(
+            name=name,
+            display_text=display_text,
+            value=value,
+            style=bb.BossBarStyle.SOLID,
+            color=bb.BossBarColor.BLUE,
+        )
 
     def inventory(self, *fields: BaseModel) -> dict[int, BaseModel]:
         return en.Inventory({field.index: field for field in fields})
@@ -198,6 +234,36 @@ class German:
         sent_at: datetime = SENT_AT,
     ) -> BaseModel:
         return de.Nachricht(text=text, absender_name=sender_name, absender_id=sender_id, versandzeit=sent_at)
+
+    def player(self, player_id: int = 1, name: str = "chris", x: float = 0.0) -> BaseModel:
+        return de.Spieler(
+            id=player_id,
+            name=name,
+            x=x,
+            y=64.0,
+            z=0.0,
+            dimension=Dimension.World,
+            rotation=0,
+            schaut_auf_block=None,
+            schaut_auf_entity=None,
+            sneaked=False,
+            max_leben=20.0,
+            leben=20.0,
+            hunger=20.0,
+            sättigung=5.0,
+            xp_level=0.0,
+            xp_fortschritt=0.0,
+            hält_item=self.field(self.stone),
+        )
+
+    def boss_bar(self, name: str = "leiste", display_text: str = "hallo", value: float = 0.5) -> BaseModel:
+        return bl.BossLeiste(
+            name=name,
+            anzeige_text=display_text,
+            wert=value,
+            stil=bl.BossLeisteStil.DURCHGEZOGEN,
+            farbe=bl.BossLeisteFarben.BLAU,
+        )
 
     def inventory(self, *fields: BaseModel) -> dict[int, BaseModel]:
         return de.Inventar({field.index: field for field in fields})
@@ -488,3 +554,51 @@ class TestMessage:
     @pytest.mark.parametrize("other", NOT_COMPARABLE)
     def test_not_comparable_values(self, lang: Variant, other: object) -> None:
         assert_not_equal(lang.message(), other)
+
+
+# --------------------------------------------------------------------------------------------------
+# Player
+# --------------------------------------------------------------------------------------------------
+
+
+class TestPlayer:
+    """
+    A player is compared field by field, it has no comparison of its own yet.
+
+    Whether a player should rather be identified by its id is still open.
+    """
+
+    def test_same_fields(self, lang: Variant) -> None:
+        assert_equal(lang.player(), lang.player())
+
+    def test_different_id(self, lang: Variant) -> None:
+        assert_not_equal(lang.player(player_id=1), lang.player(player_id=2))
+
+    def test_different_name(self, lang: Variant) -> None:
+        assert_not_equal(lang.player(name="chris"), lang.player(name="adrian"))
+
+    @pytest.mark.parametrize("other", NOT_COMPARABLE_OR_STRING)
+    def test_not_comparable_values(self, lang: Variant, other: object) -> None:
+        assert_not_equal(lang.player(), other)
+
+
+# --------------------------------------------------------------------------------------------------
+# BossBar
+# --------------------------------------------------------------------------------------------------
+
+
+class TestBossBar:
+    """A boss bar is compared field by field, it has no comparison of its own"""
+
+    def test_same_fields(self, lang: Variant) -> None:
+        assert_equal(lang.boss_bar(), lang.boss_bar())
+
+    def test_different_name(self, lang: Variant) -> None:
+        assert_not_equal(lang.boss_bar(name="erste"), lang.boss_bar(name="zweite"))
+
+    def test_different_value(self, lang: Variant) -> None:
+        assert_not_equal(lang.boss_bar(value=0.5), lang.boss_bar(value=0.9))
+
+    @pytest.mark.parametrize("other", NOT_COMPARABLE_OR_STRING)
+    def test_not_comparable_values(self, lang: Variant, other: object) -> None:
+        assert_not_equal(lang.boss_bar(), other)
